@@ -11,8 +11,7 @@ def rhs(t, x, omega, mass, tau):
     return [x[2], x[3], accx, accy, power]
 
 # Analytic solution. Assumes motion initially vertical
-def analytic_solution(t, charge, mass, bz, tau):
-    omega = charge * bz / mass
+def analytic_solution(t, omega, tau):
     mu = tau * omega**2
 
     vx_soln = (np.exp(-mu * t) * np.sin(omega*t)) / (1.0 + tau**2 * omega**2)
@@ -36,7 +35,7 @@ def solve(n_rotations, charge, mass, bz, tau):
     t_end = n_rotations * 2.0 * np.pi / np.abs(omega)
 
     # Set initial conditions
-    x_init, y_init, vx_init, vy_init = analytic_solution(0, charge, mass, bz, tau)
+    x_init, y_init, vx_init, vy_init = analytic_solution(0, omega, tau)
     # Note that for tau /= 0, both x_init and y_init and non-zero
     # Final value is total radiated power
     ic = [x_init, y_init, vx_init, vy_init, 0.0]
