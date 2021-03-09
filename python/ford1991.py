@@ -27,8 +27,7 @@ def analytic_solution(t, omega, tau):
 
 # Solve Ford & O'Connell 1991 for n rotations
 # Additionally solve for total radiated power as function of time
-def solve(n_rotations, charge, mass, bz, tau):
-    omega = bz * charge / mass
+def solve(n_rotations, omega, mass, tau):
     # Maximum timestep. Could probably be smaller
     max_step = 1e-3 / np.abs(omega)
     # Final time
