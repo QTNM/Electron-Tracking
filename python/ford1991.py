@@ -33,7 +33,7 @@ def analytic_solution(t, omega, tau, vel0=1.0):
         t: Time(s) to calculation solution for
         omega: Cyclotron frequency
         tau: Larmor power parameter, such that P = tau * mass * a**2
-        vel: Initial velocity magnitude
+        vel0: Initial velocity magnitude
 
     Returns:
         Analytic Solution: [x, y, vx, vy]
