@@ -25,7 +25,7 @@ SEPrimaryGeneratorAction::SEPrimaryGeneratorAction()
   // default particle kinematics
   fParticleGun->SetParticleDefinition(particleTable->FindParticle("e-"));
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.)); // z-axis
-  fParticleGun->SetParticleEnergy(18.6*keV);
+  fParticleGun->SetParticleEnergy(18.575*keV);
 }
 
 SEPrimaryGeneratorAction::~SEPrimaryGeneratorAction()
@@ -42,7 +42,7 @@ void SEPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
   G4Box* worldBox = dynamic_cast<G4Box*>(worldLV->GetSolid());
   G4double worldZHalfLength = worldBox->GetZHalfLength();
-  fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, -worldZHalfLength));
+  fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, -worldZHalfLength + 1.*cm));
 
   fParticleGun->GeneratePrimaryVertex(event);
 }
