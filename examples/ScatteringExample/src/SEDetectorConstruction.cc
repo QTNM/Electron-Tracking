@@ -25,6 +25,7 @@
 #include "SEPSKinEnergy.hh"
 #include "SEPSTime.hh"
 #include "SEPSTrackID.hh"
+#include "SEPSParentID.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -48,12 +49,12 @@ auto SEDetectorConstruction::Construct() -> G4VPhysicalVolume*
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
 
-  if(fGeometryName == "baseline")
+  if(fGeometryName == "bunches")
   {
-    return SetupBaseline();
+    return SetupBunches();
   }
 
-  return SetupBunches();
+  return SetupBaseline();
 }
 
 void SEDetectorConstruction::DefineMaterials()
@@ -122,7 +123,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
 
   // size parameter, unit [cm]
   // world
-  G4double worldhside = 3.0 * cm;   // box half side in x, y
+  G4double worldhside = 5.0 * cm;   // box half side in x, y
   G4double worldhZ    = 39.5 * km;  // box half side in z; kilometer-long
 
   // tubes with Gas ROI
@@ -133,7 +134,8 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
   // bunches of T-atoms
   G4double bunchhZ   = 5.0 * cm;    // 10cm long bunches in z
   G4double bunchrad  = 1.0 * mm;    // small cylinders 1mm radius
-  G4int nbunches     = (int) pipehZ / bunchhZ; // integer, lower limit half number
+  G4double gap       = 5.0 * cm;    // gap between bunches
+  G4int nbunches     = (int) (pipehZ / (bunchhZ + gap)); // integer, lower limit half number
  
   // stopwatch volume with piperad and thickness in z
   G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
@@ -178,7 +180,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
                     "Stop_phys", worldLogical, false, 0, true);
 
   for (G4int i=0; i<2*nbunches-1; ++i) 
-    new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*bunchhZ), gasLogical,
+    new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*(bunchhZ+gap)), gasLogical,
                       "Bunch_phys", worldLogical, false, i, true); // each a copy number
 
 
@@ -195,13 +197,13 @@ auto SEDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     
   // size parameter, unit [cm]
   // world
-  G4double worldhside = 3.0 * cm;   // box half side in x, y
+  G4double worldhside = 5.0 * cm;   // box half side in x, y
   G4double worldhZ    = 39.5 * km;  // box half side in z; kilometer-long
   
   // tubes with Gas ROI
   G4double pipewall  = 0.1 * cm;    // tube thickness 1 mm
   G4double piperad   = 2.0 * cm;    // tube diam 4 cm
-  G4double pipehZ    = worldhZ - 1 * cm;  // fit into world 1cm either side
+  G4double pipehZ    = worldhZ - 1*cm;  // fit into world 1cm either side
     
   // stopwatch volume with piperad and thickness in z
   G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
