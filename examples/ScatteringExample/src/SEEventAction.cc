@@ -65,7 +65,7 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   if(fTidID < 0)
   {
     fTidID    = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/TrackID");
-    fPidID    = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/ParentID");
+    fPidID    = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/PID");
     fTimeID   = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/Time");
     fKinEID   = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/KinE");
   }

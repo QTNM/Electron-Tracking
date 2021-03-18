@@ -1,5 +1,5 @@
-// WLGDPSTrackID
-#include "WLGDPSTrackID.hh"
+// SEPSTrackID
+#include "SEPSTrackID.hh"
 #include "G4UnitsTable.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -8,7 +8,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-WLGDPSTrackID::WLGDPSTrackID(G4String name, G4int depth)
+SEPSTrackID::SEPSTrackID(G4String name, G4int depth)
 : G4VPrimitiveScorer(std::move(name), depth)
 , HCID(-1)
 , EvtMap(nullptr)
@@ -16,9 +16,9 @@ WLGDPSTrackID::WLGDPSTrackID(G4String name, G4int depth)
   SetUnit("NoUnit");
 }
 
-WLGDPSTrackID::~WLGDPSTrackID() = default;
+SEPSTrackID::~SEPSTrackID() = default;
 
-G4bool WLGDPSTrackID::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
+G4bool SEPSTrackID::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
   if(aStep->GetTotalEnergyDeposit() <= 0.0)
     return false;
@@ -33,7 +33,7 @@ G4bool WLGDPSTrackID::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
   return true;
 }
 
-void WLGDPSTrackID::Initialize(G4HCofThisEvent* HCE)
+void SEPSTrackID::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4int>(GetMultiFunctionalDetector()->GetName(), GetName());
   if(HCID < 0)
@@ -43,17 +43,17 @@ void WLGDPSTrackID::Initialize(G4HCofThisEvent* HCE)
   HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
 }
 
-void WLGDPSTrackID::EndOfEvent(G4HCofThisEvent* /*unused*/) { fCellTrackLogger.clear(); }
+void SEPSTrackID::EndOfEvent(G4HCofThisEvent* /*unused*/) { fCellTrackLogger.clear(); }
 
-void WLGDPSTrackID::clear()
+void SEPSTrackID::clear()
 {
   fCellTrackLogger.clear();
   EvtMap->clear();
 }
 
-void WLGDPSTrackID::DrawAll() { ; }
+void SEPSTrackID::DrawAll() { ; }
 
-void WLGDPSTrackID::PrintAll()
+void SEPSTrackID::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
@@ -64,4 +64,4 @@ void WLGDPSTrackID::PrintAll()
   }
 }
 
-void WLGDPSTrackID::SetUnit(const G4String& unit) { ; }
+void SEPSTrackID::SetUnit(const G4String& unit) { ; }

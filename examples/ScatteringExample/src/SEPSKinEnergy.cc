@@ -1,22 +1,22 @@
-// WLGDPSEnergyDeposit
-#include "WLGDPSEnergyDeposit.hh"
+// SEPSEnergyDeposit
+#include "SEPSKinEnergy.hh"
 #include "G4UnitsTable.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
-//   This is a primitive scorer class for scoring total energy deposit
+//   This is a primitive scorer class for scoring pre-step kinetic energy 
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-WLGDPSEnergyDeposit::WLGDPSEnergyDeposit(G4String name, G4int depth)
+SEPSEnergyDeposit::SEPSEnergyDeposit(G4String name, G4int depth)
 : G4VPrimitiveScorer(std::move(name), depth)
 , HCID(-1)
 , EvtMap(nullptr)
 {
-  SetUnit("MeV");
+  SetUnit("keV");
 }
 
-WLGDPSEnergyDeposit::WLGDPSEnergyDeposit(G4String name, const G4String& unit, G4int depth)
+SEPSEnergyDeposit::SEPSEnergyDeposit(G4String name, const G4String& unit, G4int depth)
 : G4VPrimitiveScorer(std::move(name), depth)
 , HCID(-1)
 , EvtMap(nullptr)
@@ -24,17 +24,17 @@ WLGDPSEnergyDeposit::WLGDPSEnergyDeposit(G4String name, const G4String& unit, G4
   SetUnit(unit);
 }
 
-WLGDPSEnergyDeposit::~WLGDPSEnergyDeposit() = default;
+SEPSEnergyDeposit::~SEPSEnergyDeposit() = default;
 
-G4bool WLGDPSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
+G4bool SEPSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
   G4double edep = aStep->GetTotalEnergyDeposit();
+  G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
 
   if(edep > 0)
   {
-    edep *= aStep->GetPreStepPoint()->GetWeight();  // (Particle Weight)
     G4int index = GetIndex(aStep);
-    EvtMap->add(index, edep);  // add all energy depositions, weighted
+    EvtMap->add(index, kinetic);
   }
   else
     return false;
@@ -42,7 +42,7 @@ G4bool WLGDPSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unu
   return true;
 }
 
-void WLGDPSEnergyDeposit::Initialize(G4HCofThisEvent* HCE)
+void SEPSEnergyDeposit::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(), GetName());
   if(HCID < 0)
@@ -52,13 +52,13 @@ void WLGDPSEnergyDeposit::Initialize(G4HCofThisEvent* HCE)
   HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
 }
 
-void WLGDPSEnergyDeposit::EndOfEvent(G4HCofThisEvent* /*unused*/) { ; }
+void SEPSEnergyDeposit::EndOfEvent(G4HCofThisEvent* /*unused*/) { ; }
 
-void WLGDPSEnergyDeposit::clear() { EvtMap->clear(); }
+void SEPSEnergyDeposit::clear() { EvtMap->clear(); }
 
-void WLGDPSEnergyDeposit::DrawAll() { ; }
+void SEPSEnergyDeposit::DrawAll() { ; }
 
-void WLGDPSEnergyDeposit::PrintAll()
+void SEPSEnergyDeposit::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
@@ -67,12 +67,12 @@ void WLGDPSEnergyDeposit::PrintAll()
   for(; itr != EvtMap->GetMap()->end(); itr++)
   {
     G4cout << "  key: " << itr->first
-           << "  energy deposit: " << *(itr->second) / GetUnitValue() << " [" << GetUnit()
+           << "  kinetic energy: " << *(itr->second) / GetUnitValue() << " [" << GetUnit()
            << "]" << G4endl;
   }
 }
 
-void WLGDPSEnergyDeposit::SetUnit(const G4String& unit)
+void SEPSEnergyDeposit::SetUnit(const G4String& unit)
 {
   CheckAndSetUnit(unit, "Energy");
 }

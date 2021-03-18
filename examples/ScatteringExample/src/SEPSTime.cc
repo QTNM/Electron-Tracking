@@ -1,5 +1,5 @@
-// WLGDPSTime
-#include "WLGDPSTime.hh"
+// SEPSTime
+#include "SEPSTime.hh"
 #include "G4UnitsTable.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -8,7 +8,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-WLGDPSTime::WLGDPSTime(G4String name, G4int depth)
+SEPSTime::SEPSTime(G4String name, G4int depth)
 : G4VPrimitiveScorer(std::move(name), depth)
 , HCID(-1)
 , EvtMap(nullptr)
@@ -16,7 +16,7 @@ WLGDPSTime::WLGDPSTime(G4String name, G4int depth)
   SetUnit("ns");
 }
 
-WLGDPSTime::WLGDPSTime(G4String name, const G4String& unit, G4int depth)
+SEPSTime::SEPSTime(G4String name, const G4String& unit, G4int depth)
 : G4VPrimitiveScorer(std::move(name), depth)
 , HCID(-1)
 , EvtMap(nullptr)
@@ -24,26 +24,22 @@ WLGDPSTime::WLGDPSTime(G4String name, const G4String& unit, G4int depth)
   SetUnit(unit);
 }
 
-WLGDPSTime::~WLGDPSTime() = default;
+SEPSTime::~SEPSTime() = default;
 
-G4bool WLGDPSTime::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
+G4bool SEPSTime::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
-  if(aStep->GetTotalEnergyDeposit() <= 0.0)
+  if(aStep->GetTotalEnergyDeposit() <= 0.0) // nothing happened
     return false;
 
   G4int          index = GetIndex(aStep);
-  G4TrackLogger& tlog  = fCellTrackLogger[index];
-  if(tlog.FirstEnterance(aStep->GetTrack()->GetTrackID()))
-  {
-    // global time since start of event
-    G4double tt = aStep->GetTrack()->GetGlobalTime();
+  // global time since start of event
+  G4double tt = aStep->GetTrack()->GetGlobalTime();
 
-    EvtMap->add(index, tt);
-  }
+  EvtMap->add(index, tt);
   return true;
 }
 
-void WLGDPSTime::Initialize(G4HCofThisEvent* HCE)
+void SEPSTime::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(), GetName());
   if(HCID < 0)
@@ -53,17 +49,16 @@ void WLGDPSTime::Initialize(G4HCofThisEvent* HCE)
   HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
 }
 
-void WLGDPSTime::EndOfEvent(G4HCofThisEvent* /*unused*/) { fCellTrackLogger.clear(); }
+void SEPSTime::EndOfEvent(G4HCofThisEvent* /*unused*/) { ; }
 
-void WLGDPSTime::clear()
+void SEPSTime::clear()
 {
-  fCellTrackLogger.clear();
   EvtMap->clear();
 }
 
-void WLGDPSTime::DrawAll() { ; }
+void SEPSTime::DrawAll() { ; }
 
-void WLGDPSTime::PrintAll()
+void SEPSTime::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
@@ -77,4 +72,4 @@ void WLGDPSTime::PrintAll()
   }
 }
 
-void WLGDPSTime::SetUnit(const G4String& unit) { CheckAndSetUnit(unit, "Time"); }
+void SEPSTime::SetUnit(const G4String& unit) { CheckAndSetUnit(unit, "Time"); }

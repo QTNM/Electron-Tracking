@@ -73,34 +73,55 @@ void SEDetectorConstruction::DefineMaterials()
 
 void SEDetectorConstruction::ConstructSDandField()
 {
-  G4SDManager::GetSDMpointer()->SetVerboseLevel(2);
+  G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
 
   // Only need to construct the (per-thread) SD once
-  if(!fSD.Get())
+  if(!fSD.Size())
   {
-    auto* det = new G4MultiFunctionalDetector("Det");
-    fSD.Put(det);
+    auto* gasdet = new G4MultiFunctionalDetector("Gas");
+    fSD.Push_back(gasdet);
 
-    auto* vertexFilter = new G4SDParticleFilter("vtxfilt");
-    vertexFilter->addIon(32, 77);  // register 77Ge production
+    auto* electronFilter = new G4SDParticleFilter("efilt");
+    electronFilter->add("e-");  // register only electrons
 
-    auto* eprimitive = new SEPSKinEnergy("KinE", 1);
-    eprimitive->SetFilter(vertexFilter);
-    det->RegisterPrimitive(eprimitive);
+    auto* primitive = new SEPSKinEnergy("KinE");
+    primitive->SetFilter(vertexFilter);
+    gasdet->RegisterPrimitive(primitive);
 
+    primitive = new SEPSTime("Time");
+    primitive->SetFilter(vertexFilter);
+    gasdet->RegisterPrimitive(primitive);
+
+    primitive = new SEPSTrackID("TrackID");
+    primitive->SetFilter(vertexFilter);
+    gasdet->RegisterPrimitive(primitive);
+
+    primitive = new SEPSParentID("PID");
+    primitive->SetFilter(vertexFilter);
+    gasdet->RegisterPrimitive(primitive);
 
     // Also only add it once to the SD manager!
-    G4SDManager::GetSDMpointer()->AddNewDetector(fSD.Get());
+    G4SDManager::GetSDMpointer()->AddNewDetector(fSD[0]);
 
-    SetSensitiveDetector("Ge_log", fSD.Get());
-  }
-  else
-  {
-    G4cout << " >>> fSD has entry. Repeated call." << G4endl;
+    SetSensitiveDetector("Gas_log", fSD[0]);
+
+    auto* stopdet = new G4MultiFunctionalDetector("Stop");
+    fSD.Push_back(stopdet);
+
+    primitive = new SEPSTrackID("ExitID");
+    primitive->SetFilter(vertexFilter);
+    stopdet->RegisterPrimitive(primitive);
+
+    primitive = new SEPSTime("ExitT");
+    primitive->SetFilter(vertexFilter);
+    stopdet->RegisterPrimitive(primitive);
+
+    G4SDManager::GetSDMpointer()->AddNewDetector(fSD[1]);
+    SetSensitiveDetector("Stop_log", fSD[1]);
   }
 
   // Field setup
-  if ( !fFieldMessenger.Get() ) {
+  if( !fFieldMessenger.Get() ) {
     // Create global magnetic field messenger.
     // Uniform magnetic field is then created automatically if
     // the field value is not zero.
@@ -169,7 +190,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
 
   // logical volumes
   auto* pipeLogical = new G4LogicalVolume(pipeSolid, steelMat, "Pipe_log");
-  auto* gasLogical  = new G4LogicalVolume(gasSolid, bunchMat, "Bunch_log");
+  auto* gasLogical  = new G4LogicalVolume(gasSolid, bunchMat, "Gas_log");
   auto* stopLogical = new G4LogicalVolume(stopSolid, worldMaterial, "Stop_log");
 
   // placements
