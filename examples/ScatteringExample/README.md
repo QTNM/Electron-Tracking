@@ -12,7 +12,8 @@ density calculated as for H-3: 5x10^-10 g/ccm. A vacuum volume is at the end of 
 scoring.
 
 Scorers: (a) interactions in the gas - track ID, parent ID, kinetic energy and global time; (b) entering the stopwatch disk - 
-track ID and global time. Event ID is recorded for all hits of any type. Output in ROOT file.
+track ID and global time. Output in ROOT file.
 
-
+Scorers try two different methods, ID's only for first occurrence of a track; energy and time for every single step. Optional,  
+add deposited energy scoring later, maybe post-step in addition to current pre-step scoring. 
 

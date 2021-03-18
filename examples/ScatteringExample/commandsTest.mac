@@ -1,0 +1,26 @@
+# minimal command set test
+# verbose
+#/run/verbose 2
+#/tracking/verbose 0
+
+# run init
+#/run/initialize
+
+# start
+#/run/beamOn 4
+#
+# default electron in default direction (0.,0.,1.)
+# change of energy to 3 keV
+#
+#/gun/particle e-
+#/gun/energy 3 keV
+#/run/beamOn 1
+#
+# Magnetic field
+# 
+#/globalField/setValue 0.2 0 0 tesla
+#/run/beamOn 4
+#
+# list the existing physics processes
+#/process/list
+#
