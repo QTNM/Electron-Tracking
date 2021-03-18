@@ -5,7 +5,6 @@
 #include "G4Event.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
-#include "G4TrajectoryContainer.hh"
 #include "G4UnitsTable.hh"
 #include "G4ios.hh"
 
@@ -54,32 +53,39 @@ void SEEventAction::BeginOfEventAction(const G4Event*
 {
   hitid.clear();
   pid.clear();
-  hitpdg.clear();
   kine.clear();
   thit.clear();
+  texit.clear();
+  exitid.clear();
 }
 
 void SEEventAction::EndOfEventAction(const G4Event* event)
 {
-  // Get hist collections IDs
+  // Get GAS hits collections IDs
   if(fTidID < 0)
   {
-    fTidID    = G4SDManager::GetSDMpointer()->GetCollectionID("Det/TrackID");
-    fPidID    = G4SDManager::GetSDMpointer()->GetCollectionID("Det/ParentID");
-    fHitPDG   = G4SDManager::GetSDMpointer()->GetCollectionID("Det/HitPDG");
-    fTimeID   = G4SDManager::GetSDMpointer()->GetCollectionID("Det/Time");
-    fKinEID   = G4SDManager::GetSDMpointer()->GetCollectionID("Det/KinE");
+    fTidID    = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/TrackID");
+    fPidID    = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/ParentID");
+    fTimeID   = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/Time");
+    fKinEID   = G4SDManager::GetSDMpointer()->GetCollectionID("Gas/KinE");
+  }
+  if(fExitidID<0)
+  {
+    fExitidID = G4SDManager::GetSDMpointer()->GetCollectionID("Stop/ExitID");
+    fExitTID  = G4SDManager::GetSDMpointer()->GetCollectionID("Stop/ExitT");
   }
 
   // Get entries from hits collections
   //
   G4THitsMap<G4int>*         TidMap    = GetIntHitsCollection(fTidID, event);
   G4THitsMap<G4int>*         PidMap    = GetIntHitsCollection(fPidID, event);
-  G4THitsMap<G4int>*         PDGMap    = GetIntHitsCollection(fHitPDG, event);
   G4THitsMap<G4double>*      KinEMap   = GetHitsCollection(fKinEID, event);
   G4THitsMap<G4double>*      TimeMap   = GetHitsCollection(fTimeID, event);
 
-  if(TidMap->entries() <= 0)
+  G4THitsMap<G4int>*         ExidMap   = GetIntHitsCollection(fExitidID, event);
+  G4THitsMap<G4double>*      ExTMap    = GetHitsCollection(fExitTID, event);
+
+  if(TidMap->entries() <= 0 && ExidMap->entries() <= 0)
   {
     return;  // no action on no hit
   }
@@ -88,27 +94,31 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   auto analysisManager = G4AnalysisManager::Instance();
 
   // fill Hits output from SD
-  for(auto it : *HitsMap->GetMap())
+  for(auto it : *KinEMap->GetMap())
   {
-    edep.push_back((*it.second) / G4Analysis::GetUnitValue("MeV"));
+    kine.push_back((*it.second) / G4Analysis::GetUnitValue("keV"));
   }
   for(auto it : *TimeMap->GetMap())
   {
     thit.push_back((*it.second) / G4Analysis::GetUnitValue("ns"));
   }
-  for(auto it : *WeightMap->GetMap())
+  for(auto it : *TidMap->GetMap())
   {
-    whit.push_back((*it.second));
+    hitid.push_back((*it.second));
   }
-  for(auto it : *LocMap->GetMap())
+  for(auto it : *PidMap->GetMap())
   {
-    xloc.push_back((*it.second).x() / G4Analysis::GetUnitValue("m"));
-    yloc.push_back((*it.second).y() / G4Analysis::GetUnitValue("m"));
-    zloc.push_back((*it.second).z() / G4Analysis::GetUnitValue("m"));
+    pid.push_back((*it.second).x();
   }
-  for(auto it : *THitsMap->GetMap())
+
+  // fill stopwatch output
+  for(auto it : *ExTMap->GetMap())
   {
-    htrid.push_back((*it.second));
+    exitid.push_back((*it.second));
+  }
+  for(auto it : *ExidMap->GetMap())
+  {
+    texit.push_back((*it.second));
   }
 
   // fill the ntuple
@@ -117,6 +127,6 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   // printing
   G4int eventID = event->GetEventID();
   G4cout << ">>> Event: " << eventID << G4endl;
-  G4cout << "    " << edep.size() << " hits stored in this event." << G4endl;
-  G4cout << "    " << trjpdg.size() << " trajectories stored in this event." << G4endl;
+  G4cout << "    " << hitid.size() << " gas hits stored in this event." << G4endl;
+  G4cout << "    " << exitid.size() << " stopwatch hits stored in this event." << G4endl;
 }

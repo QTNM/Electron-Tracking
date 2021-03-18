@@ -22,11 +22,12 @@ SERunAction::SERunAction(SEEventAction* eventAction, G4String name)
   // Creating ntuple with vector entries
   //
   analysisManager->CreateNtuple("Score", "Hits");
-  analysisManager->CreateNtupleIColumn("Hitpdg", fEventAction->GetHitPDG());
   analysisManager->CreateNtupleIColumn("HitID", fEventAction->GetHitID());
   analysisManager->CreateNtupleIColumn("ParentID", fEventAction->GetParentID());
   analysisManager->CreateNtupleDColumn("KinE", fEventAction->GetHitKinE());
   analysisManager->CreateNtupleDColumn("Time", fEventAction->GetHitTime());
+  analysisManager->CreateNtupleIColumn("ExitID", fEventAction->GetExitID());
+  analysisManager->CreateNtupleDColumn("ExitTime", fEventAction->GetExitTime());
 
   analysisManager->FinishNtuple();
 }

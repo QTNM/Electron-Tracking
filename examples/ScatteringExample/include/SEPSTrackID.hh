@@ -1,5 +1,5 @@
-#ifndef WLGDPSTrackID_h
-#define WLGDPSTrackID_h 1
+#ifndef SEPSTrackID_h
+#define SEPSTrackID_h 1
 
 #include <map>
 #include "G4THitsMap.hh"
@@ -12,11 +12,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class WLGDPSTrackID : public G4VPrimitiveScorer
+class SEPSTrackID : public G4VPrimitiveScorer
 {
 public:
-  WLGDPSTrackID(G4String name, G4int depth = 0);  // default unit
-  virtual ~WLGDPSTrackID();
+  SEPSTrackID(G4String name, G4int depth = 0);  // default unit
+  virtual ~SEPSTrackID();
 
 protected:  // with description
   virtual G4bool ProcessHits(G4Step*, G4TouchableHistory*);

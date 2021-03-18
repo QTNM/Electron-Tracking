@@ -1,23 +1,21 @@
-#ifndef WLGDPSTime_h
-#define WLGDPSTime_h 1
+#ifndef SEPSTime_h
+#define SEPSTime_h 1
 
-#include <map>
 #include "G4THitsMap.hh"
 #include "G4VPrimitiveScorer.hh"
-#include "G4TrackLogger.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
-//   This is a primitive scorer class for scoring global track time
+//   This is a primitive scorer class for scoring global step time
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class WLGDPSTime : public G4VPrimitiveScorer
+class SEPSTime : public G4VPrimitiveScorer
 {
 public:                                        // with description
-  WLGDPSTime(G4String name, G4int depth = 0);  // default unit
-  WLGDPSTime(G4String name, const G4String& unit, G4int depth = 0);
-  virtual ~WLGDPSTime();
+  SEPSTime(G4String name, G4int depth = 0);  // default unit
+  SEPSTime(G4String name, const G4String& unit, G4int depth = 0);
+  virtual ~SEPSTime();
 
 protected:  // with description
   virtual G4bool ProcessHits(G4Step*, G4TouchableHistory*);
@@ -34,6 +32,6 @@ public:
 private:
   G4int                          HCID;
   G4THitsMap<G4double>*          EvtMap;
-  std::map<G4int, G4TrackLogger> fCellTrackLogger;
+
 };
 #endif

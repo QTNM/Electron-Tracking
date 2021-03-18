@@ -20,11 +20,12 @@ public:
   virtual void EndOfEventAction(const G4Event* event);
 
   // to create columns for Ntuple
-  std::vector<G4int>&    GetHitPDG()    { return hitpdg; }
   std::vector<G4int>&    GetHitID()     { return hitid; }
+  std::vector<G4int>&    GetExitID()    { return exitid; }
   std::vector<G4int>&    GetParentID()  { return pid; }
   std::vector<G4double>& GetHitKinE()   { return kine; }
   std::vector<G4double>& GetHitTime()   { return thit; }
+  std::vector<G4double>& GetExitTime()  { return texit; }
 
 private:
   // methods
@@ -36,14 +37,16 @@ private:
   // hit data
   G4int                 fTidID    = -1;
   G4int                 fPidID    = -1;
-  G4int                 fHitPDG   = -1;
   G4int                 fTimeID   = -1;
   G4int                 fKinEID   = -1;
+  G4int                 fExitTID  = -1;
+  G4int                 fExitidID = -1;
   std::vector<G4int>    hitid;
+  std::vector<G4int>    exitid;
   std::vector<G4int>    pid;
-  std::vector<G4int>    hitpdg;
   std::vector<G4double> kine;
   std::vector<G4double> thit;
+  std::vector<G4double> texit;
 
 };
 

@@ -1,5 +1,5 @@
-#ifndef WLGDPSTrackID_h
-#define WLGDPSTrackID_h 1
+#ifndef SEPSParentID_h
+#define SEPSParentID_h 1
 
 #include <map>
 #include "G4THitsMap.hh"
@@ -8,15 +8,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
-//   This is a primitive scorer class for scoring TrackID
+//   This is a primitive scorer class for scoring ParentID
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class WLGDPSTrackID : public G4VPrimitiveScorer
+class SEPSParentID : public G4VPrimitiveScorer
 {
 public:
-  WLGDPSTrackID(G4String name, G4int depth = 0);  // default unit
-  virtual ~WLGDPSTrackID();
+  SEPSParentID(G4String name, G4int depth = 0);  // default unit
+  virtual ~SEPSParentID();
 
 protected:  // with description
   virtual G4bool ProcessHits(G4Step*, G4TouchableHistory*);
