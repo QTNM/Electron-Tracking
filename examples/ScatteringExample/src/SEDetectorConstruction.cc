@@ -85,19 +85,19 @@ void SEDetectorConstruction::ConstructSDandField()
     electronFilter->add("e-");  // register only electrons
 
     auto* primitive = new SEPSKinEnergy("KinE");
-    primitive->SetFilter(vertexFilter);
+    primitive->SetFilter(electronFilter);
     gasdet->RegisterPrimitive(primitive);
 
     primitive = new SEPSTime("Time");
-    primitive->SetFilter(vertexFilter);
+    primitive->SetFilter(electronFilter);
     gasdet->RegisterPrimitive(primitive);
 
     primitive = new SEPSTrackID("TrackID");
-    primitive->SetFilter(vertexFilter);
+    primitive->SetFilter(electronFilter);
     gasdet->RegisterPrimitive(primitive);
 
     primitive = new SEPSParentID("PID");
-    primitive->SetFilter(vertexFilter);
+    primitive->SetFilter(electronFilter);
     gasdet->RegisterPrimitive(primitive);
 
     // Also only add it once to the SD manager!
@@ -109,11 +109,11 @@ void SEDetectorConstruction::ConstructSDandField()
     fSD.Push_back(stopdet);
 
     primitive = new SEPSTrackID("ExitID");
-    primitive->SetFilter(vertexFilter);
+    primitive->SetFilter(electronFilter);
     stopdet->RegisterPrimitive(primitive);
 
     primitive = new SEPSTime("ExitT");
-    primitive->SetFilter(vertexFilter);
+    primitive->SetFilter(electronFilter);
     stopdet->RegisterPrimitive(primitive);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(fSD[1]);

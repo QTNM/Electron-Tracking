@@ -1,5 +1,4 @@
 #include "SEEventAction.hh"
-#include "SETrajectory.hh"
 #include "g4root.hh"
 
 #include "G4Event.hh"
@@ -8,11 +7,6 @@
 #include "G4UnitsTable.hh"
 #include "G4ios.hh"
 
-#include "Randomize.hh"
-#include <algorithm>
-#include <iomanip>
-#include <numeric>
-#include <vector>
 
 G4THitsMap<G4int>* SEEventAction::GetIntHitsCollection(G4int          hcID,
                                                          const G4Event* event) const
