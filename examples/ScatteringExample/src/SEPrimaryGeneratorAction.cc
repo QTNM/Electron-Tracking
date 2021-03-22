@@ -37,9 +37,9 @@ void SEPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
   // In order to avoid dependence of PrimaryGeneratorAction
   // on DetectorConstruction class we get world volume 
-  // from G4LogicalVolumeStore: assumes name is World!
+  // from G4LogicalVolumeStore: assumes name is World_log!
   //
-  auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
+  auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
   G4Box* worldBox = dynamic_cast<G4Box*>(worldLV->GetSolid());
   G4double worldZHalfLength = worldBox->GetZHalfLength();
   fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, -worldZHalfLength + 1.*cm));
