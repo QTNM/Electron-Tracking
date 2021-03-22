@@ -31,8 +31,8 @@ private:
 
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
   G4String                                  fGeometryName      = "baseline";
-  G4VectorCache<G4MultiFunctionalDetector*> fSD                = nullptr;
   G4Cache<G4GlobalMagFieldMessenger*>       fFieldMessenger    = nullptr;
+  G4VectorCache<G4MultiFunctionalDetector*> fSD;
 };
 
 #endif

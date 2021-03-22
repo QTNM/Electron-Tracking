@@ -102,7 +102,7 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   }
   for(auto it : *PidMap->GetMap())
   {
-    pid.push_back((*it.second).x();
+    pid.push_back((*it.second));
   }
 
   // fill stopwatch output

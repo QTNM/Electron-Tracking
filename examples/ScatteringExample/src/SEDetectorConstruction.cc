@@ -13,6 +13,7 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4SolidStore.hh"
 #include "G4Tubs.hh"
+#include "G4PVPlacement.hh"
 
 #include "G4GlobalMagFieldMessenger.hh"
 #include "G4UniformMagField.hh"
@@ -23,7 +24,9 @@
 #include "G4SDParticleFilter.hh"
 #include "G4VPrimitiveScorer.hh"
 #include "SEPSKinEnergy.hh"
+#include "SEPSBoundaryTime.hh"
 #include "SEPSTime.hh"
+#include "SEPSBoundaryTrackID.hh"
 #include "SEPSTrackID.hh"
 #include "SEPSParentID.hh"
 
@@ -88,17 +91,17 @@ void SEDetectorConstruction::ConstructSDandField()
     primitive->SetFilter(electronFilter);
     gasdet->RegisterPrimitive(primitive);
 
-    primitive = new SEPSTime("Time");
-    primitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(primitive);
+    auto* tprimitive = new SEPSTime("Time");
+    tprimitive->SetFilter(electronFilter);
+    gasdet->RegisterPrimitive(tprimitive);
 
-    primitive = new SEPSTrackID("TrackID");
-    primitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(primitive);
+    auto* rprimitive = new SEPSTrackID("TrackID");
+    rprimitive->SetFilter(electronFilter);
+    gasdet->RegisterPrimitive(rprimitive);
 
-    primitive = new SEPSParentID("PID");
-    primitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(primitive);
+    auto* pprimitive = new SEPSParentID("PID");
+    pprimitive->SetFilter(electronFilter);
+    gasdet->RegisterPrimitive(pprimitive);
 
     // Also only add it once to the SD manager!
     G4SDManager::GetSDMpointer()->AddNewDetector(fSD[0]);
@@ -108,13 +111,13 @@ void SEDetectorConstruction::ConstructSDandField()
     auto* stopdet = new G4MultiFunctionalDetector("Stop");
     fSD.Push_back(stopdet);
 
-    primitive = new SEPSTrackID("ExitID");
-    primitive->SetFilter(electronFilter);
-    stopdet->RegisterPrimitive(primitive);
+    auto* tbprimitive = new SEPSBoundaryTrackID("ExitID");
+    tbprimitive->SetFilter(electronFilter);
+    stopdet->RegisterPrimitive(tbprimitive);
 
-    primitive = new SEPSTime("ExitT");
-    primitive->SetFilter(electronFilter);
-    stopdet->RegisterPrimitive(primitive);
+    auto* ttprimitive = new SEPSBoundaryTime("ExitT");
+    ttprimitive->SetFilter(electronFilter);
+    stopdet->RegisterPrimitive(ttprimitive);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(fSD[1]);
     SetSensitiveDetector("Stop_log", fSD[1]);

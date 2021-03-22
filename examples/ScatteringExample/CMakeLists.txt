@@ -18,7 +18,10 @@ add_executable(scattering
   src/SEActionInitialization.cc
   src/SEDetectorConstruction.cc
   src/SEEventAction.cc
-  src/SEPSEnergyDeposit.cc
+  src/SEPSBoundaryTrackID.cc
+  src/SEPSBoundaryTime.cc
+  src/SEPSKinEnergy.cc
+  src/SEPSParentID.cc
   src/SEPSTime.cc
   src/SEPSTrackID.cc
   src/SEPrimaryGeneratorAction.cc

@@ -2,6 +2,7 @@
 #define SEActionInitialization_h 1
 
 #include "G4VUserActionInitialization.hh"
+#include "G4String.hh"
 
 /// Action initialization class.
 
