@@ -108,7 +108,7 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   // fill stopwatch output
   for(auto it : *ExTMap->GetMap())
   {
-    exitid.push_back((*it.second));
+    exitid.push_back((*it.second) / G4Analysis::GetUnitValue("ns"));
   }
   for(auto it : *ExidMap->GetMap())
   {
@@ -121,6 +121,8 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   // printing
   G4int eventID = event->GetEventID();
   G4cout << ">>> Event: " << eventID << G4endl;
-  G4cout << "    " << hitid.size() << " gas hits stored in this event." << G4endl;
-  G4cout << "    " << exitid.size() << " stopwatch hits stored in this event." << G4endl;
+  if (hitid.size())
+    G4cout << "    " << hitid.size() << " gas hits stored in this event." << G4endl;
+  if (exitid.size())
+    G4cout << "    " << exitid.size() << " stopwatch hits stored in this event." << G4endl;
 }
