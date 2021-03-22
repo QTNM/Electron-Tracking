@@ -41,21 +41,32 @@ def analytic_solution(t, omega, tau, vel0=1.0):
 
     mu = tau * omega**2
 
+    if np.size(vel0) == 1:
+        phi = 0.0
+        v0 = vel0
+    else:
+        if np.shape(vel0) == (2,):
+            phi = np.arctan2(vel0[0], vel0[1])
+            v0 = np.linalg.norm(vel0)
+        else:
+            raise ValueError("Vel0 may only be scalar, or 2D vector shape")
+
+    phase = omega * t + phi
     # Factor of 1 / (1 + tau * mu) not needed, as we scale solution such that
     # initial velocity is correct
-    vx_soln = np.exp(-mu * t) * np.sin(omega*t)
-    vy_soln = np.exp(-mu * t) * np.cos(omega*t)
+    vx_soln = np.exp(-mu * t) * np.sin(phase)
+    vy_soln = np.exp(-mu * t) * np.cos(phase)
 
-    x_soln = -np.exp(-mu * t) * ((mu * np.sin(omega * t) + omega * np.cos(omega * t))
+    x_soln = -np.exp(-mu * t) * ((mu * np.sin(phase) + omega * np.cos(phase))
                                  / (omega**2 + mu**2))
-    y_soln = np.exp(-mu * t) * ((omega * np.sin(omega * t) - mu * np.cos(omega * t))
+    y_soln = np.exp(-mu * t) * ((omega * np.sin(phase) - mu * np.cos(phase))
                                 / (omega**2 + mu**2))
 
     # Scale results by initial velocity
-    vx_soln *= vel0
-    vy_soln *= vel0
-    x_soln *= vel0
-    y_soln *= vel0
+    vx_soln *= v0
+    vy_soln *= v0
+    x_soln *= v0
+    y_soln *= v0
 
     return x_soln, y_soln, vx_soln, vy_soln
 
