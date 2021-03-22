@@ -192,7 +192,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
                                 0.0, CLHEP::twopi);
 
   // logical volumes
-  auto* pipeLogical = new G4LogicalVolume(pipeSolid, steelMat, "Pipe_log");
+  auto* pipeLogical = new G4LogicalVolume(pipeSolid, worldMaterial, "Pipe_log");
   auto* gasLogical  = new G4LogicalVolume(gasSolid, bunchMat, "Gas_log");
   auto* stopLogical = new G4LogicalVolume(stopSolid, worldMaterial, "Stop_log");
 
@@ -205,7 +205,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
 
   for (G4int i=0; i<2*nbunches-1; ++i) 
     new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*(bunchhZ+gap)), gasLogical,
-                      "Bunch_phys", worldLogical, false, i, true); // each a copy number
+                      "Bunch_phys", worldLogical, false, i, false); // each a copy number
 
 
 
@@ -260,7 +260,7 @@ auto SEDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                                 0.0, CLHEP::twopi);
   
   // logical volumes    
-  auto* pipeLogical = new G4LogicalVolume(pipeSolid, steelMat, "Pipe_log");
+  auto* pipeLogical = new G4LogicalVolume(pipeSolid, worldMaterial, "Pipe_log");
   auto* gasLogical  = new G4LogicalVolume(gasSolid, gasMat, "Gas_log");
   auto* stopLogical = new G4LogicalVolume(stopSolid, worldMaterial, "Stop_log");
  
