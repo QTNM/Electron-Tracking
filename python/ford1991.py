@@ -41,13 +41,15 @@ def analytic_solution(t, omega, tau, vel0=1.0):
 
     mu = tau * omega**2
 
-    vx_soln = (np.exp(-mu * t) * np.sin(omega*t)) / (1.0 + tau * mu)
-    vy_soln = (np.exp(-mu * t) * np.cos(omega*t)) / (1.0 + tau * mu)
+    # Factor of 1 / (1 + tau * mu) not needed, as we scale solution such that
+    # initial velocity is correct
+    vx_soln = np.exp(-mu * t) * np.sin(omega*t)
+    vy_soln = np.exp(-mu * t) * np.cos(omega*t)
 
     x_soln = -np.exp(-mu * t) * ((mu * np.sin(omega * t) + omega * np.cos(omega * t))
-                                 / ((omega**2 + mu**2) * (1 + tau * mu)))
+                                 / (omega**2 + mu**2))
     y_soln = np.exp(-mu * t) * ((omega * np.sin(omega * t) - mu * np.cos(omega * t))
-                                / ((omega**2 + mu**2) * (1 + tau * mu)))
+                                / (omega**2 + mu**2))
 
     # Scale results by initial velocity
     vx_soln *= vel0
