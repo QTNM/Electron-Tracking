@@ -64,7 +64,7 @@ void SEDetectorConstruction::DefineMaterials()
 {
   G4NistManager* nistManager = G4NistManager::Instance();
   nistManager->FindOrBuildMaterial("G4_Galactic");
-  nistManager->FindOrBuildMaterial("G4_Stainless-Steel");
+  nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
   auto* H3     = new G4Element("Tritium", "H", 1., 3.016 * g / mole);
   auto* gasMat = new G4Material("gas", 5.e-10 * g / cm3, 1);  // low density gas
@@ -142,7 +142,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
 {
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
-  auto* steelMat      = G4Material::GetMaterial("G4_Stainless-Steel");
+  auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* bunchMat      = G4Material::GetMaterial("bunch");
 
   // size parameter, unit [cm]
@@ -216,7 +216,7 @@ auto SEDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 {
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
-  auto* steelMat      = G4Material::GetMaterial("G4_Stainless-Steel");
+  auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* gasMat        = G4Material::GetMaterial("gas");
     
   // size parameter, unit [cm]

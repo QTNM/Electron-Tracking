@@ -17,7 +17,7 @@
 #include "G4RunManagerFactory.hh"
 #include "G4UImanager.hh"
 #include "G4Threading.hh"
-#include "G4PhysListFactory.hh"
+#include "G4GenericPhysicsList.hh"
 #include "G4VModularPhysicsList.hh"
 
 // us
@@ -32,19 +32,22 @@ int main(int argc, char** argv)
   int         nthreads = 4;
   std::string outputFileName("qtnm.root");
   std::string macroName;
-  std::string physListName;
+  std::string physListMacro;
 
   app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
-  app.add_option("-p,--physlist", physListName, "<Geant4 physics list name> Default: G4EmStandard_opt4");
+  app.add_option("-p,--physlist", physListMacro, "<Geant4 physics list macro> Default: None");
   app.add_option("-o,--outputFile", outputFileName,
-                 "<FULL PATH ROOT FILENAME> Default: lg.root");
+                 "<FULL PATH ROOT FILENAME> Default: qtnm.root");
   app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
 
   CLI11_PARSE(app, argc, argv);
 
   // GEANT4 code
-  // Don't accept interactive mode (no macroName).
+  // Get the pointer to the User Interface manager
+  //
+  G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
+  // Don't accept interactive mode (no macroName).
   if(macroName.empty())
   {
     G4cout << "No interactive mode running of example: provide a macro!" << G4endl;
@@ -70,23 +73,21 @@ int main(int argc, char** argv)
 
   // -- set user physics list
   // Physics list factory
-  G4PhysListFactory factory;
   G4VModularPhysicsList* physList = nullptr;
 
-  // Check if the name is known to the factory
-  if ( physListName.size() &&  (! factory.IsReferencePhysList(physListName) ) ) {
-    G4cerr << "Physics list " << physListName
-           << " is not available in PhysListFactory." << G4endl;
-    physListName.clear();
+  if ( physListMacro.size() ) {
+    // via macro
+    physList = new G4GenericPhysicsList();
+    UImanager->ApplyCommand("/control/execute "+physListMacro);
   }
+  else {
+    // from vector of physics cobstructor names
+    std::vector<G4String>* myConstructors = new std::vector<G4String>;
 
-  // If name is not defined use recommended low-energy EM physics list
-  if ( physListName.empty() ) {
-    physListName = "G4EmStandard_opt4";
+    myConstructors->push_back("G4EmStandardPhysics_option4");
+
+    physList = new G4GenericPhysicsList(myConstructors);
   }
-
-  // Reference PhysicsList via its name
-  physList = factory.GetReferencePhysList(physListName);
 
   // finish physics list
   runManager->SetUserInitialization(physList);
@@ -96,9 +97,6 @@ int main(int argc, char** argv)
   auto* actions = new SEActionInitialization(outputFileName);
   runManager->SetUserInitialization(actions);
 
-  // Get the pointer to the User Interface manager
-  //
-  G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
   // Batch mode only - no visualisation
   G4String command = "/control/execute ";
