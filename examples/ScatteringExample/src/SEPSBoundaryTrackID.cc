@@ -30,6 +30,8 @@ G4bool SEPSBoundaryTrackID::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unu
   if(tlog.FirstEnterance(aStep->GetTrack()->GetTrackID()))
   {
     G4int tid = aStep->GetTrack()->GetTrackID();
+    // debug
+    // G4cout << "in BdID: " << index << ", " << tid << G4endl;
     EvtMap->add(index, tid);
   }
   return true;

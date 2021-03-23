@@ -88,6 +88,9 @@ void SEDetectorConstruction::ConstructSDandField()
     auto* gasdet = new G4MultiFunctionalDetector("Gas");
     fSD.Push_back(gasdet);
 
+    // Also only add it once to the SD manager!
+    G4SDManager::GetSDMpointer()->AddNewDetector(gasdet);
+
     auto* electronFilter = new G4SDParticleFilter("efilt");
     electronFilter->add("e-");  // register only electrons
 
@@ -107,13 +110,12 @@ void SEDetectorConstruction::ConstructSDandField()
     pprimitive->SetFilter(electronFilter);
     gasdet->RegisterPrimitive(pprimitive);
 
-    // Also only add it once to the SD manager!
-    G4SDManager::GetSDMpointer()->AddNewDetector(fSD[0]);
-
-    SetSensitiveDetector("Gas_log", fSD[0]);
+    SetSensitiveDetector("Gas_log", gasdet);
 
     auto* stopdet = new G4MultiFunctionalDetector("Stop");
     fSD.Push_back(stopdet);
+
+    G4SDManager::GetSDMpointer()->AddNewDetector(stopdet);
 
     auto* tbprimitive = new SEPSBoundaryTrackID("ExitID");
     tbprimitive->SetFilter(electronFilter);
@@ -123,8 +125,7 @@ void SEDetectorConstruction::ConstructSDandField()
     ttprimitive->SetFilter(electronFilter);
     stopdet->RegisterPrimitive(ttprimitive);
 
-    G4SDManager::GetSDMpointer()->AddNewDetector(fSD[1]);
-    SetSensitiveDetector("Stop_log", fSD[1]);
+    SetSensitiveDetector("Stop_log", stopdet);
   }
 
   // Field setup

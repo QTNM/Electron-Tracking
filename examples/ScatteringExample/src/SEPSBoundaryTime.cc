@@ -37,6 +37,9 @@ G4bool SEPSBoundaryTime::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused
   // global time since start of event
   G4double tt = aStep->GetTrack()->GetGlobalTime();
 
+  // debug
+  // G4cout << "in BdTime: index, time" << index << ", " << tt / GetUnitValue() << G4endl;
+
   EvtMap->add(index, tt);
   return true;
 }

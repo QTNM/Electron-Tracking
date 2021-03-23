@@ -29,11 +29,13 @@ SEPSKinEnergy::~SEPSKinEnergy() = default;
 G4bool SEPSKinEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
   G4double edep = aStep->GetTotalEnergyDeposit();
-  G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
 
-  if(edep > 0) // something interesting has happened
+  if(edep / GetUnitValue() > 1.e-7) // 100 micro eV minimum
   {
+    G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
     G4int index = GetIndex(aStep);
+    // debug
+    // G4cout << "in kine: " << index << ", " << kinetic / GetUnitValue() << G4endl;
     EvtMap->add(index, kinetic);
   }
   else
