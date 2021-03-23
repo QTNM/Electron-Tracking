@@ -23,17 +23,11 @@ SERunAction::SERunAction(SEEventAction* eventAction, G4String name)
   //
   analysisManager->CreateNtuple("Score", "Hits");
   analysisManager->CreateNtupleIColumn("HitID");
-//  analysisManager->CreateNtupleIColumn("HitID", fEventAction->GetHitID());
   analysisManager->CreateNtupleIColumn("ParentID");
-//  analysisManager->CreateNtupleIColumn("ParentID", fEventAction->GetParentID());
   analysisManager->CreateNtupleDColumn("KinE");
-//  analysisManager->CreateNtupleDColumn("KinE", fEventAction->GetHitKinE());
   analysisManager->CreateNtupleDColumn("Time");
-//  analysisManager->CreateNtupleDColumn("Time", fEventAction->GetHitTime());
   analysisManager->CreateNtupleIColumn("ExitID");
-//  analysisManager->CreateNtupleIColumn("ExitID", fEventAction->GetExitID());
   analysisManager->CreateNtupleDColumn("ExitTime");
-//  analysisManager->CreateNtupleDColumn("ExitTime", fEventAction->GetExitTime());
 
   analysisManager->FinishNtuple();
 }
