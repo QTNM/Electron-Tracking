@@ -4,7 +4,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
-//   This is a primitive scorer class for scoring pre-step kinetic energy 
+//   This is a primitive scorer class for scoring post-step kinetic energy 
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ G4bool SEPSKinEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 
   if(edep / GetUnitValue() > 1.e-7) // 100 micro eV minimum
   {
-    G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
+    G4double kinetic = aStep->GetPostStepPoint()->GetKineticEnergy();
     G4int index = aStep->GetTrack()->GetCurrentStepNumber(); // unique key
     // debug
     // G4cout << "in kine: " << index << ", " << kinetic / GetUnitValue() << G4endl;

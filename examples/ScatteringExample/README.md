@@ -14,8 +14,8 @@ scoring.
 Scorers: (a) interactions in the gas - track ID, parent ID, kinetic energy and global time; (b) entering the stopwatch disk - 
 track ID and global time. Output in ROOT file.
 
-Scorers try two different methods, ID's only for first occurrence of a track; energy and time for every single step. Optional,  
-add deposited energy scoring later, maybe post-step in addition to current pre-step scoring. 
+Scorers try two different methods, ID's only for first occurrence of a track; energy and time for every single step. Currently 
+post-step kinetic energy scoring. 
 
 ## Build instruction
 
