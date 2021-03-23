@@ -1,6 +1,8 @@
 #include "SEEventAction.hh"
 #include "g4root.hh"
 
+#include <vector>
+
 #include "G4Event.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
@@ -77,48 +79,71 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
     return;  // no action on no hit
   }
 
+  // dummy storage
+  std::vector<double> tkin, ttime, tex;
+  std::vector<int> hid, pid, texid;
+
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
 
   // fill Hits output from SD
   for(auto it : *KinEMap->GetMap())
   {
-    G4double kin = (*it.second) / G4Analysis::GetUnitValue("keV");
-    analysisManager->FillNtupleDColumn(0, kin);
+    double kin = (*it.second) / G4Analysis::GetUnitValue("keV");
+    tkin.push_back(kin);
   }
   for(auto it : *TimeMap->GetMap())
   {
-    G4double th = (*it.second) / G4Analysis::GetUnitValue("ns");
-    analysisManager->FillNtupleDColumn(1, th);
+    double th = (*it.second) / G4Analysis::GetUnitValue("ns");
+    ttime.push_back(th);
   }
   for(auto it : *TidMap->GetMap())
   {
-    G4int hid = (*it.second);
-    analysisManager->FillNtupleIColumn(2, hid);
+    hid.push_back((*it.second));
   }
   for(auto it : *PidMap->GetMap())
   {
-    G4int pi = (*it.second);
-    analysisManager->FillNtupleIColumn(3, pi);
+    pid.push_back((*it.second));
   }
 
   // fill stopwatch output
   for(auto it : *ExidMap->GetMap())
   {
-    G4int exid = (*it.second);
-    analysisManager->FillNtupleIColumn(4, exid);
+    texid.push_back((*it.second));
   }
   for(auto it : *ExTMap->GetMap())
   {
-    G4double ext = (*it.second);
-    analysisManager->FillNtupleDColumn(5, ext);
+    double ext = (*it.second) / G4Analysis::GetUnitValue("ns");
+    tex.push_back(ext);
   }
 
   // fill the ntuple - check column id?
-  analysisManager->AddNtupleRow();
+  G4int eventID = event->GetEventID();
+  for (unsigned int i=0;i<tkin.size();i++)
+  {
+    analysisManager->FillNtupleIColumn(0, 0, eventID); // repeat all rows
+    analysisManager->FillNtupleDColumn(0, 1, tkin.at(i));
+    analysisManager->FillNtupleDColumn(0, 2, ttime.at(i)); // same size
+    if (i >= hid.size()) 
+    {
+      analysisManager->FillNtupleIColumn(0, 3, hid.back()); // repeat
+      analysisManager->FillNtupleIColumn(0, 4, pid.back());
+    }
+    else {
+      analysisManager->FillNtupleIColumn(0, 3, hid.at(i));
+      analysisManager->FillNtupleIColumn(0, 4, pid.at(i));
+    }
+    analysisManager->AddNtupleRow(0);
+  }
+  for (unsigned int i=0;i<texid.size();i++)
+  {
+    analysisManager->FillNtupleIColumn(1, 0, eventID); // repeat all rows
+    analysisManager->FillNtupleIColumn(1, 1, texid.at(i));
+    analysisManager->FillNtupleDColumn(1, 2, tex.at(i));
+    analysisManager->AddNtupleRow(1);
+  }
 
   // printing
-  G4int eventID = event->GetEventID();
   G4cout << ">>> Event: " << eventID << G4endl;
   if (TidMap->entries())
     G4cout << "    " << TidMap->entries() << " gas hits stored in this event." << G4endl;
