@@ -28,6 +28,7 @@ private:
 
   G4VPhysicalVolume* SetupBaseline();
   G4VPhysicalVolume* SetupBunches();
+  G4VPhysicalVolume* SetupShort();
 
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
   G4String                                  fGeometryName      = "baseline";

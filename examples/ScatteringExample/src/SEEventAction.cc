@@ -95,27 +95,43 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   for(auto it : *TimeMap->GetMap())
   {
     thit.push_back((*it.second) / G4Analysis::GetUnitValue("ns"));
+    // debug
+    G4cout << "gas time stored: " << thit.back() << G4endl;
   }
   for(auto it : *TidMap->GetMap())
   {
     hitid.push_back((*it.second));
+    // debug
+    G4cout << "gas id stored: " << hitid.back() << G4endl;
   }
   for(auto it : *PidMap->GetMap())
   {
     pid.push_back((*it.second));
+    // debug
+    G4cout << "parent id stored: " << pid.back() << G4endl;
   }
 
   // fill stopwatch output
   for(auto it : *ExTMap->GetMap())
   {
-    exitid.push_back((*it.second) / G4Analysis::GetUnitValue("ns"));
+    exitid.push_back((*it.second));
+    // debug
+    G4cout << "stopwatch id stored: " << exitid.back() << G4endl;
   }
   for(auto it : *ExidMap->GetMap())
   {
-    texit.push_back((*it.second));
+    texit.push_back((*it.second)  / G4Analysis::GetUnitValue("ns"));
+    // debug
+    G4cout << "stopwatch time stored: " << texit.back() << G4endl;
   }
 
-  // fill the ntuple
+  // fill the ntuple - check column id?
+//  analysisManager->FillNtupleDColumn(0, kine);
+//  analysisManager->FillNtupleDColumn(1, thit);
+//  analysisManager->FillNtupleIColumn(2, hitid);
+//  analysisManager->FillNtupleIColumn(3, pid);
+//  analysisManager->FillNtupleIColumn(4, exitid);
+//  analysisManager->FillNtupleDColumn(5, texit);
   analysisManager->AddNtupleRow();
 
   // printing

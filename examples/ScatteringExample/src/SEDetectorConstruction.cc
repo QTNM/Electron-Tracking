@@ -56,6 +56,10 @@ auto SEDetectorConstruction::Construct() -> G4VPhysicalVolume*
   {
     return SetupBunches();
   }
+  else if (fGeometryName == "shortPipe")
+  {
+    return SetupShort();
+  }
 
   return SetupBaseline();
 }
@@ -137,6 +141,79 @@ void SEDetectorConstruction::ConstructSDandField()
   }
 
 }
+
+auto SEDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
+{
+  // Get materials
+  auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
+  auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
+  auto* bunchMat      = G4Material::GetMaterial("bunch");
+    
+  // size parameter, unit [cm]
+  // world
+  G4double worldhside = 5.0 * cm;   // box half side in x, y
+  G4double worldhZ    = 0.5 * m;    // box half side in z; full 1 metre
+   
+  // tubes with Gas ROI
+  G4double pipewall  = 0.1 * cm;    // tube thickness 1 mm
+  G4double piperad   = 2.0 * cm;    // tube diam 4 cm
+  G4double pipehZ    = worldhZ - 1 * cm;  // fit into world 1cm either side
+ 
+  // bunches of T-atoms
+  G4double bunchhZ   = 5.0 * cm;    // 10cm long bunches in z  
+  G4double bunchrad  = 1.0 * mm;    // small cylinders 1mm radius
+  G4double gap       = 5.0 * cm;    // gap between bunches
+  G4int nbunches     = (int) (pipehZ / (bunchhZ + gap)); // integer, lower limit half number
+  
+  // stopwatch volume with piperad and thickness in z
+  G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
+  
+  // Volumes for this geometry
+  
+  //
+  // World
+  //
+  auto* worldSolid = new G4Box("World", worldhside, worldhside, worldhZ);
+  auto* worldLogical  = new G4LogicalVolume(worldSolid, worldMaterial, "World_log");
+  auto* worldPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), worldLogical,
+                                           "World_phys", nullptr, false, 0);
+  
+  //
+  // pipe, hollow cylinder shell
+  // 
+  auto* pipeSolid = new G4Tubs("Pipe", piperad, piperad + pipewall,
+                                 pipehZ, 0.0, CLHEP::twopi);
+  
+  //
+  // Target gas, solid cylinder
+  // 
+  auto* gasSolid = new G4Tubs("Gas", 0.0 * cm, bunchrad, bunchhZ,
+                               0.0, CLHEP::twopi);
+  
+  //
+  // stopwatch disk at end of pipe
+  auto* stopSolid = new G4Tubs("Stop", 0.0 * cm, piperad, heightZ,
+                                0.0, CLHEP::twopi);
+  
+  // logical volumes
+  auto* pipeLogical = new G4LogicalVolume(pipeSolid, worldMaterial, "Pipe_log");
+  auto* gasLogical  = new G4LogicalVolume(gasSolid, bunchMat, "Gas_log");
+  auto* stopLogical = new G4LogicalVolume(stopSolid, worldMaterial, "Stop_log");
+    
+  // placements
+  new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, 0. * cm),
+                    pipeLogical, "Pipe_phys", worldLogical, false, 0, true);
+  
+  new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, pipehZ + heightZ), stopLogical,
+                    "Stop_phys", worldLogical, false, 0, true);
+  
+  for (G4int i=0; i<2*nbunches-1; ++i)
+    new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*(bunchhZ+gap)), gasLogical,
+                      "Bunch_phys", worldLogical, false, i, true); // each a copy number
+    
+  return worldPhysical;
+}
+
 
 auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
 {
@@ -282,7 +359,7 @@ auto SEDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
 void SEDetectorConstruction::SetGeometry(const G4String& name)
 {
-  std::set<G4String> knownGeometries = { "baseline", "bunches" };
+  std::set<G4String> knownGeometries = { "baseline", "bunches", "shortPipe" };
   if(knownGeometries.count(name) == 0)
   {
     G4Exception("SEDetectorConstruction::SetGeometry", "SE0001", JustWarning,
@@ -307,7 +384,8 @@ void SEDetectorConstruction::DefineCommands()
     .SetGuidance("Set geometry model of cavern and detector")
     .SetGuidance("baseline = NEEDS DESCRIPTION")
     .SetGuidance("bunches = NEEDS DESCRIPTION")
-    .SetCandidates("baseline bunches ")
+    .SetGuidance("shortPipe = NEEDS DESCRIPTION")
+    .SetCandidates("baseline bunches shortPipe")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
