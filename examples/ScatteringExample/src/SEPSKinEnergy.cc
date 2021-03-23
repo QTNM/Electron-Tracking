@@ -35,7 +35,7 @@ G4bool SEPSKinEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
     G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
     G4int index = aStep->GetTrack()->GetCurrentStepNumber(); // unique key
     // debug
-    G4cout << "in kine: " << index << ", " << kinetic / GetUnitValue() << G4endl;
+    // G4cout << "in kine: " << index << ", " << kinetic / GetUnitValue() << G4endl;
     EvtMap->add(index, kinetic);
   }
   else
