@@ -162,9 +162,11 @@ auto SEDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
  
   // bunches of T-atoms
   G4double bunchhZ   = 5.0 * cm;    // 10cm long bunches in z  
-  G4double bunchrad  = 1.0 * mm;    // small cylinders 1mm radius
+  G4double bunchrad  = 2.0 * mm;    // small cylinders 4 mm diam
   G4double gap       = 5.0 * cm;    // gap between bunches
   G4int nbunches     = (int) (pipehZ / (bunchhZ + gap)); // integer, lower limit half number
+
+  G4cout << ">> shortPipe: nbunches fit in pipe: " << 2*nbunches-1 << G4endl;
   
   // stopwatch volume with piperad and thickness in z
   G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
@@ -235,10 +237,12 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
 
   // bunches of T-atoms
   G4double bunchhZ   = 5.0 * cm;    // 10cm long bunches in z
-  G4double bunchrad  = 1.0 * mm;    // small cylinders 1mm radius
+  G4double bunchrad  = 2.0 * mm;    // small cylinders 4 mm diam
   G4double gap       = 5.0 * cm;    // gap between bunches
   G4int nbunches     = (int) (pipehZ / (bunchhZ + gap)); // integer, lower limit half number
  
+  G4cout << ">> bunches: nbunches fit in pipe: " << 2*nbunches-1 << G4endl;
+
   // stopwatch volume with piperad and thickness in z
   G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
 
