@@ -1,14 +1,14 @@
-// SEPSKinEnergy
-#include "SEPSKinEnergy.hh"
+// SEPSKinEnergy1
+#include "SEPSKinEnergy1.hh"
 #include "G4UnitsTable.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
-//   This is a primitive scorer class for scoring post-step kinetic energy 
+//   This is a primitive scorer class for scoring pre-step kinetic energy 
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-SEPSKinEnergy::SEPSKinEnergy(G4String name, G4int depth)
+SEPSKinEnergy1::SEPSKinEnergy1(G4String name, G4int depth)
 : G4VPrimitiveScorer(std::move(name), depth)
 , HCID(-1)
 , EvtMap(nullptr)
@@ -16,7 +16,7 @@ SEPSKinEnergy::SEPSKinEnergy(G4String name, G4int depth)
   SetUnit("keV");
 }
 
-SEPSKinEnergy::SEPSKinEnergy(G4String name, const G4String& unit, G4int depth)
+SEPSKinEnergy1::SEPSKinEnergy1(G4String name, const G4String& unit, G4int depth)
 : G4VPrimitiveScorer(std::move(name), depth)
 , HCID(-1)
 , EvtMap(nullptr)
@@ -24,15 +24,15 @@ SEPSKinEnergy::SEPSKinEnergy(G4String name, const G4String& unit, G4int depth)
   SetUnit(unit);
 }
 
-SEPSKinEnergy::~SEPSKinEnergy() = default;
+SEPSKinEnergy1::~SEPSKinEnergy1() = default;
 
-G4bool SEPSKinEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
+G4bool SEPSKinEnergy1::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
   G4double edep = aStep->GetTotalEnergyDeposit();
 
   if(edep / GetUnitValue() > 1.e-7) // 100 micro eV minimum
   {
-    G4double kinetic = aStep->GetPostStepPoint()->GetKineticEnergy();
+    G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
     G4int index = aStep->GetTrack()->GetCurrentStepNumber(); // unique key
     // debug
     // G4cout << "in kine: " << index << ", " << kinetic / GetUnitValue() << G4endl;
@@ -44,7 +44,7 @@ G4bool SEPSKinEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
   return true;
 }
 
-void SEPSKinEnergy::Initialize(G4HCofThisEvent* HCE)
+void SEPSKinEnergy1::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(), GetName());
   if(HCID < 0)
@@ -54,13 +54,13 @@ void SEPSKinEnergy::Initialize(G4HCofThisEvent* HCE)
   HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
 }
 
-void SEPSKinEnergy::EndOfEvent(G4HCofThisEvent* /*unused*/) { ; }
+void SEPSKinEnergy1::EndOfEvent(G4HCofThisEvent* /*unused*/) { ; }
 
-void SEPSKinEnergy::clear() { EvtMap->clear(); }
+void SEPSKinEnergy1::clear() { EvtMap->clear(); }
 
-void SEPSKinEnergy::DrawAll() { ; }
+void SEPSKinEnergy1::DrawAll() { ; }
 
-void SEPSKinEnergy::PrintAll()
+void SEPSKinEnergy1::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
@@ -74,7 +74,7 @@ void SEPSKinEnergy::PrintAll()
   }
 }
 
-void SEPSKinEnergy::SetUnit(const G4String& unit)
+void SEPSKinEnergy1::SetUnit(const G4String& unit)
 {
   CheckAndSetUnit(unit, "Energy");
 }

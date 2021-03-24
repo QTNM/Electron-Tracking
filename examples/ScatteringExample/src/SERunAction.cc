@@ -23,7 +23,9 @@ SERunAction::SERunAction(SEEventAction* eventAction, G4String name)
   //
   analysisManager->CreateNtuple("Score", "Hits");
   analysisManager->CreateNtupleIColumn("EventID");
-  analysisManager->CreateNtupleDColumn("KinE");
+  analysisManager->CreateNtupleDColumn("Edep");
+  analysisManager->CreateNtupleDColumn("KinE1");
+  analysisManager->CreateNtupleDColumn("KinE2");
   analysisManager->CreateNtupleDColumn("Time");
   analysisManager->CreateNtupleIColumn("HitID");
   analysisManager->CreateNtupleIColumn("ParentID");

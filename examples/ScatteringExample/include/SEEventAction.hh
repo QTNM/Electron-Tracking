@@ -28,7 +28,9 @@ private:
   G4int                 fTidID    = -1;
   G4int                 fPidID    = -1;
   G4int                 fTimeID   = -1;
-  G4int                 fKinEID   = -1;
+  G4int                 fEdepID   = -1;
+  G4int                 fKin1EID  = -1;
+  G4int                 fKin2EID  = -1;
   G4int                 fExitTID  = -1;
   G4int                 fExitidID = -1;
 

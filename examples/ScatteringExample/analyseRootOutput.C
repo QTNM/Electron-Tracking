@@ -10,7 +10,9 @@ void shortsummary(TString fname) {
   TFile *fin = new TFile(fname.Data(), "READ");
   TTreeReader nt1("Score", fin);
   TTreeReaderValue<int>    evid1(nt1, "EventID");
-  TTreeReaderValue<double> kine(nt1, "KinE");
+  TTreeReaderValue<double> edep(nt1, "Edep");
+  TTreeReaderValue<double> kine1(nt1, "KinE1");
+  TTreeReaderValue<double> kine2(nt1, "KinE2");
   TTreeReaderValue<double> time(nt1, "Time");
   TTreeReaderValue<int>    tid(nt1, "HitID");
   TTreeReaderValue<int>    pid(nt1, "ParentID");
@@ -49,7 +51,9 @@ void summary(TString fname) {
   TFile *fin = new TFile(fname.Data(), "READ");
   TTreeReader nt1("Score", fin);
   TTreeReaderValue<int>    evid1(nt1, "EventID");
-  TTreeReaderValue<double> kine(nt1, "KinE");
+  TTreeReaderValue<double> edep(nt1, "Edep");
+  TTreeReaderValue<double> kine1(nt1, "KinE1");
+  TTreeReaderValue<double> kine2(nt1, "KinE2");
   TTreeReaderValue<double> time(nt1, "Time");
   TTreeReaderValue<int>    tid(nt1, "HitID");
   TTreeReaderValue<int>    pid(nt1, "ParentID");
@@ -65,7 +69,9 @@ void summary(TString fname) {
     if (*tid>0) { // primary particle has id=1
       std::cout << "<<< event " << *evid1 << std::endl;
       std::cout << "track id: " << *tid << std::endl;
-      std::cout << "kinetic energy: " << *kine << std::endl;
+      std::cout << "deposited energy: " << *edep << std::endl;
+      std::cout << "kinetic energy pre : " << *kine1 << std::endl;
+      std::cout << "kinetic energy post: " << *kine2 << std::endl;
       std::cout << "global time: " << *time << std::endl;
     }
   }

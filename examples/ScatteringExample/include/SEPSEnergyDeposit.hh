@@ -1,5 +1,5 @@
-#ifndef SEPSKinEnergy_h
-#define SEPSKinEnergy_h 1
+#ifndef SEPSEnergyDeposit_h
+#define SEPSEnergyDeposit_h 1
 
 #include "G4THitsMap.hh"
 #include "G4VPrimitiveScorer.hh"
@@ -10,12 +10,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class SEPSKinEnergy : public G4VPrimitiveScorer
+class SEPSEnergyDeposit : public G4VPrimitiveScorer
 {
 public:                                                 // with description
-  SEPSKinEnergy(G4String name, G4int depth = 0);  // default unit
-  SEPSKinEnergy(G4String name, const G4String& unit, G4int depth = 0);
-  virtual ~SEPSKinEnergy();
+  SEPSEnergyDeposit(G4String name, G4int depth = 0);  // default unit
+  SEPSEnergyDeposit(G4String name, const G4String& unit, G4int depth = 0);
+  virtual ~SEPSEnergyDeposit();
 
 protected:  // with description
   virtual G4bool ProcessHits(G4Step*, G4TouchableHistory*);

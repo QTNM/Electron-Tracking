@@ -23,7 +23,9 @@
 #include "G4SDManager.hh"
 #include "G4SDParticleFilter.hh"
 #include "G4VPrimitiveScorer.hh"
-#include "SEPSKinEnergy.hh"
+#include "SEPSEnergyDeposit.hh"
+#include "SEPSKinEnergy1.hh"
+#include "SEPSKinEnergy2.hh"
 #include "SEPSBoundaryTime.hh"
 #include "SEPSTime.hh"
 #include "SEPSBoundaryTrackID.hh"
@@ -95,9 +97,17 @@ void SEDetectorConstruction::ConstructSDandField()
     auto* electronFilter = new G4SDParticleFilter("efilt");
     electronFilter->add("e-");  // register only electrons
 
-    auto* primitive = new SEPSKinEnergy("KinE");
+    auto* eprimitive = new SEPSEnergyDeposit("Edep");
+    eprimitive->SetFilter(electronFilter);
+    gasdet->RegisterPrimitive(eprimitive);
+
+    auto* primitive = new SEPSKinEnergy1("KinE1");
     primitive->SetFilter(electronFilter);
     gasdet->RegisterPrimitive(primitive);
+
+    auto* primitive2 = new SEPSKinEnergy2("KinE2");
+    primitive2->SetFilter(electronFilter);
+    gasdet->RegisterPrimitive(primitive2);
 
     auto* tprimitive = new SEPSTime("Time");
     tprimitive->SetFilter(electronFilter);
