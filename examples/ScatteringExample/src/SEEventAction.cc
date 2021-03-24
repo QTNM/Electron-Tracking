@@ -144,9 +144,9 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // printing
-  G4cout << ">>> Event: " << eventID << G4endl;
-  if (TidMap->entries())
-    G4cout << "    " << TidMap->entries() << " gas hits stored in this event." << G4endl;
-  if (ExidMap->entries())
-    G4cout << "    " << ExidMap->entries() << " stopwatch hits stored in this event." << G4endl;
+  //G4cout << ">>> Event: " << eventID << G4endl;
+  //if (TidMap->entries())
+  //  G4cout << "    " << TidMap->entries() << " gas hits stored in this event." << G4endl;
+  //if (ExidMap->entries())
+  //  G4cout << "    " << ExidMap->entries() << " stopwatch hits stored in this event." << G4endl;
 }
