@@ -10,17 +10,9 @@ void shortsummary(TString fname) {
   TFile *fin = new TFile(fname.Data(), "READ");
   TTreeReader nt1("Score", fin);
   TTreeReaderValue<int>    evid1(nt1, "EventID");
-  TTreeReaderValue<double> edep(nt1, "Edep");
-  TTreeReaderValue<double> kine1(nt1, "KinE1");
-  TTreeReaderValue<double> kine2(nt1, "KinE2");
-  TTreeReaderValue<double> time(nt1, "Time");
-  TTreeReaderValue<int>    tid(nt1, "HitID");
-  TTreeReaderValue<int>    pid(nt1, "ParentID");
    
   TTreeReader nt2("Watch", fin);
   TTreeReaderValue<int>    evid2(nt2, "EventID");
-  TTreeReaderValue<double> btime(nt2, "ExitTime");
-  TTreeReaderValue<int>    btid(nt2, "ExitID");
       
   // event loop
   int counterh = 0;
@@ -66,20 +58,17 @@ void summary(TString fname) {
   // event loop
   while (nt1.Next())
   {
-    if (*tid>0) { // primary particle has id=1
-      std::cout << "<<< event " << *evid1 << std::endl;
-      std::cout << "track id: " << *tid << std::endl;
-      std::cout << "deposited energy: " << *edep << std::endl;
-      std::cout << "kinetic energy pre : " << *kine1 << std::endl;
-      std::cout << "kinetic energy post: " << *kine2 << std::endl;
-      std::cout << "global time: " << *time << std::endl;
-    }
+    std::cout << "<<< event " << *evid1 << std::endl;
+    std::cout << "track id: " << *tid << std::endl;
+    std::cout << "deposited energy: " << *edep << std::endl;
+    std::cout << "kinetic energy pre : " << *kine1 << std::endl;
+    std::cout << "kinetic energy post: " << *kine2 << std::endl;
+    std::cout << "global time: " << *time << std::endl;
   }
   while (nt2.Next())
   {
-    if (*btid>0) {
-      std::cout << "<<< event " << *evid2 << std::endl;
-      std::cout << "stopwatch: " << *btime << std::endl;
-    }
+    std::cout << "<<< event " << *evid2 << std::endl;
+    std::cout << "track id : " << *btid << std::endl;
+    std::cout << "stopwatch: " << *btime << std::endl;
   }
 }
