@@ -71,7 +71,8 @@ void SEDetectorConstruction::DefineMaterials()
   nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
   auto* H3     = new G4Element("Tritium", "H", 1., 3.016 * g / mole);
-  auto* gasMat = new G4Material("gas", 5.e-10 * g / cm3, 1);  // low density gas
+  // auto* gasMat = new G4Material("gas", 5.e-10 * g / cm3, 1);  // low density gas
+  auto* gasMat = new G4Material("gas", 5.e-12 * g / cm3, 1);  // low density gas
   gasMat->AddElement(H3, 1);
 
   auto* bunchGas = new G4Material("bunch", 5.e-14 * g / cm3, 1);  // ultra-low density gas
