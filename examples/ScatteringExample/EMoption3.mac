@@ -1,0 +1,2 @@
+/PhysicsList/SetVerboseLevel 1
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option3
