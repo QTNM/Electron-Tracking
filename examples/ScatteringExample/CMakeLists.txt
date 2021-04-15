@@ -10,7 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(CTest)
 
 # Dependencies
-find_package(Geant4 REQUIRED)
+find_package(Geant4 10.7 REQUIRED)
 
 # Build
 add_executable(scattering
