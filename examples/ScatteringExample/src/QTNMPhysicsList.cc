@@ -19,6 +19,7 @@
 
 // e+-
 #include "G4patcheDPWACoulombScatteringModel.hh"
+#include "G4CoulombScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
 #include "G4Generator2BS.hh"

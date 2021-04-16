@@ -59,7 +59,7 @@
 #include "G4ThreeVector.hh"
 
 
-G4eDPWACoulombScatteringModel::G4eDPWACoulombScatteringModel(G4bool ismixed, G4bool isscpcor, G4double mumin)
+G4patcheDPWACoulombScatteringModel::G4patcheDPWACoulombScatteringModel(G4bool ismixed, G4bool isscpcor, G4double mumin)
 : G4VEmModel("eDPWACoulombScattering"),
   fIsMixedModel(ismixed),
   fIsScpCorrection(isscpcor),
@@ -72,7 +72,7 @@ G4eDPWACoulombScatteringModel::G4eDPWACoulombScatteringModel(G4bool ismixed, G4b
 }
 
 
-G4eDPWACoulombScatteringModel::~G4eDPWACoulombScatteringModel()
+G4patcheDPWACoulombScatteringModel::~G4patcheDPWACoulombScatteringModel()
 {
   if (IsMaster()) {
     delete fTheDCS;
@@ -80,7 +80,7 @@ G4eDPWACoulombScatteringModel::~G4eDPWACoulombScatteringModel()
 }
 
 
-void G4eDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
+void G4patcheDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
                                                const G4DataVector& prodcuts)
 {
   if(!fParticleChange) {
@@ -115,16 +115,16 @@ void G4eDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
 }
 
 
-void G4eDPWACoulombScatteringModel::InitialiseLocal(const G4ParticleDefinition*,
+void G4patcheDPWACoulombScatteringModel::InitialiseLocal(const G4ParticleDefinition*,
                                                     G4VEmModel* masterModel)
 {
   SetElementSelectors(masterModel->GetElementSelectors());
-  SetTheDCS(static_cast<G4eDPWACoulombScatteringModel*>(masterModel)->GetTheDCS());
+  SetTheDCS(static_cast<G4patcheDPWACoulombScatteringModel*>(masterModel)->GetTheDCS());
 }
 
 
 G4double
-G4eDPWACoulombScatteringModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
+G4patcheDPWACoulombScatteringModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
                                                           G4double ekin,
                                                           G4double Z,
                                                           G4double /*A*/,
@@ -154,7 +154,7 @@ G4eDPWACoulombScatteringModel::ComputeCrossSectionPerAtom(const G4ParticleDefini
 
 
 void
-G4eDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>*,
+G4patcheDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>*,
                                                  const G4MaterialCutsCouple* cp,
                                                  const G4DynamicParticle* dp,
                                                  G4double, G4double)
