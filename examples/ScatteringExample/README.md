@@ -5,7 +5,7 @@ the QTNM project with a view to explore the low-energy electron scattering in a 
 
 ## Notes 
 
-Set default physics list as G4EMStandardPhysics_option4; G4ParticleGun for simple event generation,
+Set default physics list as QTNMPhysicsList; G4ParticleGun for simple event generation,
 default is an electron with 18.575 keV, can change in macro; switch on simple uniform B-field in macro - default is none; 
 
 Change of physics list is possible by macro, naming list constructors. An example macro is included to switch to 
