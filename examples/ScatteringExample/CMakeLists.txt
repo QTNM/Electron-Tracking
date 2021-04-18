@@ -15,7 +15,6 @@ find_package(Geant4 10.7 REQUIRED)
 # Build
 add_executable(scattering
   scattering.cc
-  src/G4patcheDPWACoulombScatteringModel.cc
   src/SEActionInitialization.cc
   src/SEDetectorConstruction.cc
   src/SEEventAction.cc

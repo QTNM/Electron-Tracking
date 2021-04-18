@@ -18,7 +18,7 @@
 #include "G4LivermorePhotoElectricModel.hh"
 
 // e+-
-#include "G4patcheDPWACoulombScatteringModel.hh"
+#include "G4eDPWACoulombScatteringModel.hh"
 #include "G4CoulombScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
@@ -154,7 +154,7 @@ void QTNMPhysicsList::ConstructProcess()
  
   // single scattering
   G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new G4patcheDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
   // ionisation
   G4eIonisation* eioni = new G4eIonisation();
@@ -183,7 +183,7 @@ void QTNMPhysicsList::ConstructProcess()
 
   // single scattering  
   ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new G4patcheDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
   // ionisation
   eioni = new G4eIonisation();
