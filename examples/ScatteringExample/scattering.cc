@@ -35,7 +35,7 @@ int main(int argc, char** argv)
   std::string physListMacro;
 
   app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
-  app.add_option("-p,--physlist", physListMacro, "<Geant4 physics list macro> Default: None");
+  app.add_option("-p,--physlist", physListMacro, "<Geant4 physics list macro> Default: QTNMPhysicsList");
   app.add_option("-o,--outputFile", outputFileName,
                  "<FULL PATH ROOT FILENAME> Default: qtnm.root");
   app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     // from vector of physics cobstructor names
     std::vector<G4String>* myConstructors = new std::vector<G4String>;
 
-    myConstructors->push_back("G4EmStandardPhysics_option4");
+    myConstructors->push_back("QTNMPhysicsList");
 
     physList = new G4GenericPhysicsList(myConstructors);
   }

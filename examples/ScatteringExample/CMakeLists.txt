@@ -27,7 +27,8 @@ add_executable(scattering
   src/SEPSTime.cc
   src/SEPSTrackID.cc
   src/SEPrimaryGeneratorAction.cc
-  src/SERunAction.cc)
+  src/SERunAction.cc 
+  src/QTNMPhysicsList.cc)
 target_include_directories(scattering PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(scattering PRIVATE ${Geant4_LIBRARIES})
 
