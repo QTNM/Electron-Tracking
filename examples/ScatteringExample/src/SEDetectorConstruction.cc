@@ -37,6 +37,8 @@
 
 SEDetectorConstruction::SEDetectorConstruction()
 {
+  fdensity = 5.e-12 * g / cm3;
+
   DefineCommands();
   DefineMaterials();
 }
@@ -74,10 +76,10 @@ void SEDetectorConstruction::DefineMaterials()
 
   auto* H3     = new G4Element("Tritium", "H", 1., 3.016 * g / mole);
   // auto* gasMat = new G4Material("gas", 5.e-10 * g / cm3, 1);  // low density gas
-  auto* gasMat = new G4Material("gas", 5.e-12 * g / cm3, 1);  // low density gas
+  auto* gasMat = new G4Material("gas", fdensity, 1);  // low density gas
   gasMat->AddElement(H3, 1);
 
-  auto* bunchGas = new G4Material("bunch", 5.e-14 * g / cm3, 1);  // ultra-low density gas
+  auto* bunchGas = new G4Material("bunch", fdensity, 1);  // ultra-low density gas
   bunchGas->AddElement(H3, 1);
 }
 
@@ -164,7 +166,7 @@ auto SEDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   // size parameter, unit [cm]
   // world
   G4double worldhside = 5.0 * cm;   // box half side in x, y
-  G4double worldhZ    = 0.5 * m;    // box half side in z; full 1 metre
+  G4double worldhZ    = 0.51 * m;    // box half side in z; full 1.02 metre
    
   // tubes with Gas ROI
   G4double pipewall  = 0.1 * cm;    // tube thickness 1 mm
@@ -172,12 +174,13 @@ auto SEDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   G4double pipehZ    = worldhZ - 1 * cm;  // fit into world 1cm either side
  
   // bunches of T-atoms
-  G4double bunchhZ   = 5.0 * cm;    // 10cm long bunches in z  
+  G4double bunchhZ   = 5.0 * cm;    // 10 cm long bunches in z  
   G4double bunchrad  = 2.0 * mm;    // small cylinders 4 mm diam
-  G4double gap       = 5.0 * cm;    // gap between bunches
-  G4int nbunches     = (int) (pipehZ / (bunchhZ + gap)); // integer, lower limit half number
+  G4double gap       = 2.0 * cm;    // gap between bunches
+  G4int nbunches     = (int) (pipehZ / (2*bunchhZ + gap)); // integer, lower limit half number
 
   G4cout << ">> shortPipe: nbunches fit in pipe: " << 2*nbunches-2 << G4endl;
+  G4cout << ">> shortPipe: at density [g/cm3] " << fdensity / (g / cm3) << G4endl;
   
   // stopwatch volume with piperad and thickness in z
   G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
@@ -222,7 +225,7 @@ auto SEDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
                     "Stop_phys", worldLogical, false, 0, true);
   
   for (G4int i=0; i<2*nbunches-1; ++i)
-    new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*(bunchhZ+gap)), gasLogical,
+    new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*(2*bunchhZ+gap)), gasLogical,
                       "Bunch_phys", worldLogical, false, i, true); // each a copy number
     
   return worldPhysical;
@@ -250,7 +253,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
   G4double bunchhZ   = 5.0 * cm;    // 10cm long bunches in z
   G4double bunchrad  = 2.0 * mm;    // small cylinders 4 mm diam
   G4double gap       = 5.0 * cm;    // gap between bunches
-  G4int nbunches     = (int) (pipehZ / (bunchhZ + gap)); // integer, lower limit half number
+  G4int nbunches     = (int) (pipehZ / (2*bunchhZ + gap)); // integer, lower limit half number
  
   G4cout << ">> bunches: nbunches fit in pipe: " << 2*nbunches-2 << G4endl;
 
@@ -297,7 +300,7 @@ auto SEDetectorConstruction::SetupBunches() -> G4VPhysicalVolume*
                     "Stop_phys", worldLogical, false, 0, true);
 
   for (G4int i=0; i<2*nbunches-1; ++i) 
-    new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*(bunchhZ+gap)), gasLogical,
+    new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, -pipehZ + (i+1)*(2*bunchhZ+gap)), gasLogical,
                       "Bunch_phys", worldLogical, false, i, false); // each a copy number
 
 
@@ -388,6 +391,19 @@ void SEDetectorConstruction::SetGeometry(const G4String& name)
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
+void SEDetectorConstruction::SetDensity(G4double d)
+{
+  if(d <= 0.)
+  {
+    G4Exception("SEDetectorConstruction::SetDensity", "SE0001", JustWarning,
+                "Invalid density value ");
+    return;
+  }
+  
+  fdensity = d * g/cm3;
+  // Reinit wiping out stores
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}   
 
 void SEDetectorConstruction::DefineCommands()
 {
@@ -402,6 +418,11 @@ void SEDetectorConstruction::DefineCommands()
     .SetGuidance("bunches = NEEDS DESCRIPTION")
     .SetGuidance("shortPipe = NEEDS DESCRIPTION")
     .SetCandidates("baseline bunches shortPipe")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
+
+  fDetectorMessenger->DeclareMethod("setDensity", &SEDetectorConstruction::SetDensity)
+    .SetGuidance("Set detector T-gas density [g/cm^3]")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
