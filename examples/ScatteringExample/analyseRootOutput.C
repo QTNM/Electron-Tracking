@@ -9,32 +9,11 @@ void shortsummary(TString fname) {
   if (fname.IsNull()) fname = "qtnm.root";
   TFile *fin = new TFile(fname.Data(), "READ");
   TTreeReader nt1("Score", fin);
-  TTreeReaderValue<int>    evid1(nt1, "EventID");
    
   TTreeReader nt2("Watch", fin);
-  TTreeReaderValue<int>    evid2(nt2, "EventID");
       
-  // event loop
-  int counterh = 0;
-  int counterw = 0;
-  int prevev   = -1;
-  while (nt1.Next())
-  {
-    if (*evid1 != prevev) { // primary particle has id=1
-      counterh++;
-      prevev = *evid1;
-    }
-  }
-  prevev = -1;
-  while (nt2.Next())
-  {
-    if (*evid2 != prevev) {
-      counterw++;
-      prevev = *evid2;
-    }
-  }
-  std::cout << "counted gas hits: " << counterh << std::endl;
-  std::cout << "counted watch hits: " << counterw << std::endl;
+  std::cout << "counted gas hits: " << nt1.GetEntries() << std::endl;
+  std::cout << "counted watch hits: " << nt2.GetEntries() << std::endl;
 }
 
 //  use output TTree for summary
