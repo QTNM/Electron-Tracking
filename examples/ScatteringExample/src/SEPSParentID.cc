@@ -20,7 +20,7 @@ SEPSParentID::~SEPSParentID() = default;
 
 G4bool SEPSParentID::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
-  if(aStep->GetTotalEnergyDeposit()  / CLHEP::keV <= 1.e-7)
+  if(aStep->GetTotalEnergyDeposit()  / CLHEP::keV <= 1.e-6)
     return false;
 
   G4int          index = GetIndex(aStep);
