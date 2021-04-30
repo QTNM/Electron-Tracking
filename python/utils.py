@@ -53,3 +53,19 @@ def calculate_omega(b_field, charge=-qe, energy=0.0, mass=me):
 
     gamma_m0 = mass + 1e3 * energy * qe / c**2
     return charge * b_field / gamma_m0
+
+
+def decompose_velocity(velocity, b_field):
+    """ Decompose velocity into components parallel and perpendicular to
+    magnetic field.
+
+    Args:
+        b_field: Magnetic Field
+        velocity: Velocity
+    """
+    b_field = np.array(b_field)
+    velocity = np.array(velocity)
+    bmag2 = np.dot(b_field, b_field)
+    vpar = np.dot(velocity, b_field) * b_field / bmag2
+    vper = velocity - vpar
+    return vpar, vper
