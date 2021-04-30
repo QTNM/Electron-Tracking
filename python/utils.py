@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.constants import c, electron_mass as me, elementary_charge as qe
 
+
 # A very basic error plotting routine
-def error_plot(x, y, x_exact=None, y_exact=None, title=None, xlabel=None, ylabel=None):
+def error_plot(x, y, x_exact=None, y_exact=None, title=None, xlabel=None,
+               ylabel=None):
     """Plot data and optionally compare to analytic solution
 
     Args:
@@ -37,13 +39,15 @@ def error_plot(x, y, x_exact=None, y_exact=None, title=None, xlabel=None, ylabel
 
     plt.tight_layout()
 
+
 def calculate_omega(b_field, charge=-qe, energy=0.0, mass=me):
     """ Calculate cyclotron frequency for a particle in a magnetic field
 
     Args:
         b_field: Magnetic Field (Tesla)
         charge: Particle charge. Default: electron charge
-        energy: Particle kinetic energy (KeV). Default: 0.0 (yields non-relativistic result)
+        energy: Particle kinetic energy (KeV). Default: 0.0
+                (yields non-relativistic result)
         mass: Particle mass (Kg). Default: Electron mass
     """
 
