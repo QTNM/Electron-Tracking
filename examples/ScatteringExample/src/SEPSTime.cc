@@ -28,7 +28,7 @@ SEPSTime::~SEPSTime() = default;
 
 G4bool SEPSTime::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
-  if(aStep->GetTotalEnergyDeposit() / CLHEP::keV <= 1.e-7) // 100 micro eV min.
+  if(aStep->GetTotalEnergyDeposit() / CLHEP::keV <= 1.e-6) // 1 meV min.
     return false;
 
   G4int          index = aStep->GetTrack()->GetCurrentStepNumber(); // unique key

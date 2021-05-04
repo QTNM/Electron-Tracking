@@ -30,7 +30,7 @@ G4bool SEPSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unuse
 {
   G4double edep = aStep->GetTotalEnergyDeposit();
 
-  if(edep / GetUnitValue() > 1.e-7) // 100 micro eV minimum
+  if(edep / GetUnitValue() > 1.e-6) // 1 meV minimum
   {
     G4int index = aStep->GetTrack()->GetCurrentStepNumber(); // unique key
     // debug

@@ -21,6 +21,7 @@ public:
   virtual void               ConstructSDandField();
 
   void     SetGeometry(const G4String& name);
+  void     SetDensity(G4double d);
 
 private:
   void DefineCommands();
@@ -32,6 +33,7 @@ private:
 
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
   G4String                                  fGeometryName      = "baseline";
+  G4double                                  fdensity;
   G4Cache<G4GlobalMagFieldMessenger*>       fFieldMessenger    = nullptr;
   G4VectorCache<G4MultiFunctionalDetector*> fSD;
 };
