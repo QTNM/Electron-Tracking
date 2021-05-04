@@ -35,10 +35,11 @@ void SEWatchSD::Initialize(G4HCofThisEvent* hce)
 G4bool SEWatchSD::ProcessHits(G4Step* aStep, 
                               G4TouchableHistory*)
 {  
-  // energy deposit
-  G4double edep = aStep->GetTotalEnergyDeposit();
+  // boundary crossing
+  G4StepPoint* preStep = aStep->GetPreStepPoint();
+  G4bool IsEnter = preStep->GetStepStatus() == fGeomBoundary;
 
-  if (edep / CLHEP::keV <= 1.e-6) return false;
+  if (!IsEnter) return false; // boundary check
 
   SEWatchHit* newHit = new SEWatchHit();
 

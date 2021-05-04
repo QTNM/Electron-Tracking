@@ -57,12 +57,11 @@ void SEEventAction::BeginOfEventAction(const G4Event*
 void SEEventAction::EndOfEventAction(const G4Event* event)
 {
   // Get GAS hits collections IDs
-  if(fGID < 0)
+  if(fGID < 0) 
     fGID = G4SDManager::GetSDMpointer()->GetCollectionID("GasHitsCollection");
 
-  if(fWID<0)
+  if(fWID<0) 
     fWID = G4SDManager::GetSDMpointer()->GetCollectionID("WatchHitsCollection");
-  
 
   // Get entries from hits collections
   //
@@ -148,7 +147,7 @@ void SEEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // printing
-  //G4cout << ">>> Event: " << eventID << G4endl;
-  //  G4cout << "    " << GnofHits << " gas hits stored in this event." << G4endl;
-  //  G4cout << "    " << WnofHits << " stopwatch hits stored in this event." << G4endl;
+  G4cout << ">>> Event: " << eventID << G4endl;
+  G4cout << "    " << GnofHits << " gas hits stored in this event." << G4endl;
+  G4cout << "    " << WnofHits << " stopwatch hits stored in this event." << G4endl;
 }
