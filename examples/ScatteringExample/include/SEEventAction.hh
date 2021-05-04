@@ -1,7 +1,9 @@
 #ifndef SEEventAction_h
 #define SEEventAction_h 1
 
-#include "G4THitsMap.hh"
+#include "SEGasHit.hh"
+#include "SEWatchHit.hh"
+
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 
@@ -19,20 +21,16 @@ public:
 
 private:
   // methods
-  G4THitsMap<G4int>*         GetIntHitsCollection(G4int hcID, const G4Event* event) const;
-  G4THitsMap<G4double>*      GetHitsCollection(G4int hcID, const G4Event* event) const;
+  SEGasHitsCollection*     GetGasHitsCollection(G4int hcID,
+                                              const G4Event* event) const;
 
+  SEWatchHitsCollection*   GetWatchHitsCollection(G4int hcID,
+                                                  const G4Event* event) const;
 
   // data members
   // hit data
-  G4int                 fTidID    = -1;
-  G4int                 fPidID    = -1;
-  G4int                 fTimeID   = -1;
-  G4int                 fEdepID   = -1;
-  G4int                 fKin1EID  = -1;
-  G4int                 fKin2EID  = -1;
-  G4int                 fExitTID  = -1;
-  G4int                 fExitidID = -1;
+  G4int                 fGID    = -1;
+  G4int                 fWID    = -1;
 
 };
 
