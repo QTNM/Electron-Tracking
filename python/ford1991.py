@@ -112,13 +112,12 @@ def solve(n_rotations, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
     t_end = n_rotations * 2.0 * np.pi / np.abs(omega)
 
     # Set initial conditions
-    x_init, y_init, vx_init, vy_init = analytic_solution(0, b_field=b_field,
-                                                         vel0=vel0, mass=mass,
-                                                         charge=charge,
-                                                         tau=tau)
     # Note that for tau /= 0, both x_init and y_init and non-zero
-    # Final value is total radiated power
-    ic = [x_init, y_init, vx_init, vy_init, 0.0]
+    ic = analytic_solution(0, b_field=b_field, vel0=vel0, mass=mass,
+                           charge=charge, tau=tau)
+
+    # Also track total radiated power, so initialise to zero
+    ic += (0.0,)
 
     res = solve_ivp(rhs, (0, t_end), ic,
                     max_step=max_step, args=[omega, mass, tau])
