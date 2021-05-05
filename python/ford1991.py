@@ -175,3 +175,82 @@ def analytic_solution_3d(time, b_field=np.array([0, 0, 1]),
     vz_soln = N[2, 0] * vx_b + N[2, 1] * vy_b + vpar[2]
 
     return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
+
+
+def rhs_3d(t, x, omega, mass, tau):
+    """Calculate RHS for Ford & O'Connell equation in 3D
+
+    Args:
+        t: Time. Not used, but required for solve_ivp
+        x: Current State [x, y, vx, vy, energy_radiated]
+        omega: Cyclotron frequency
+        mass: Mass of particle
+        tau: Larmor power parameter, such that P = tau * mass * a**2
+
+    Returns:
+        Time derivatives: [vx, vy, vz, ax, ay, az, radiated_power]
+    """
+    d = 1 / (1 + tau**2 * np.dot(omega, omega))
+    accx = omega[2] * x[4] - omega[1] * x[5] - tau * (omega[2]**2
+                                                      + omega[1]**2) * x[3]
+    accx += tau * omega[0] * (omega[2] * x[5] + omega[1] * x[4])
+    accy = omega[0] * x[5] - omega[2] * x[3] - tau * (omega[2]**2
+                                                      + omega[0]**2) * x[4]
+    accy += tau * omega[1] * (omega[2] * x[5] + omega[0] * x[4])
+    accz = omega[1] * x[3] - omega[0] * x[4] - tau * (omega[0]**2
+                                                      + omega[1]**2) * x[5]
+    accz += tau * omega[2] * (omega[0] * x[3] + omega[1] * x[4])
+    accx *= d
+    accy *= d
+    accz *= d
+
+    # Power according to Larmor formula
+    power = tau * mass * (accx**2 + accy**2 + accz**2)
+
+    return x[3], x[4], x[5], accx, accy, accz, power
+
+
+def solve_3d(n_rotations, b_field, vel0, mass=me, charge=-qe, tau=0.0):
+    """Numerically solve Ford & O'Connell 1991 equation in 3D
+
+    Assumes that motion is initially vertical (at t=0), with magnitude vel0
+    Additionally solves for total radiated power as a function of time
+
+    Args:
+        n_rotations: Number of rotations to calculate
+        b_field: Magnetic field.
+        vel0: Initial velocity.
+        mass: Mass of particle. Default: Electron mass
+        charge: Charge of particle. Default: Electron charge.
+        tau: Larmor power parameter, such that P = tau * mass * a**2
+             Default: 0.0
+
+    Returns:
+        res: Numerical Solution
+    """
+
+    # Check if magnetic field is scalar, if so, pass to 1D solve
+    if len(b_field) == 1:
+        return solve(n_rotations, b_field, vel0, mass, charge, tau)
+
+    # Calculate omega vector
+    wvec = calculate_omega(b_field, charge=charge, energy=0.0, mass=mass)
+
+    # Calculate max time step
+    wmag = np.linalg.norm(wvec)
+    max_step = 1e-3 / wmag
+    # Final time
+    t_end = n_rotations * 2.0 * np.pi / wmag
+
+    # Set initial conditions
+    # Note that for tau /= 0, both x_init and y_init and non-zero
+    ic = analytic_solution_3d(0, b_field=b_field, vel0=vel0, mass=mass,
+                              charge=charge, tau=tau)
+
+    # Also track total radiated power, so initialise to zero
+    ic += (0.0,)
+
+    res = solve_ivp(rhs_3d, (0, t_end), ic,
+                    max_step=max_step, args=[wvec, mass, tau])
+
+    return res
