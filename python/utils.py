@@ -69,3 +69,52 @@ def decompose_velocity(velocity, b_field):
     vpar = np.dot(velocity, b_field) * b_field / bmag2
     vper = velocity - vpar
     return vpar, vper
+
+
+def rotation_matrix(a, b):
+    """ Calculate rotation matrix M, such that Ma is aligned to b
+
+    Args:
+        a: Initial vector direction
+        b: Target direction
+    """
+    # np.allclose might be safer here
+    if np.array_equal(a, b):
+        return np.eye(3)
+
+    if np.array_equal(a, -b):
+        # TODO FIXME
+        # Not the correct answer...
+        return - np.eye(3)
+
+    # Allow cases where a,b are not unit vectors, so normalise
+    a = a / np.linalg.norm(a)
+    b = b / np.linalg.norm(b)
+
+    v = np.cross(a, b)
+    s = np.linalg.norm(v)
+    t = np.dot(a, b)
+    vx = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
+    return np.eye(3) + vx + np.dot(vx, vx) * (1-t) / (s**2)
+
+
+def rotate_b_field(b_field):
+    """ Rotate B field to be aligned with the z-direction
+
+    Returns matrix M, such that M B = (0, 0, B_z)
+
+    Args:
+        b_field: Initial magnetic field vector
+    """
+    return rotation_matrix(b_field, np.array([0, 0, 1]))
+
+
+def rotate_b_field_inverse(b_field):
+    """ Rotate a z-directed B-field to be aligned with a target field direction
+
+    Returns matrix M, such that M B_z is proportional to B
+
+    Args:
+        b_field: Target magnetic field direction
+    """
+    return rotation_matrix(np.array([0, 0, 1]), np.array(b_field))
