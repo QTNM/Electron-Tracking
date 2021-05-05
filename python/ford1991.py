@@ -2,6 +2,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.constants import electron_mass as me, elementary_charge as qe
 from utils import calculate_omega
+from utils import rotate_b_field, rotate_b_field_inverse, decompose_velocity
 
 
 # RHS according to Ford & O'Connell (1991). Non-relativistic
@@ -123,3 +124,55 @@ def solve(n_rotations, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
                     max_step=max_step, args=[omega, mass, tau])
 
     return res
+
+
+# TODO. Is this optimal? As transform the initial velocity into the rotated
+# frame we could just use vx', vy'.
+# Extra cost of transforming back vz_b /= 0 > cost of velocity
+# decomposition(?)
+def analytic_solution_3d(time, b_field=np.array([0, 0, 1]),
+                         vel0=np.array([0, 1, 0]), mass=me, charge=-qe,
+                         tau=0.0):
+    """Calculate analytic solution for Ford & O'Connell equation in 3D
+
+    Assumes that motion is initially vertical (at t=0), with magnitude vel0
+
+    Args:
+        t: Time(s) to calculation solution for
+        b_field: Magnetic field. Default: [0, 0, 1]
+        vel0: Initial velocity. Default: [0, 1, 0]
+        mass: Mass of particle. Default: Electron mass
+        charge: Charge of particle. Default: Electron charge
+        tau: Larmor power parameter, such that P = tau * mass * a**2.
+             Default: 0.0
+
+    Returns:
+        Analytic Solution: [x, y, vx, vy]
+    """
+
+    # Calculate vpara, vperp
+    vpar, vperp = decompose_velocity(vel0, b_field)
+    # Now rotate coordinate system so B aligned with z-axis
+    M = rotate_b_field(b_field)
+    # Velocity in rotated coordinate system
+    v = np.dot(M, vperp)
+
+    # Calculate b-field magnitude for 1D solution
+    bmag = np.linalg.norm(b_field)
+
+    # Analytic 1D solution
+    x_b, y_b, vx_b, vy_b = analytic_solution(time, b_field=bmag, vel0=v[0:2],
+                                             mass=mass, charge=charge, tau=tau)
+
+    # Calculate full solution by transforming back and adding on vpara
+    N = rotate_b_field_inverse(b_field)
+
+    # z_b = 0 for all time
+    x_soln = N[0, 0] * x_b + N[0, 1] * y_b + vpar[0] * time
+    y_soln = N[1, 0] * x_b + N[1, 1] * y_b + vpar[1] * time
+    z_soln = N[2, 0] * x_b + N[2, 1] * y_b + vpar[2] * time
+    vx_soln = N[0, 0] * vx_b + N[0, 1] * vy_b + vpar[0]
+    vy_soln = N[1, 0] * vx_b + N[1, 1] * vy_b + vpar[1]
+    vz_soln = N[2, 0] * vx_b + N[2, 1] * vy_b + vpar[2]
+
+    return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
