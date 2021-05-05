@@ -82,14 +82,18 @@ def rotation_matrix(a, b):
     if np.array_equal(a, b):
         return np.eye(3)
 
-    if np.array_equal(a, -b):
-        # TODO FIXME
-        # Not the correct answer...
-        return - np.eye(3)
-
     # Allow cases where a,b are not unit vectors, so normalise
     a = a / np.linalg.norm(a)
     b = b / np.linalg.norm(b)
+
+    # Anti-parallel - rotate 180 degrees about any axis.
+    if np.array_equal(a, -b):
+        # If vector is (anti)parallel to z, rotate around x
+        if np.array_equal(np.abs(a), np.array([0, 0, 1])):
+            return np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
+
+        # Otherwise rotate around z
+        return np.array([[-1, 0, 0], [0, -1, 0], [0, 0, 1]])
 
     v = np.cross(a, b)
     s = np.linalg.norm(v)
