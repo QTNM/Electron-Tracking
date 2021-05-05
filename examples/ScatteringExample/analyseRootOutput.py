@@ -28,13 +28,12 @@ def summary_TTreeReader(fname="qtnm.root"):
     nt1 = ROOT.TTreeReader("Score", inputFile)
     nt2 = ROOT.TTreeReader("Watch", inputFile)
 
-    EventID = ROOT.TTreeReaderValue(int)(nt1, "EventID")
-    # "double" as a type also works here
+    EventID = ROOT.TTreeReaderValue(ROOT.int)(nt1, "EventID")
     Edep = ROOT.TTreeReaderValue(ROOT.double)(nt1, "Edep")
     KinE = ROOT.TTreeReaderValue(ROOT.double)(nt1, "KinE")
     time = ROOT.TTreeReaderValue(ROOT.double)(nt1, "Time")
-    HitID = ROOT.TTreeReaderValue(int)(nt1, "HitID")
-    ParentID = ROOT.TTreeReaderValue(int)(nt1, "ParentID")
+    HitID = ROOT.TTreeReaderValue(ROOT.int)(nt1, "HitID")
+    ParentID = ROOT.TTreeReaderValue(ROOT.int)(nt1, "ParentID")
 
     while nt1.Next():
         print('Event: %d' % EventID.Get()[0])
@@ -43,8 +42,8 @@ def summary_TTreeReader(fname="qtnm.root"):
         print('Kinetic Energy post: %.6F' % KinE.Get()[0])
         print('Global Time: %.10F' % time.Get()[0])
 
-    EventID2 = ROOT.TTreeReaderValue(int)(nt2, "EventID")
-    HitID2 = ROOT.TTreeReaderValue(int)(nt2, "HitID")
+    EventID2 = ROOT.TTreeReaderValue(ROOT.int)(nt2, "EventID")
+    HitID2 = ROOT.TTreeReaderValue(ROOT.int)(nt2, "HitID")
     time2 = ROOT.TTreeReaderValue(ROOT.double)(nt2, "Time")
     xpos  = ROOT.TTreeReaderValue(ROOT.double)(nt2, "Posx")
     ypos  = ROOT.TTreeReaderValue(ROOT.double)(nt2, "Posy")
