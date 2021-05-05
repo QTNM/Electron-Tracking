@@ -1,5 +1,7 @@
 import numpy as np
 from scipy.integrate import solve_ivp
+from scipy.constants import electron_mass as me, elementary_charge as qe
+from utils import calculate_omega
 
 # RHS according to Ford & O'Connell (1991). Non-relativistic
 def rhs(t, x, omega, mass, tau):
@@ -24,20 +26,27 @@ def rhs(t, x, omega, mass, tau):
     power = tau * mass * (accx**2 + accy**2)
     return [x[2], x[3], accx, accy, power]
 
-def analytic_solution(t, omega, tau, vel0=1.0):
+def analytic_solution(t, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
     """Calculate analytic solution for Ford & O'Connell equation
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
 
     Args:
         t: Time(s) to calculation solution for
-        omega: Cyclotron frequency
-        tau: Larmor power parameter, such that P = tau * mass * a**2
-        vel0: Initial velocity magnitude
+        b_field: Magnetic field. Assumed to be in z-direction. Default: 1.0
+        vel0: Initial velocity. If scalar assumed to be in y-direction.
+              Otherwise in xy plane. Default: 1.0
+        mass: Mass of particle. Default: Electron mass
+        charge: Charge of particle. Default: Electron charge
+        tau: Larmor power parameter, such that P = tau * mass * a**2.
+             Default: 0.0
 
     Returns:
         Analytic Solution: [x, y, vx, vy]
     """
+
+    # Calculate non-relativistic omega
+    omega = calculate_omega(b_field, charge=charge, energy=0.0, mass=mass)
 
     mu = tau * omega**2
 
@@ -70,7 +79,7 @@ def analytic_solution(t, omega, tau, vel0=1.0):
 
     return x_soln, y_soln, vx_soln, vy_soln
 
-def solve(n_rotations, omega, mass, tau, vel0=1.0):
+def solve(n_rotations, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
     """Numerically solve Ford & O'Connell 1991 equation
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
@@ -78,21 +87,29 @@ def solve(n_rotations, omega, mass, tau, vel0=1.0):
 
     Args:
         n_rotations: Number of rotations to calculate
-        omega: Cyclotron frequency
-        mass: Mass of particle
+        b_field: Magnetic field. Assumed to be in z-direction. Default: 1.0
+        vel0: Initial velocity. If scalar assumed to be in y-direction.
+              Otherwise in xy plane. Default: 1.0
+        mass: Mass of particle. Default: Electron mass
+        charge: Charge of particle. Default: Electron charge.
         tau: Larmor power parameter, such that P = tau * mass * a**2
-        vel: Initial velocity magnitude
+             Default: 0.0
 
     Returns:
         res: Numerical Solution
     """
+
+    # Calculate non-relativistic omega
+    omega = calculate_omega(b_field, charge=charge, energy=0.0, mass=mass)
+
     # Maximum timestep. Could probably be smaller
     max_step = 1e-3 / np.abs(omega)
     # Final time
     t_end = n_rotations * 2.0 * np.pi / np.abs(omega)
 
     # Set initial conditions
-    x_init, y_init, vx_init, vy_init = analytic_solution(0, omega, tau, vel0=vel0)
+    x_init, y_init, vx_init, vy_init = analytic_solution(0, b_field=b_field, vel0=vel0,
+                                                         mass=mass, charge=charge, tau=tau)
     # Note that for tau /= 0, both x_init and y_init and non-zero
     # Final value is total radiated power
     ic = [x_init, y_init, vx_init, vy_init, 0.0]
