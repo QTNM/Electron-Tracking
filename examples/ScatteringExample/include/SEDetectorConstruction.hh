@@ -7,8 +7,9 @@
 #include "globals.hh"
 
 class G4VPhysicalVolume;
-class G4MultiFunctionalDetector;
 class G4GlobalMagFieldMessenger;
+class SEGasSD;
+class SEWatchSD;
 
 class SEDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -35,7 +36,8 @@ private:
   G4String                                  fGeometryName      = "baseline";
   G4double                                  fdensity;
   G4Cache<G4GlobalMagFieldMessenger*>       fFieldMessenger    = nullptr;
-  G4VectorCache<G4MultiFunctionalDetector*> fSD;
+  G4Cache<SEGasSD*>                         fSD1               = nullptr;
+  G4Cache<SEWatchSD*>                       fSD2               = nullptr;
 };
 
 #endif

@@ -19,18 +19,9 @@
 #include "G4UniformMagField.hh"
 #include "G4AutoDelete.hh"
 
-#include "G4MultiFunctionalDetector.hh"
 #include "G4SDManager.hh"
-#include "G4SDParticleFilter.hh"
-#include "G4VPrimitiveScorer.hh"
-#include "SEPSEnergyDeposit.hh"
-#include "SEPSKinEnergy1.hh"
-#include "SEPSKinEnergy2.hh"
-#include "SEPSBoundaryTime.hh"
-#include "SEPSTime.hh"
-#include "SEPSBoundaryTrackID.hh"
-#include "SEPSTrackID.hh"
-#include "SEPSParentID.hh"
+#include "SEGasSD.hh"
+#include "SEWatchSD.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -88,57 +79,25 @@ void SEDetectorConstruction::ConstructSDandField()
   G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
 
   // Only need to construct the (per-thread) SD once
-  if(!fSD.Size())
+  if(!fSD1.Get()) // both declared together, test one is enough
   {
-    auto* gasdet = new G4MultiFunctionalDetector("Gas");
-    fSD.Push_back(gasdet);
+    G4String SD1name  = "GasSD";
+    SEGasSD* aGasSD = new SEGasSD(SD1name,
+                                  "GasHitsCollection");
+    fSD1.Put(aGasSD);
+
+    G4String SD2name  = "WatchSD";
+    SEWatchSD* aWatchSD = new SEWatchSD(SD2name,
+                                        "WatchHitsCollection");
+    fSD2.Put(aWatchSD);
 
     // Also only add it once to the SD manager!
-    G4SDManager::GetSDMpointer()->AddNewDetector(gasdet);
+    G4SDManager::GetSDMpointer()->AddNewDetector(fSD1.Get());
+    G4SDManager::GetSDMpointer()->AddNewDetector(fSD2.Get());
 
-    auto* electronFilter = new G4SDParticleFilter("efilt");
-    electronFilter->add("e-");  // register only electrons
+    SetSensitiveDetector("Gas_log", fSD1.Get());
+    SetSensitiveDetector("Stop_log", fSD2.Get());
 
-    auto* eprimitive = new SEPSEnergyDeposit("Edep");
-    eprimitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(eprimitive);
-
-    auto* primitive = new SEPSKinEnergy1("KinE1");
-    primitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(primitive);
-
-    auto* primitive2 = new SEPSKinEnergy2("KinE2");
-    primitive2->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(primitive2);
-
-    auto* tprimitive = new SEPSTime("Time");
-    tprimitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(tprimitive);
-
-    auto* rprimitive = new SEPSTrackID("TrackID");
-    rprimitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(rprimitive);
-
-    auto* pprimitive = new SEPSParentID("PID");
-    pprimitive->SetFilter(electronFilter);
-    gasdet->RegisterPrimitive(pprimitive);
-
-    SetSensitiveDetector("Gas_log", gasdet);
-
-    auto* stopdet = new G4MultiFunctionalDetector("Stop");
-    fSD.Push_back(stopdet);
-
-    G4SDManager::GetSDMpointer()->AddNewDetector(stopdet);
-
-    auto* tbprimitive = new SEPSBoundaryTrackID("ExitID");
-    tbprimitive->SetFilter(electronFilter);
-    stopdet->RegisterPrimitive(tbprimitive);
-
-    auto* ttprimitive = new SEPSBoundaryTime("ExitT");
-    ttprimitive->SetFilter(electronFilter);
-    stopdet->RegisterPrimitive(ttprimitive);
-
-    SetSensitiveDetector("Stop_log", stopdet);
   }
 
   // Field setup
