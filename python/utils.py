@@ -52,7 +52,7 @@ def calculate_omega(b_field, charge=-qe, energy=0.0, mass=me):
     """
 
     gamma_m0 = mass + 1e3 * energy * qe / c**2
-    return charge * b_field / gamma_m0
+    return charge * np.array(b_field) / gamma_m0
 
 
 def decompose_velocity(velocity, b_field):
