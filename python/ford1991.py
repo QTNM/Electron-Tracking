@@ -183,7 +183,7 @@ def analytic_solution_3d(time, b_field=np.array([0, 0, 1]),
     return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
 
 
-def rhs_3d(t, x, omega, mass, tau):
+def rhs_3d(t, x, charge, mass, tau, omega0=np.array([0.,0.,1.]), calc_b_field=None):
     """Calculate RHS for Ford & O'Connell equation in 3D
 
     Args:
@@ -196,6 +196,13 @@ def rhs_3d(t, x, omega, mass, tau):
     Returns:
         Time derivatives: [vx, vy, vz, ax, ay, az, radiated_power]
     """
+
+    if calc_b_field is None:
+        omega = omega0
+    else:
+        b = calc_b_field(x[:2])
+        omega = calculate_omega(b, charge=charge, energy=0.0, mass=mass)
+
     d = 1 / (1 + tau**2 * np.dot(omega, omega))
     accx = omega[2] * x[4] - omega[1] * x[5] - tau * (omega[2]**2
                                                       + omega[1]**2) * x[3]
@@ -216,7 +223,7 @@ def rhs_3d(t, x, omega, mass, tau):
     return x[3], x[4], x[5], accx, accy, accz, power
 
 
-def solve_3d(n_rotations, b_field, vel0, mass=me, charge=-qe, tau=0.0):
+def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0, calc_b_field=None):
     """Numerically solve Ford & O'Connell 1991 equation in 3D
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
@@ -236,11 +243,11 @@ def solve_3d(n_rotations, b_field, vel0, mass=me, charge=-qe, tau=0.0):
     """
 
     # Check if magnetic field is scalar, if so, pass to 1D solve
-    if len(b_field) == 1:
+    if len(b0) == 1:
         return solve(n_rotations, b_field, vel0, mass, charge, tau)
 
-    # Calculate omega vector
-    wvec = calculate_omega(b_field, charge=charge, energy=0.0, mass=mass)
+    # Calculate omega vector to calculate initial timestep
+    wvec = calculate_omega(b0, charge=charge, energy=0.0, mass=mass)
 
     # Calculate max time step
     wmag = np.linalg.norm(wvec)
@@ -250,13 +257,13 @@ def solve_3d(n_rotations, b_field, vel0, mass=me, charge=-qe, tau=0.0):
 
     # Set initial conditions
     # Note that for tau /= 0, both x_init and y_init and non-zero
-    ic = analytic_solution_3d(0, b_field=b_field, vel0=vel0, mass=mass,
+    ic = analytic_solution_3d(0, b_field=b0, vel0=v0, mass=mass,
                               charge=charge, tau=tau)
 
     # Also track total radiated power, so initialise to zero
     ic += (0.0,)
 
     res = solve_ivp(rhs_3d, (0, t_end), ic,
-                    max_step=max_step, args=[wvec, mass, tau])
+                    max_step=max_step, args=[charge, mass, tau, wvec, calc_b_field])
 
     return res
