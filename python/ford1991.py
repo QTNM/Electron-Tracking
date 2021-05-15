@@ -6,7 +6,7 @@ from utils import rotate_b_field, rotate_b_field_inverse, decompose_velocity
 
 
 # RHS according to Ford & O'Connell (1991). Non-relativistic
-def rhs(t, x, omega, mass, tau):
+def rhs(t, x, charge, mass, tau, omega0=1.0, calc_b_field=None):
     """Calculate RHS for Ford & O'Connell equation
 
     Args:
@@ -19,6 +19,12 @@ def rhs(t, x, omega, mass, tau):
     Returns:
         Time derivatives: [vx, vy, ax, ay, radiated_power]
     """
+
+    if calc_b_field is None:
+        omega = omega0
+    else:
+        b = calc_b_field(x[:2])
+        omega = calculate_omega(b, charge=charge, energy=0.0, mass=mass)
 
     # Calculate acceleration according to Lorentz force and Larmor term
     accx = (omega * x[3] - tau * omega**2 * x[2]) / (1 + tau**2 * omega**2)
@@ -83,7 +89,7 @@ def analytic_solution(t, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
     return x_soln, y_soln, vx_soln, vy_soln
 
 
-def solve(n_rotations, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
+def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0, calc_b_field=None):
     """Numerically solve Ford & O'Connell 1991 equation
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
@@ -103,24 +109,24 @@ def solve(n_rotations, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
         res: Numerical Solution
     """
 
-    # Calculate non-relativistic omega
-    omega = calculate_omega(b_field, charge=charge, energy=0.0, mass=mass)
+    # Calculate non-relativistic omega(b0) to use as maximum timestep
+    omega0 = calculate_omega(b0, charge=charge, energy=0.0, mass=mass)
 
     # Maximum timestep. Could probably be smaller
-    max_step = 1e-3 / np.abs(omega)
+    max_step = 1e-3 / np.abs(omega0)
     # Final time
-    t_end = n_rotations * 2.0 * np.pi / np.abs(omega)
+    t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
 
     # Set initial conditions
     # Note that for tau /= 0, both x_init and y_init and non-zero
-    ic = analytic_solution(0, b_field=b_field, vel0=vel0, mass=mass,
+    ic = analytic_solution(0, b_field=b0, vel0=v0, mass=mass,
                            charge=charge, tau=tau)
 
     # Also track total radiated power, so initialise to zero
     ic += (0.0,)
 
     res = solve_ivp(rhs, (0, t_end), ic,
-                    max_step=max_step, args=[omega, mass, tau])
+                    max_step=max_step, args=[charge, mass, tau, omega0, calc_b_field])
 
     return res
 
