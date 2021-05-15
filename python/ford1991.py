@@ -23,7 +23,7 @@ def rhs(t, x, charge, mass, tau, omega0=1.0, calc_b_field=None):
     if calc_b_field is None:
         omega = omega0
     else:
-        b = calc_b_field(x[:2])
+        b = calc_b_field(x[0], x[1])
         omega = calculate_omega(b, charge=charge, energy=0.0, mass=mass)
 
     # Calculate acceleration according to Lorentz force and Larmor term
@@ -200,7 +200,7 @@ def rhs_3d(t, x, charge, mass, tau, omega0=np.array([0.,0.,1.]), calc_b_field=No
     if calc_b_field is None:
         omega = omega0
     else:
-        b = calc_b_field(x[:2])
+        b = calc_b_field(x[0], x[1], x[2])
         omega = calculate_omega(b, charge=charge, energy=0.0, mass=mass)
 
     d = 1 / (1 + tau**2 * np.dot(omega, omega))
