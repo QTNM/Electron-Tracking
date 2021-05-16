@@ -89,7 +89,8 @@ def analytic_solution(t, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
     return x_soln, y_soln, vx_soln, vy_soln
 
 
-def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0, calc_b_field=None):
+def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0,
+          calc_b_field=None, ic=None):
     """Numerically solve Ford & O'Connell 1991 equation
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
@@ -117,15 +118,18 @@ def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0, calc_b_fiel
     # Final time
     t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
 
-    # Set initial conditions
-    # Note that for tau /= 0, both x_init and y_init and non-zero
-    ic = analytic_solution(0, b_field=b0, vel0=v0, mass=mass,
-                           charge=charge, tau=tau)
+    # Set initial conditions if not provided
+    if ic is None:
+        # Note that for tau /= 0, both x_init and y_init and non-zero
+        ic0 = analytic_solution(0, b_field=b0, vel0=v0, mass=mass,
+                                charge=charge, tau=tau)
 
-    # Also track total radiated power, so initialise to zero
-    ic += (0.0,)
+        # Also track total radiated power, so initialise to zero
+        ic0 += (0.0,)
+    else:
+        ic0 = ic
 
-    res = solve_ivp(rhs, (0, t_end), ic,
+    res = solve_ivp(rhs, (0, t_end), ic0,
                     max_step=max_step, args=[charge, mass, tau, omega0, calc_b_field])
 
     return res
@@ -223,7 +227,8 @@ def rhs_3d(t, x, charge, mass, tau, omega0=np.array([0.,0.,1.]), calc_b_field=No
     return x[3], x[4], x[5], accx, accy, accz, power
 
 
-def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0, calc_b_field=None):
+def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
+             calc_b_field=None, ic=None):
     """Numerically solve Ford & O'Connell 1991 equation in 3D
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
@@ -255,15 +260,18 @@ def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0, calc_b_field=Non
     # Final time
     t_end = n_rotations * 2.0 * np.pi / wmag
 
-    # Set initial conditions
-    # Note that for tau /= 0, both x_init and y_init and non-zero
-    ic = analytic_solution_3d(0, b_field=b0, vel0=v0, mass=mass,
-                              charge=charge, tau=tau)
+    # Set initial conditions, if not provided by user
+    if ic is None:
+        # Note that for tau /= 0, both x_init and y_init and non-zero
+        ic0 = analytic_solution_3d(0, b_field=b0, vel0=v0, mass=mass,
+                                   charge=charge, tau=tau)
 
-    # Also track total radiated power, so initialise to zero
-    ic += (0.0,)
+        # Also track total radiated power, so initialise to zero
+        ic0 += (0.0,)
+    else:
+        ic0 = ic
 
-    res = solve_ivp(rhs_3d, (0, t_end), ic,
+    res = solve_ivp(rhs_3d, (0, t_end), ic0,
                     max_step=max_step, args=[charge, mass, tau, wvec, calc_b_field])
 
     return res
