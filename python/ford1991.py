@@ -248,7 +248,7 @@ def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
     """
 
     # Check if magnetic field is scalar, if so, pass to 1D solve
-    if len(b0) == 1:
+    if np.size(b0) == 1:
         return solve(n_rotations, b_field, vel0, mass, charge, tau)
 
     # Calculate omega vector to calculate initial timestep
