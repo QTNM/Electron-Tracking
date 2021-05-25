@@ -106,7 +106,7 @@ def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0,
         tau: Larmor power parameter, such that P = tau * mass * a**2
              Default: 0.0
         cfl: Orbital CFL number, such that the maximum timestep,
-             dt_max = cfl / | \omega |
+             dt_max = cfl / | omega |
 
     Returns:
         res: Numerical Solution
@@ -132,7 +132,8 @@ def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0,
         ic0 = ic
 
     res = solve_ivp(rhs, (0, t_end), ic0,
-                    max_step=max_step, args=[charge, mass, tau, omega0, calc_b_field])
+                    max_step=max_step, args=[charge, mass, tau, omega0,
+                                             calc_b_field])
 
     return res
 
@@ -189,7 +190,8 @@ def analytic_solution_3d(time, b_field=np.array([0, 0, 1]),
     return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
 
 
-def rhs_3d(t, x, charge, mass, tau, omega0=np.array([0.,0.,1.]), calc_b_field=None):
+def rhs_3d(t, x, charge, mass, tau, omega0=np.array([0., 0., 1.]),
+           calc_b_field=None):
     """Calculate RHS for Ford & O'Connell equation in 3D
 
     Args:
@@ -245,7 +247,7 @@ def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
         tau: Larmor power parameter, such that P = tau * mass * a**2
              Default: 0.0
         cfl: Orbital CFL number, such that the maximum timestep,
-             dt_max = cfl / | \omega |
+             dt_max = cfl / | omega |
 
     Returns:
         res: Numerical Solution
@@ -276,6 +278,7 @@ def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
         ic0 = ic
 
     res = solve_ivp(rhs_3d, (0, t_end), ic0,
-                    max_step=max_step, args=[charge, mass, tau, wvec, calc_b_field])
+                    max_step=max_step, args=[charge, mass, tau, wvec,
+                                             calc_b_field])
 
     return res
