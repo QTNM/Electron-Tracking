@@ -90,7 +90,7 @@ def analytic_solution(t, b_field=1.0, vel0=1.0, mass=me, charge=-qe, tau=0.0):
 
 
 def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0,
-          calc_b_field=None, ic=None):
+          calc_b_field=None, ic=None, cfl=1e-3):
     """Numerically solve Ford & O'Connell 1991 equation
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
@@ -105,6 +105,8 @@ def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0,
         charge: Charge of particle. Default: Electron charge.
         tau: Larmor power parameter, such that P = tau * mass * a**2
              Default: 0.0
+        cfl: Orbital CFL number, such that the maximum timestep,
+             dt_max = cfl / | \omega |
 
     Returns:
         res: Numerical Solution
@@ -113,8 +115,8 @@ def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0,
     # Calculate non-relativistic omega(b0) to use as maximum timestep
     omega0 = calculate_omega(b0, charge=charge, energy=0.0, mass=mass)
 
-    # Maximum timestep. Could probably be smaller
-    max_step = 1e-3 / np.abs(omega0)
+    # Maximum timestep.
+    max_step = cfl / np.abs(omega0)
     # Final time
     t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
 
@@ -228,7 +230,7 @@ def rhs_3d(t, x, charge, mass, tau, omega0=np.array([0.,0.,1.]), calc_b_field=No
 
 
 def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
-             calc_b_field=None, ic=None):
+             calc_b_field=None, ic=None, cfl=1e-3):
     """Numerically solve Ford & O'Connell 1991 equation in 3D
 
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
@@ -242,6 +244,8 @@ def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
         charge: Charge of particle. Default: Electron charge.
         tau: Larmor power parameter, such that P = tau * mass * a**2
              Default: 0.0
+        cfl: Orbital CFL number, such that the maximum timestep,
+             dt_max = cfl / | \omega |
 
     Returns:
         res: Numerical Solution
@@ -256,7 +260,7 @@ def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
 
     # Calculate max time step
     wmag = np.linalg.norm(wvec)
-    max_step = 1e-3 / wmag
+    max_step = cfl / wmag
     # Final time
     t_end = n_rotations * 2.0 * np.pi / wmag
 
