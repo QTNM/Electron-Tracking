@@ -2,6 +2,48 @@ import numpy as np
 from scipy.constants import mu_0 as mu0
 from qtnm_base import qtnm_base_field
 
+
+
+class biot_savart(qtnm_base_field):
+    def __init__(self, x, y, z, I=1, mu=mu0):
+        self.I = I
+        self.mu = mu
+
+        # Construct positions of current elements
+        self.xc = 0.5 * (x[1:] + x[:-1])
+        self.yc = 0.5 * (y[1:] + y[:-1])
+        self.zc = 0.5 * (z[1:] + z[:-1])
+
+        # Wire elements
+        self.dlx = x[1:] - x[:-1]
+        self.dly = y[1:] - y[:-1]
+        self.dlz = z[1:] - z[:-1]
+
+    def evaluate_field_at_point(self, x, y, z):
+        # Displacement vectors
+        rx = x - self.xc
+        ry = y - self.yc
+        rz = z - self.zc
+        r = np.sqrt(rx**2 + ry**2 + rz**2)
+
+        # Cross product components. Better implementations
+        # (e.g. using built in cross product) exist
+        lrx = self.dly * rz - self.dlz * ry
+        lry = self.dlz * rx - self.dlx * rz
+        lrz = self.dlx * ry - self.dly * rx
+
+        bx = np.sum(lrx / r**3)
+        by = np.sum(lry / r**3)
+        bz = np.sum(lrz / r**3)
+
+        bx *= self.I * mu0 / 4.0 / np.pi
+        by *= self.I * mu0 / 4.0 / np.pi
+        bz *= self.I * mu0 / 4.0 / np.pi
+
+        return bx, by, bz
+
+
+# TODO. This ought to just inherit from Biot-Savart
 class Coil_Field(qtnm_base_field):
     def __init__(self, Ntheta, R=0.005, I=40, Z=0.0):
         self.R = R
