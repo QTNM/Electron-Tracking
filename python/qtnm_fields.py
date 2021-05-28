@@ -56,3 +56,18 @@ class Bath_Tub_Field:
         bx2, by2, bz2 = self.c2.evaluate_field(x, y, z)
 
         return np.array([bx1 + bx2, by1 + by2, bz1 + bz2]) + self.background
+
+
+class Solenoid_Field:
+    def __init__(self, Ntheta, R=0.005, I=40, Zmin=-1, Zmax=1,
+                 Ncoils=11):
+        self.coils = []
+        for z in np.linspace(Zmin, Zmax, Ncoils):
+            self.coils.append(Coil_Field(Ntheta, R=R, I=I, Z=z))
+
+    def evaluate_field(self, x, y, z):
+        field = np.zeros(3)
+        for c in self.coils:
+            field = field + c.evaluate_field(x, y, z)
+
+        return field
