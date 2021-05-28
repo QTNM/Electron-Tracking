@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.constants import mu_0 as mu0
+from qtnm_base import qtnm_base_field
 
-
-class Coil_Field:
+class Coil_Field(qtnm_base_field):
     def __init__(self, Ntheta, R=0.005, I=40, Z=0.0):
         self.R = R
         self.I = I
@@ -44,7 +44,7 @@ class Coil_Field:
         return bx, by, bz
 
 
-class Bath_Tub_Field:
+class Bath_Tub_Field(qtnm_base_field):
     def __init__(self, Ntheta, R=0.005, I=40, Z1=-1, Z2=1,
                  background=np.zeros(3)):
         self.c1 = Coil_Field(Ntheta, R=R, I=I, Z=Z1)
@@ -58,7 +58,7 @@ class Bath_Tub_Field:
         return np.array([bx1 + bx2, by1 + by2, bz1 + bz2]) + self.background
 
 
-class Solenoid_Field:
+class Solenoid_Field(qtnm_base_field):
     def __init__(self, Ntheta, R=0.005, I=40, Zmin=-1, Zmax=1,
                  Ncoils=11):
         self.coils = []
