@@ -22,7 +22,7 @@ class Coil_Field:
         self.dly = -(Ycoil[:-1] - Ycoil[1:])
 
     # Might be nicer if this worked on an array of values
-    def evaluate_field(self, x, y, z):
+    def evaluate_field_at_point(self, x, y, z):
         rx = x - self.xm
         ry = y - self.ym
         rz = z - self.zm
@@ -51,9 +51,9 @@ class Bath_Tub_Field:
         self.c2 = Coil_Field(Ntheta, R=R, I=I, Z=Z2)
         self.background = background
 
-    def evaluate_field(self, x, y, z):
-        bx1, by1, bz1 = self.c1.evaluate_field(x, y, z)
-        bx2, by2, bz2 = self.c2.evaluate_field(x, y, z)
+    def evaluate_field_at_point(self, x, y, z):
+        bx1, by1, bz1 = self.c1.evaluate_field_at_point(x, y, z)
+        bx2, by2, bz2 = self.c2.evaluate_field_at_point(x, y, z)
 
         return np.array([bx1 + bx2, by1 + by2, bz1 + bz2]) + self.background
 
@@ -65,9 +65,9 @@ class Solenoid_Field:
         for z in np.linspace(Zmin, Zmax, Ncoils):
             self.coils.append(Coil_Field(Ntheta, R=R, I=I, Z=z))
 
-    def evaluate_field(self, x, y, z):
+    def evaluate_field_at_point(self, x, y, z):
         field = np.zeros(3)
         for c in self.coils:
-            field = field + c.evaluate_field(x, y, z)
+            field = field + c.evaluate_field_at_point(x, y, z)
 
         return field
