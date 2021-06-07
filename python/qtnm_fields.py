@@ -1,9 +1,9 @@
 import numpy as np
 from scipy.constants import mu_0 as mu0
-from qtnm_base import qtnm_base_field
+from qtnm_base import QtnmBaseField
 
 
-class biot_savart(qtnm_base_field):
+class BiotSavart(QtnmBaseField):
     def __init__(self, x, y, z, I=1, mu=mu0):
         self.I = I
         self.mu = mu
@@ -43,7 +43,7 @@ class biot_savart(qtnm_base_field):
 
 
 # TODO. This ought to just inherit from Biot-Savart
-class Coil_Field(qtnm_base_field):
+class CoilField(QtnmBaseField):
     def __init__(self, Ntheta, R=0.005, I=40, Z=0.0):
         self.R = R
         self.I = I
@@ -85,11 +85,11 @@ class Coil_Field(qtnm_base_field):
         return bx, by, bz
 
 
-class Bath_Tub_Field(qtnm_base_field):
+class BathTubField(QtnmBaseField):
     def __init__(self, Ntheta, R=0.005, I=40, Z1=-1, Z2=1,
                  background=np.zeros(3)):
-        self.c1 = Coil_Field(Ntheta, R=R, I=I, Z=Z1)
-        self.c2 = Coil_Field(Ntheta, R=R, I=I, Z=Z2)
+        self.c1 = CoilField(Ntheta, R=R, I=I, Z=Z1)
+        self.c2 = CoilField(Ntheta, R=R, I=I, Z=Z2)
         self.background = background
 
     def evaluate_field_at_point(self, x, y, z):
@@ -99,12 +99,12 @@ class Bath_Tub_Field(qtnm_base_field):
         return np.array([bx1 + bx2, by1 + by2, bz1 + bz2]) + self.background
 
 
-class Solenoid_Field(qtnm_base_field):
+class SolenoidField(QtnmBaseField):
     def __init__(self, Ntheta, R=0.005, I=40, Zmin=-1, Zmax=1,
                  Ncoils=11):
         self.coils = []
         for z in np.linspace(Zmin, Zmax, Ncoils):
-            self.coils.append(Coil_Field(Ntheta, R=R, I=I, Z=z))
+            self.coils.append(CoilField(Ntheta, R=R, I=I, Z=z))
 
     def evaluate_field_at_point(self, x, y, z):
         field = np.zeros(3)

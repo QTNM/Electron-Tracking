@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-class qtnm_base_field(ABC):
+class QtnmBaseField(ABC):
     @abstractmethod
     def evaluate_field_at_point(self, x, y, z):
         pass
