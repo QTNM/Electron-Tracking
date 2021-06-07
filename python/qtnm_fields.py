@@ -4,8 +4,8 @@ from qtnm_base import QtnmBaseField
 
 
 class BiotSavart(QtnmBaseField):
-    def __init__(self, x, y, z, I=1, mu=mu0):
-        self.I = I
+    def __init__(self, x, y, z, current=1.0, mu=mu0):
+        self.current = current
         self.mu = mu
 
         # Construct positions of current elements
@@ -20,91 +20,90 @@ class BiotSavart(QtnmBaseField):
 
     def evaluate_field_at_point(self, x, y, z):
         # Displacement vectors
-        rx = x - self.xc
-        ry = y - self.yc
-        rz = z - self.zc
-        r = np.sqrt(rx**2 + ry**2 + rz**2)
+        r_x = x - self.xc
+        r_y = y - self.yc
+        r_z = z - self.zc
+        rmag = np.sqrt(r_x**2 + r_y**2 + r_z**2)
 
         # Cross product components. Better implementations
         # (e.g. using built in cross product) exist
-        lrx = self.dly * rz - self.dlz * ry
-        lry = self.dlz * rx - self.dlx * rz
-        lrz = self.dlx * ry - self.dly * rx
+        lrx = self.dly * r_z - self.dlz * r_y
+        lry = self.dlz * r_x - self.dlx * r_z
+        lrz = self.dlx * r_y - self.dly * r_x
 
-        bx = np.sum(lrx / r**3)
-        by = np.sum(lry / r**3)
-        bz = np.sum(lrz / r**3)
+        b_x = np.sum(lrx / rmag**3)
+        b_y = np.sum(lry / rmag**3)
+        b_z = np.sum(lrz / rmag**3)
 
-        bx *= self.I * mu0 / 4.0 / np.pi
-        by *= self.I * mu0 / 4.0 / np.pi
-        bz *= self.I * mu0 / 4.0 / np.pi
+        b_x *= self.current * self.mu / 4.0 / np.pi
+        b_y *= self.current * self.mu / 4.0 / np.pi
+        b_z *= self.current * self.mu / 4.0 / np.pi
 
-        return bx, by, bz
+        return b_x, b_y, b_z
 
 
 # TODO. This ought to just inherit from Biot-Savart
 class CoilField(QtnmBaseField):
-    def __init__(self, Ntheta, R=0.005, I=40, Z=0.0):
-        self.R = R
-        self.I = I
+    def __init__(self, Ntheta, radius=0.005, current=40, Z=0.0, mu=mu0):
+        self.current = current
+        self.mu = mu
 
         phi = np.linspace(0.0, 2 * np.pi, Ntheta)
-        Xcoil = R * np.cos(phi)
-        Ycoil = R * np.sin(phi)
+        x_coil = radius * np.cos(phi)
+        y_coil = radius * np.sin(phi)
 
         # Midpoint of coil elements
-        self.xm = 0.5 * (Xcoil[1:] + Xcoil[:-1])
-        self.ym = 0.5 * (Ycoil[1:] + Ycoil[:-1])
+        self.xm = 0.5 * (x_coil[1:] + x_coil[:-1])
+        self.ym = 0.5 * (y_coil[1:] + y_coil[:-1])
         self.zm = Z
 
         # Coil elements, dl
-        # Possibly sketchy sign convention. Chosen so that I>0 produces Bz > 0
-        self.dlx = -(Xcoil[:-1] - Xcoil[1:])
-        self.dly = -(Ycoil[:-1] - Ycoil[1:])
+        self.dlx = x_coil[1:] - x_coil[:-1]
+        self.dly = y_coil[1:] - y_coil[:-1]
 
     # Might be nicer if this worked on an array of values
     def evaluate_field_at_point(self, x, y, z):
-        rx = x - self.xm
-        ry = y - self.ym
-        rz = z - self.zm
-        r = np.sqrt(rx**2 + ry**2 + rz**2)
+        r_x = x - self.xm
+        r_y = y - self.ym
+        r_z = z - self.zm
+        rmag = np.sqrt(r_x**2 + r_y**2 + r_z**2)
 
         # Components of cross product
-        lxrx = self.dly * rz
-        lxry = -self.dlx * rz
-        lxrz = self.dlx * ry - self.dly * rx
+        lxrx = self.dly * r_z
+        lxry = -self.dlx * r_z
+        lxrz = self.dlx * r_y - self.dly * r_x
 
-        bx = np.sum(lxrx / r**3)
-        by = np.sum(lxry / r**3)
-        bz = np.sum(lxrz / r**3)
+        b_x = np.sum(lxrx / rmag**3)
+        b_y = np.sum(lxry / rmag**3)
+        b_z = np.sum(lxrz / rmag**3)
 
-        bx *= self.I * mu0 / 4.0 / np.pi
-        by *= self.I * mu0 / 4.0 / np.pi
-        bz *= self.I * mu0 / 4.0 / np.pi
+        b_x *= self.current * self.mu / 4.0 / np.pi
+        b_y *= self.current * self.mu / 4.0 / np.pi
+        b_z *= self.current * self.mu / 4.0 / np.pi
 
-        return bx, by, bz
+        return b_x, b_y, b_z
 
 
 class BathTubField(QtnmBaseField):
-    def __init__(self, Ntheta, R=0.005, I=40, Z1=-1, Z2=1,
+    def __init__(self, Ntheta, radius=0.005, current=40, Z1=-1, Z2=1,
                  background=np.zeros(3)):
-        self.c1 = CoilField(Ntheta, R=R, I=I, Z=Z1)
-        self.c2 = CoilField(Ntheta, R=R, I=I, Z=Z2)
+        self.coil1 = CoilField(Ntheta, radius=radius, current=current, Z=Z1)
+        self.coil2 = CoilField(Ntheta, radius=radius, current=current, Z=Z2)
         self.background = background
 
     def evaluate_field_at_point(self, x, y, z):
-        bx1, by1, bz1 = self.c1.evaluate_field_at_point(x, y, z)
-        bx2, by2, bz2 = self.c2.evaluate_field_at_point(x, y, z)
+        b_x1, b_y1, b_z1 = self.coil1.evaluate_field_at_point(x, y, z)
+        b_x2, b_y2, b_z2 = self.coil2.evaluate_field_at_point(x, y, z)
 
-        return np.array([bx1 + bx2, by1 + by2, bz1 + bz2]) + self.background
+        return np.array([b_x1 + b_x2, b_y1 + b_y2, b_z1 + b_z2]) + self.background
 
 
 class SolenoidField(QtnmBaseField):
-    def __init__(self, Ntheta, R=0.005, I=40, Zmin=-1, Zmax=1,
+    def __init__(self, Ntheta, radius=0.005, current=40, Zmin=-1, Zmax=1,
                  Ncoils=11):
         self.coils = []
         for z in np.linspace(Zmin, Zmax, Ncoils):
-            self.coils.append(CoilField(Ntheta, R=R, I=I, Z=z))
+            self.coils.append(CoilField(Ntheta, radius=radius, current=current, Z=z))
 
     def evaluate_field_at_point(self, x, y, z):
         field = np.zeros(3)
