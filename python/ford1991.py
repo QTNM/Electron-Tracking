@@ -12,9 +12,13 @@ def rhs(t, x, charge, mass, tau, omega0=1.0, calc_b_field=None):
     Args:
         t: Time. Not used, but required for solve_ivp
         x: Current State [x, y, vx, vy, energy_radiated]
-        omega: Cyclotron frequency
+        charge: Charge of particle
         mass: Mass of particle
         tau: Larmor power parameter, such that P = tau * mass * a**2
+        omega0: Pre-compyted cyclotron frequency, to use if
+                calc_b_field is None
+        calc_b_field: Method to calculate magnetic field as function
+                      of (x, y)
 
     Returns:
         Time derivatives: [vx, vy, ax, ay, radiated_power]
@@ -99,12 +103,18 @@ def solve(n_rotations, b0=1.0, v0=1.0, mass=me, charge=-qe, tau=0.0,
     Args:
         n_rotations: Number of rotations to calculate
         b_field: Magnetic field. Assumed to be in z-direction. Default: 1.0
+                 If calc_b_field is None, this value is used for all time.
+                 Otherwise, this value is only used for limiting the timestep.
         vel0: Initial velocity. If scalar assumed to be in y-direction.
               Otherwise in xy plane. Default: 1.0
         mass: Mass of particle. Default: Electron mass
         charge: Charge of particle. Default: Electron charge.
         tau: Larmor power parameter, such that P = tau * mass * a**2
              Default: 0.0
+        calc_b_field: Method to calculate magnetic field as function
+                      of (x, y)
+        ic: Initial conditions. If None, the particle is initialised
+            automatically, using vel0 (default behaviour).
         cfl: Orbital CFL number, such that the maximum timestep,
              dt_max = cfl / | omega |
 
@@ -150,7 +160,7 @@ def analytic_solution_3d(time, b_field=np.array([0, 0, 1]),
     Assumes that motion is initially vertical (at t=0), with magnitude vel0
 
     Args:
-        t: Time(s) to calculation solution for
+        time: Time(s) to calculation solution for
         b_field: Magnetic field. Default: [0, 0, 1]
         vel0: Initial velocity. Default: [0, 1, 0]
         mass: Mass of particle. Default: Electron mass
@@ -197,9 +207,12 @@ def rhs_3d(t, x, charge, mass, tau, omega0=np.array([0., 0., 1.]),
     Args:
         t: Time. Not used, but required for solve_ivp
         x: Current State [x, y, vx, vy, energy_radiated]
-        omega: Cyclotron frequency
         mass: Mass of particle
         tau: Larmor power parameter, such that P = tau * mass * a**2
+        omega0: Pre-compyted cyclotron frequency (vector), to use if
+                calc_b_field is None
+        calc_b_field: Method to calculate magnetic field as function
+                      of (x, y, z)
 
     Returns:
         Time derivatives: [vx, vy, vz, ax, ay, az, radiated_power]
@@ -246,6 +259,10 @@ def solve_3d(n_rotations, b0, v0, mass=me, charge=-qe, tau=0.0,
         charge: Charge of particle. Default: Electron charge.
         tau: Larmor power parameter, such that P = tau * mass * a**2
              Default: 0.0
+        calc_b_field: Method to calculate magnetic field as function
+                      of (x, y)
+        ic: Initial conditions. If None, the particle is initialised
+            automatically, using v0 (default behaviour).
         cfl: Orbital CFL number, such that the maximum timestep,
              dt_max = cfl / | omega |
 
