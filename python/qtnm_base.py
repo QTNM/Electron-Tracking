@@ -1,11 +1,38 @@
+"""
+QTNM base field module.
+
+Provides the abstract class, QtnmBaseField.
+New concrete implementations of this class should be compatible with
+other python code within the Electron-Tracking package.
+"""
+
 from abc import ABC, abstractmethod
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 class QtnmBaseField(ABC):
+    """
+    QTNM Base field abstract class
+
+    Methods
+    -------
+    evaluate_field_at_point(x, y, z): Evaluates the field at a given position.
+                                      (abstractmethod)
+    evaluate_field(x, y, z): Evaluate field for a set of points.
+    evaluate_field_magnitude(x, y, z): Evaluate field magnitude for a set of points.
+    stream_plot(x, y, z): Produce 2D magnetic field line plot.
+    """
     @abstractmethod
     def evaluate_field_at_point(self, x, y, z):
+        """
+        Parameters
+        ----------
+        x: x position to evaluate field at.
+        y: y position to evaluate field at.
+        z: z position to evaluate field at.
+        """
+
         pass
 
     @staticmethod
@@ -13,6 +40,14 @@ class QtnmBaseField(ABC):
         return np.array([np.size(x), np.size(y), np.size(z)])
 
     def evaluate_field(self, x, y, z):
+        """
+        Parameters
+        ----------
+        x: x positions to evaluate field at (1D).
+        y: y positions to evaluate field at (1D).
+        z: z positions to evaluate field at (1D).
+        """
+
         # Convert to arrays, so subscriptable
         _x = np.atleast_1d(x)
         _y = np.atleast_1d(y)
@@ -40,10 +75,37 @@ class QtnmBaseField(ABC):
         return np.squeeze(b_x), np.squeeze(b_y), np.squeeze(b_z)
 
     def evaluate_field_magnitude(self, x, y, z):
+        """
+        Parameters
+        ----------
+        x: x positions to evaluate field magnitude at (1D).
+        y: y positions to evaluate field magnitude at (1D).
+        z: z positions to evaluate field magnitude at (1D).
+        """
+
         b_x, b_y, b_z = self.evaluate_field(x, y, z)
+
         return np.sqrt(b_x**2 + b_y**2 + b_z**2)
 
     def stream_plot(self, x, y, z, **kwargs):
+        """
+        Evaluate field in a plane and produce a 2D streamplot.
+        Note that one, and only one of x, y, z must be size 1.
+        The size 1 input argument is used to specify the plane to
+        produce the streamplot in.
+
+        Parameters
+        ----------
+        x: Position(s) to evaluate field at for use in streamplot
+        y: Position(s) to evaluate field at for use in streamplot
+        z: Position(s) to evaluate field at for use in streamplot
+        **kwargs: **kwargs for matplotlib.pyplot.streamplot
+
+        Raises
+        ------
+        ValueError If 1 (and only) one of x, y, z are size is not 1.
+        """
+
         # Quick check on inputs
         sizes = self.__sizes(x, y, z)
         if np.sum(sizes == 1) != 1:
