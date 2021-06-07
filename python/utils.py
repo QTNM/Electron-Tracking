@@ -4,13 +4,13 @@ from scipy.constants import c, electron_mass as me, elementary_charge as qe
 
 
 # A very basic error plotting routine
-def error_plot(x, y, x_exact=None, y_exact=None, title=None, xlabel=None,
+def error_plot(x_data, y_data, x_exact=None, y_exact=None, title=None, xlabel=None,
                ylabel=None):
     """Plot data and optionally compare to analytic solution
 
     Args:
-        x: xdata
-        y: ydata, as function of x
+        x_data: xdata
+        y_data: ydata, as function of x_data
         x_exact: xdata for analytic solution. Default: None
         y_exact: Analytic solution, as a function of xdata. Default: None
         title: Plot title
@@ -19,7 +19,7 @@ def error_plot(x, y, x_exact=None, y_exact=None, title=None, xlabel=None,
     """
 
     # Plot data
-    plt.plot(x, y)
+    plt.plot(x_data, y_data)
 
     # Optionally plot analytic solution
     if y_exact is not None:
@@ -27,14 +27,14 @@ def error_plot(x, y, x_exact=None, y_exact=None, title=None, xlabel=None,
         if x_exact is not None:
             plt.plot(x_exact, y_exact, linestyle='--')
         else:
-            plt.plot(x, y_exact, linestyle='--')
+            plt.plot(x_data, y_exact, linestyle='--')
 
     plt.title(title, fontsize=14)
     plt.xlabel(xlabel, fontsize=12)
     plt.ylabel(ylabel, fontsize=12)
 
     # If all x positive, limit axis
-    if np.all(x >= 0.0):
+    if np.all(x_data >= 0.0):
         plt.xlim(left=0.0)
 
     plt.tight_layout()
