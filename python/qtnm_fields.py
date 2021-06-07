@@ -3,7 +3,6 @@ from scipy.constants import mu_0 as mu0
 from qtnm_base import qtnm_base_field
 
 
-
 class biot_savart(qtnm_base_field):
     def __init__(self, x, y, z, I=1, mu=mu0):
         self.I = I
