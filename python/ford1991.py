@@ -183,8 +183,9 @@ def analytic_solution_3d(time, b_field=np.array([0, 0, 1]),
     bmag = np.linalg.norm(b_field)
 
     # Analytic 1D solution
-    x_b, y_b, vx_b, vy_b = analytic_solution(time, b_field=bmag, vel0=vrot[0:2],
-                                             mass=mass, charge=charge, tau=tau)
+    x_b, y_b, vx_b, vy_b = analytic_solution(time, b_field=bmag,
+                                             vel0=vrot[0:2], mass=mass,
+                                             charge=charge, tau=tau)
 
     # Calculate full solution by transforming back and adding on vpara
     minv = rotate_b_field_inverse(b_field)

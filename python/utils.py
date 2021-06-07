@@ -4,8 +4,8 @@ from scipy.constants import c, electron_mass as me, elementary_charge as qe
 
 
 # A very basic error plotting routine
-def error_plot(x_data, y_data, x_exact=None, y_exact=None, title=None, xlabel=None,
-               ylabel=None):
+def error_plot(x_data, y_data, x_exact=None, y_exact=None, title=None,
+               xlabel=None, ylabel=None):
     """Plot data and optionally compare to analytic solution
 
     Args:

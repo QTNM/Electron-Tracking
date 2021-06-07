@@ -20,7 +20,8 @@ class QtnmBaseField(ABC):
     evaluate_field_at_point(x, y, z): Evaluates the field at a given position.
                                       (abstractmethod)
     evaluate_field(x, y, z): Evaluate field for a set of points.
-    evaluate_field_magnitude(x, y, z): Evaluate field magnitude for a set of points.
+    evaluate_field_magnitude(x, y, z): Evaluate field magnitude for a set of
+                                       points.
     stream_plot(x, y, z): Produce 2D magnetic field line plot.
     """
     @abstractmethod
@@ -119,6 +120,6 @@ class QtnmBaseField(ABC):
             bfield = self.evaluate_field(x, y, z)[::2]
         else:
             grid = np.meshgrid(x, y)
-            bfield= self.evaluate_field(x, y, z)[:-1]
+            bfield = self.evaluate_field(x, y, z)[:-1]
 
         return plt.streamplot(grid[0], grid[1], bfield[0], bfield[1], **kwargs)
