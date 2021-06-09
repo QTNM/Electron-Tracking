@@ -122,4 +122,11 @@ class QtnmBaseField(ABC):
             grid = np.meshgrid(x, y)
             bfield = self.evaluate_field(x, y, z)[:-1]
 
-        return plt.streamplot(grid[0], grid[1], bfield[0], bfield[1], **kwargs)
+        stream_plot = plt.streamplot(grid[0], grid[1], bfield[0], bfield[1],
+                                     **kwargs)
+
+        # Limit axes
+        plt.xlim(np.min(grid[0]), np.max(grid[0]))
+        plt.ylim(np.min(grid[1]), np.max(grid[1]))
+
+        return stream_plot
