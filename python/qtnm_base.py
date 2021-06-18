@@ -49,6 +49,12 @@ class QtnmBaseField(ABC):
         z: z positions to evaluate field at (1D).
         """
 
+        sizes = self.__sizes(x,  y, z)
+
+        # If all three arguments are scalars, call evalute_field
+        if np.all(sizes == 1):
+            return self.evaluate_field_at_point(x, y, z)
+
         # Convert to arrays, so subscriptable
         _x = np.atleast_1d(x)
         _y = np.atleast_1d(y)
@@ -56,12 +62,6 @@ class QtnmBaseField(ABC):
 
         # TODO handle multi-dimensional arrays
         # (e.g. those from meshgrid)
-
-        sizes = self.__sizes(x,  y, z)
-
-        # If all three arguments are scalars, call evalute_field
-        if np.all(sizes == 1):
-            return self.evaluate_field_at_point(_x, _y, _z)
 
         b_x = np.zeros(sizes[::-1])
         b_y = np.zeros_like(b_x)
