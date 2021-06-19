@@ -34,8 +34,6 @@ class QtnmBaseField(ABC):
         z: z position to evaluate field at.
         """
 
-        pass
-
     @staticmethod
     def __sizes(x, y, z):
         return np.array([np.size(x), np.size(y), np.size(z)])
