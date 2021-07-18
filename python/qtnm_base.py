@@ -43,7 +43,7 @@ class QtnmBaseSolver(ABC):
         if self.calc_b_field is None:
             return self.omega0
 
-        bfield = self.calc_b_field(pos)
+        bfield = self.calc_b_field(pos[0], pos[1], pos[2])
         return calculate_omega(bfield, mass=self.mass, charge=self.charge, energy=0.0)
 
     @abstractmethod
