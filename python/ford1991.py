@@ -112,9 +112,9 @@ class Ford1991Solver(QtnmBaseSolver):
         vz_soln = minv[2, 0] * vx_b + minv[2, 1] * vy_b + vpar[2]
 
         # Shift solution to x0
-        x_soln += (x0[0] - x_soln[0])
-        y_soln += (x0[1] - y_soln[0])
-        z_soln += (x0[2] - z_soln[0])
+        x_soln += (x0[0] - np.atleast_1d(x_soln)[0])
+        y_soln += (x0[1] - np.atleast_1d(y_soln)[0])
+        z_soln += (x0[2] - np.atleast_1d(z_soln)[0])
 
         return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
 
@@ -149,7 +149,7 @@ class Ford1991Solver(QtnmBaseSolver):
                 omega = -omega_mag
 
         if np.size(v0) == 1:
-            _v0 = np.array(0.0, v0)
+            _v0 = np.array([0.0, v0])
         elif np.size(v0) == 2:
             _v0 = v0
         else:
@@ -185,7 +185,7 @@ class Ford1991Solver(QtnmBaseSolver):
             _x0 = x0[0]
             _y0 = x0[1]
 
-        x_soln += (_x0 - x_soln[0])
-        y_soln += (_y0 - y_soln[0])
+        x_soln += (_x0 - np.atleast_1d(x_soln)[0])
+        y_soln += (_y0 - np.atleast_1d(y_soln)[0])
 
         return x_soln, y_soln, vx_soln, vy_soln
