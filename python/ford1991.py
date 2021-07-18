@@ -172,4 +172,15 @@ class Ford1991Solver(QtnmBaseSolver):
         x_soln *= v0_mag
         y_soln *= v0_mag
 
+        # Now correct for non-zero initial position
+        if np.size(x0) == 1:
+            _x0 = x0
+            _y0 = 0.0
+        else:
+            _x0 = x0[0]
+            _y0 = x0[1]
+
+        x_soln += (_x0 - x_soln[0])
+        y_soln += (_y0 - y_soln[0])
+
         return x_soln, y_soln, vx_soln, vy_soln
