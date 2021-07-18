@@ -76,7 +76,7 @@ class Ford1991Solver(QtnmBaseSolver):
         power = self.tau * self.mass * (accx**2 + accy**2)
         return [x[2], x[3], accx, accy, power]
 
-    def analytic_solution(time, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0])):
+    def analytic_solution(self, time, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0])):
         """Calculate analytic solution for Ford & O'Connell equation in 3D
 
         Assumes a uniform magnetic field
@@ -113,7 +113,7 @@ class Ford1991Solver(QtnmBaseSolver):
 
         return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
 
-    def analytic_solution_1d(time, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0])):
+    def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0])):
         """Calculate analytic solution for Ford & O'Connell equation
 
         Assumes a uniform magnetic field, in the z-direction
@@ -132,7 +132,7 @@ class Ford1991Solver(QtnmBaseSolver):
         # Calculate non-relativistic omega
         # Take magnitude as possible working with 3D field via
         # 3D analytic solution
-        omega = np.linalg.norm(self.get_omega)
+        omega = np.linalg.norm(self.get_omega(np.append(x0, 0.0)))
 
         if np.size(v0) == 1:
             _v0 = np.array(0.0, v0)
@@ -144,17 +144,17 @@ class Ford1991Solver(QtnmBaseSolver):
         phi = np.arctan2(_v0[0], _v0[1])
         v0_mag = np.linalg.norm(_v0)
 
-        self.mu = self.tau * omega**2
+        mu = self.tau * omega**2
 
-        phase = omega * t + phi
+        phase = omega * time + phi
         # Factor of 1 / (1 + tau * mu) not needed, as we scale solution such that
         # initial velocity is correct
-        vx_soln = np.exp(-mu * t) * np.sin(phase)
-        vy_soln = np.exp(-mu * t) * np.cos(phase)
+        vx_soln = np.exp(-mu * time) * np.sin(phase)
+        vy_soln = np.exp(-mu * time) * np.cos(phase)
 
-        x_soln = -np.exp(-mu * t) * ((mu * np.sin(phase) + omega * np.cos(phase))
+        x_soln = -np.exp(-mu * time) * ((mu * np.sin(phase) + omega * np.cos(phase))
                                  / (omega**2 + mu**2))
-        y_soln = np.exp(-mu * t) * ((omega * np.sin(phase) - mu * np.cos(phase))
+        y_soln = np.exp(-mu * time) * ((omega * np.sin(phase) - mu * np.cos(phase))
                                 / (omega**2 + mu**2))
 
         # Scale results by initial velocity
