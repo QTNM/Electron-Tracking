@@ -98,7 +98,7 @@ class Ford1991Solver(QtnmBaseSolver):
         vrot = np.dot(mrot, vperp)
 
         # Analytic 1D solution
-        x_b, y_b, vx_b, vy_b = analytic_solution(time, x0=x0[:2], v0=v0[:2])
+        x_b, y_b, vx_b, vy_b = self.analytic_solution_1d(time, v0=vrot[:2])
 
         # Calculate full solution by transforming back and adding on vpara
         minv = rotate_b_field_inverse(self.b_field)
@@ -110,6 +110,11 @@ class Ford1991Solver(QtnmBaseSolver):
         vx_soln = minv[0, 0] * vx_b + minv[0, 1] * vy_b + vpar[0]
         vy_soln = minv[1, 0] * vx_b + minv[1, 1] * vy_b + vpar[1]
         vz_soln = minv[2, 0] * vx_b + minv[2, 1] * vy_b + vpar[2]
+
+        # Shift solution to x0
+        x_soln += (x0[0] - x_soln[0])
+        y_soln += (x0[1] - y_soln[0])
+        z_soln += (x0[2] - z_soln[0])
 
         return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
 

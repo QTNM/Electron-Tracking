@@ -83,13 +83,14 @@ class QtnmBaseSolver(ABC):
             v0: Initial position. Defailt: (0.0, 1.0, 0.0)
         """
 
-        omega0 = self.get_omega(x0)
+        # Calculate magnitude of omega
+        omega0 = np.linalg.norm(self.get_omega(x0))
 
         # Maximum time step
-        max_step = cfl / np.abs(omega0)
+        max_step = cfl / omega0
 
         # Final time
-        t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
+        t_end = n_rotations * 2.0 * np.pi / omega0
 
         # Check how many variables we're solving for. If > 6 pad initial conditions with zeros
         initial_conditions = np.append(x0, v0)
