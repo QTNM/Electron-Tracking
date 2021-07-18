@@ -91,7 +91,7 @@ class QtnmBaseSolver(ABC):
         t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
 
         # Check how many variables we're solving for. If > 6 pad initial conditions with zeros
-        initial_conditions = np.array([x0, v0])
+        initial_conditions = np.append(x0, v0)
         n_additional_vars = np.size(self.rhs(0.0, initial_conditions)) - 6
         initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
 
@@ -130,7 +130,7 @@ class QtnmBaseSolver(ABC):
             print('error')
 
         # Caculate omega (t=0) to set end time and max dt
-        omega0 = self.get_omega(np.array([_x0, 0.0]))
+        omega0 = self.get_omega(np.append(_x0, 0.0))
 
         # Maximum time step
         max_step = cfl / np.abs(omega0)
@@ -139,7 +139,7 @@ class QtnmBaseSolver(ABC):
         t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
 
         # Check how many variables we're solving for. If > 4 pad initial conditions with zeros
-        initial_conditions = np.array([_x0, _v0])
+        initial_conditions = np.append(_x0, _v0)
         n_additional_vars = np.size(self.rhs_1d(0.0, initial_conditions)) - 4
         initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
 
