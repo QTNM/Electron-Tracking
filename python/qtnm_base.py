@@ -1,7 +1,7 @@
 """
 QTNM base field module.
 
-Provides the abstract class, QtnmBaseField.
+Provides the abstract classes, QtnmBaseField and QtnmBaseSolver.
 New concrete implementations of this class should be compatible with
 other python code within the Electron-Tracking package.
 """
@@ -9,7 +9,141 @@ other python code within the Electron-Tracking package.
 from abc import ABC, abstractmethod
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.constants import electron_mass as me, elementary_charge as qe
+from scipy.integrate import solve_ivp
+from utils import calculate_omega
 
+
+class QtnmBaseSolver(ABC):
+
+    def __init__(self, charge=-qe, mass=me, b_field=1.0, calc_b_field=None):
+
+        self.mass = mass
+        self.charge = charge
+        self.calc_b_field = calc_b_field
+
+        # If calc_b_field not provided, assume constant field, and store omega
+        if calc_b_field is None:
+            omega0 = calculate_omega(b_field)
+            if np.size(omega0 == 3):
+                self.omega0 = omega0
+            elif np.size(omega0 == 1):
+                self.omega0 = np.array([0,0,omega0], dtype=float)
+            else:
+                # Raise error here. TODO raise exception
+                print('error')
+
+    def get_omega(self, pos=np.zeros(3)):
+        """
+        Calculate omega as a function of position
+        """
+
+        # Use pre-calculated value if possible
+        if self.calc_b_field is None:
+            return self.omega0
+
+        bfield = self.calc_b_field(pos)
+        return calculate_omega(bfield, mass=self.mass, charge=self.charge, energy=0.0)
+
+    @abstractmethod
+    def rhs(self, t, x):
+        """
+        Return RHS of equation as a function of time(t) and x(vars solved for)
+        """
+
+    @abstractmethod
+    def rhs1d(self, t, x):
+        """
+        Return RHS of equation as a function of time(t) and x(vars solved for),
+        assuming a one dimensional B-field (in z-direction)
+        """
+
+    def analytic_solution(t):
+        """
+        Return analytic solution as a function of t, assuming a uniform field
+        """
+        return None
+
+    def analytic_solution1d(t):
+        """
+        Return 1D (B = (0, 0, B_z), uniform) analytic solution as a function of t
+        """
+        return None
+
+    def solve(n_rotations, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0]), ic=None, cfl=1e-3):
+        """
+        Numerically solve equation set for n_rotations.
+
+        If RHS returns > 6 values the initial conditions are padded with zero
+
+        Args:
+            n_rotations: Number of gyro-orbits (as function of B(x0))
+            x0: Initial position. Default: (1.0, 0.0, 0.0)
+            v0: Initial position. Defailt: (0.0, 1.0, 0.0)
+        """
+
+        omega0 = self.get_omega(x0)
+
+        # Maximum time step
+        max_step = cfl / np.abs(omega0)
+
+        # Final time
+        t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
+
+        # Check how many variables we're solving for. If > 6 pad initial conditions with zeros
+        initial_conditions = np.array([x0, v0])
+        n_additional_vars = np.size(self.rhs(0.0, initial_conditions)) - 6
+        initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
+
+        return solve_ivp(self.rhs, (0, t_end), max_step=max_step)
+
+    def solve_1d(n_rotations, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0]), cfl=1e-3):
+        """
+        Numerically solve equation set in 1D, for n_rotations
+
+        If RHS returns > 4 values the initial conditions are padded with zero
+
+        Args:
+            n_rotations: Number of gyro-orbits (as function of B(x0))
+            x0: Initial position. Scalar values interpretted as (x0, 0.0).
+                Default: (1.0, 0.0)
+            v0: Initial velocity. Scalar values interpretted as (0.0, v0).
+                Default: (0.0, 1.0)
+            cfl: Time-steps per gyro-orbit. Default: 1e-3
+        """
+
+        if np.size(v0) == 1:
+            _v0 = np.array(0.0, v0)
+        elif np.size(v0) == 2:
+            _v0 = v0
+        else:
+            # Could possible fall back to 3D solve here? If np.size(x0 == 3)
+            # TODO raise exception here
+            print('error')
+
+        if np.size(x0) == 1:
+            _x0 = np.array(x0, 0.0)
+        elif np.size(x0) == 2:
+            _x0 = x0
+        else:
+            # TODO raise exception here
+            print('error')
+
+        # Caculate omega (t=0) to set end time and max dt
+        omega0 = self.get_omega(np.array([_x0, 0.0]))
+
+        # Maximum time step
+        max_step = cfl / np.abs(omega0)
+
+        # Final time
+        t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
+
+        # Check how many variables we're solving for. If > 4 pad initial conditions with zeros
+        initial_conditions = np.array([_x0, _v0])
+        n_additional_vars = np.size(self.rhs(0.0, initial_conditions)) - 4
+        initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
+
+        return solve_ivp(self.rhs, (0, t_end), max_step=max_step)
 
 class QtnmBaseField(ABC):
     """
