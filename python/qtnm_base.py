@@ -26,9 +26,9 @@ class QtnmBaseSolver(ABC):
         # If calc_b_field not provided, assume constant field, and store omega
         if calc_b_field is None:
             omega0 = calculate_omega(b_field, mass=mass, charge=charge)
-            if np.size(omega0 == 3):
+            if np.size(omega0) == 3:
                 self.omega0 = omega0
-            elif np.size(omega0 == 1):
+            elif np.size(omega0) == 1:
                 self.omega0 = np.array([0,0,omega0], dtype=float)
             else:
                 # Raise error here. TODO raise exception
@@ -131,7 +131,7 @@ class QtnmBaseSolver(ABC):
             print('error')
 
         # Caculate omega (t=0) to set end time and max dt
-        omega0 = self.get_omega(np.append(_x0, 0.0))
+        omega0 = self.get_omega(np.append(_x0, 0.0))[2]
 
         # Maximum time step
         max_step = cfl / np.abs(omega0)
