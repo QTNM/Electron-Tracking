@@ -20,6 +20,7 @@ class QtnmBaseSolver(ABC):
 
         self.mass = mass
         self.charge = charge
+        self.b_field = b_field
         self.calc_b_field = calc_b_field
 
         # If calc_b_field not provided, assume constant field, and store omega
