@@ -95,7 +95,7 @@ class QtnmBaseSolver(ABC):
         n_additional_vars = np.size(self.rhs(0.0, initial_conditions)) - 6
         initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
 
-        return solve_ivp(self.rhs, (0, t_end), max_step=max_step)
+        return solve_ivp(self.rhs, (0, t_end), initial_conditions, max_step=max_step)
 
     def solve_1d(self, n_rotations, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0]), cfl=1e-3):
         """
@@ -143,7 +143,7 @@ class QtnmBaseSolver(ABC):
         n_additional_vars = np.size(self.rhs_1d(0.0, initial_conditions)) - 4
         initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
 
-        return solve_ivp(self.rhs, (0, t_end), max_step=max_step)
+        return solve_ivp(self.rhs_1d, (0, t_end), initial_conditions, max_step=max_step)
 
 class QtnmBaseField(ABC):
     """
