@@ -52,25 +52,25 @@ class QtnmBaseSolver(ABC):
         """
 
     @abstractmethod
-    def rhs1d(self, t, x):
+    def rhs_1d(self, t, x):
         """
         Return RHS of equation as a function of time(t) and x(vars solved for),
         assuming a one dimensional B-field (in z-direction)
         """
 
-    def analytic_solution(t):
+    def analytic_solution(self, t):
         """
         Return analytic solution as a function of t, assuming a uniform field
         """
         return None
 
-    def analytic_solution1d(t):
+    def analytic_solution_1d(self, t):
         """
         Return 1D (B = (0, 0, B_z), uniform) analytic solution as a function of t
         """
         return None
 
-    def solve(n_rotations, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0]), ic=None, cfl=1e-3):
+    def solve(self, n_rotations, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0]), ic=None, cfl=1e-3):
         """
         Numerically solve equation set for n_rotations.
 
@@ -97,7 +97,7 @@ class QtnmBaseSolver(ABC):
 
         return solve_ivp(self.rhs, (0, t_end), max_step=max_step)
 
-    def solve_1d(n_rotations, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0]), cfl=1e-3):
+    def solve_1d(self, n_rotations, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0]), cfl=1e-3):
         """
         Numerically solve equation set in 1D, for n_rotations
 
@@ -113,7 +113,7 @@ class QtnmBaseSolver(ABC):
         """
 
         if np.size(v0) == 1:
-            _v0 = np.array(0.0, v0)
+            _v0 = np.array([0.0, v0])
         elif np.size(v0) == 2:
             _v0 = v0
         else:
@@ -122,7 +122,7 @@ class QtnmBaseSolver(ABC):
             print('error')
 
         if np.size(x0) == 1:
-            _x0 = np.array(x0, 0.0)
+            _x0 = np.array([x0, 0.0])
         elif np.size(x0) == 2:
             _x0 = x0
         else:
@@ -140,7 +140,7 @@ class QtnmBaseSolver(ABC):
 
         # Check how many variables we're solving for. If > 4 pad initial conditions with zeros
         initial_conditions = np.array([_x0, _v0])
-        n_additional_vars = np.size(self.rhs(0.0, initial_conditions)) - 4
+        n_additional_vars = np.size(self.rhs_1d(0.0, initial_conditions)) - 4
         initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
 
         return solve_ivp(self.rhs, (0, t_end), max_step=max_step)
