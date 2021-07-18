@@ -66,7 +66,7 @@ class Ford1991Solver(QtnmBaseSolver):
             Time derivatives: [vx, vy, ax, ay, radiated_power]
         """
 
-        omega = self.get_omega(pos=np.array(x[0], x[1], 0.0))
+        omega = self.get_omega(pos=np.array([x[0], x[1], 0.0]))
 
         # Calculate acceleration according to Lorentz force and Larmor term
         accx = (omega * x[3] - self.tau * omega**2 * x[2]) / (1 + self.tau**2 * omega**2)
