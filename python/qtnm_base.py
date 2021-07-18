@@ -24,7 +24,7 @@ class QtnmBaseSolver(ABC):
 
         # If calc_b_field not provided, assume constant field, and store omega
         if calc_b_field is None:
-            omega0 = calculate_omega(b_field)
+            omega0 = calculate_omega(b_field, mass=mass, charge=charge)
             if np.size(omega0 == 3):
                 self.omega0 = omega0
             elif np.size(omega0 == 1):
