@@ -130,9 +130,18 @@ class Ford1991Solver(QtnmBaseSolver):
         """
 
         # Calculate non-relativistic omega
-        # Take magnitude as possible working with 3D field via
-        # 3D analytic solution
-        omega = np.linalg.norm(self.get_omega(np.append(x0, 0.0)))
+        omega = self.get_omega(np.append(x0, 0.0))
+
+        # If 1D require 3rd component
+        if np.size(self.b_field) == 1:
+            omega = omega[2]
+        else:
+            # 3D solution. Take magnitude * sign(self.charge)
+            omega_mag = np.linalg.norm(omega)
+            if self.charge > 0:
+                omega = omega_mag
+            else:
+                omega = -omega_mag
 
         if np.size(v0) == 1:
             _v0 = np.array(0.0, v0)
