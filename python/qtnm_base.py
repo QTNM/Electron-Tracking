@@ -23,6 +23,11 @@ class QtnmBaseSolver(ABC):
         self.b_field = b_field
         self.calc_b_field = calc_b_field
 
+        if calc_b_field is not None:
+          # Handle cases where calc_b_field returns a single component
+          if np.size(calc_b_field(0,0,0)) == 1:
+              self.calc_b_field = lambda x, y, z: np.array([0.0, 0.0, calc_b_field(x,y,z)])
+
         # If calc_b_field not provided, assume constant field, and store omega
         if calc_b_field is None:
             omega0 = calculate_omega(b_field, mass=mass, charge=charge)
