@@ -21,7 +21,7 @@ class LorentzSolver(Ford1991Solver):
                          calc_b_field=calc_b_field, tau=0.0)
 
     # RHS according to Lorentz equation. Non-relativistic
-    def rhs_1d(t, x):
+    def rhs_1d(self, t, x):
         """Calculate RHS for Lorentz equation
 
         Args:
@@ -32,7 +32,7 @@ class LorentzSolver(Ford1991Solver):
             Time derivatives: [vx, vy, ax, ay]
         """
 
-        omega = self.get_omega(np.array([x[0], y[0], 0.0]))[2]
+        omega = self.get_omega(np.array([x[0], x[1], 0.0]))[2]
 
         # Calculate acceleration according to Lorentz
         accx = omega * x[3]
@@ -40,7 +40,7 @@ class LorentzSolver(Ford1991Solver):
 
         return [x[2], x[3], accx, accy]
 
-    def rhs(t, x):
+    def rhs(self, t, x):
         """Calculate RHS for Lorentz equation in 3D
 
         Args:

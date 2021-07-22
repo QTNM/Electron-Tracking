@@ -45,7 +45,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
         return 1.0 / np.sqrt(1.0 - np.sum((v / c)**2))
 
     # RHS according to Lorentz equation.
-    def rhs_1d(t, x):
+    def rhs_1d(self, t, x):
 
         """Calculate RHS for Ford & O'Connell equation
 
@@ -57,9 +57,9 @@ class LorentzSolverRelativistic(Ford1991Solver):
             Time derivatives: [vx, vy, ax, ay]
         """
 
-        omega = self.get_omega(np.array([x[0], y[0], 0.0]))[2]
+        omega = self.get_omega(np.array([x[0], x[1], 0.0]))[2]
 
-        gamma_rel = calculate_gamma_from_u(x[2:])
+        gamma_rel = self.calculate_gamma_from_u(x[2:])
         v = x[2:] / gamma_rel
 
         # Calculate acceleration according to Lorentz
@@ -68,7 +68,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
         return [v[0], v[1], accx, accy]
 
-    def rhs_3d(t, x):
+    def rhs_3d(self, t, x):
         """Calculate RHS for Lorentz equation in 3D
 
         Args:
@@ -79,7 +79,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
             Time derivatives: [vx, vy, vz, ax, ay, az]
         """
 
-        gamma_rel = calculate_gamma_from_u(x[3:])
+        gamma_rel = self.calculate_gamma_from_u(x[3:])
         vel = x[3:] / gamma_rel
 
         omega = self.get_omega(x[:3])
@@ -98,7 +98,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
             Analytic Solution: [x, y, vx, vy]
         """
 
-        gamma = calculate_gamma_from_v(np.append(v0, 0.0))
+        gamma = self.calculate_gamma_from_v(np.append(v0, 0.0))
         mass = self.mass
 
         self.mass /= gamma
@@ -121,7 +121,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
         """
 
-        gamma = calculate_gamma_from_v(v0)
+        gamma = self.calculate_gamma_from_v(v0)
         mass = self.mass
 
         self.mass /= gamma

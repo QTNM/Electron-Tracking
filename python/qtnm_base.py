@@ -66,16 +66,19 @@ class QtnmBaseSolver(ABC):
         assuming a one dimensional B-field (in z-direction)
         """
 
-    def analytic_solution(self, t):
+    def analytic_solution(self, time, x0=np.array([1.0, 0.0, 0.0]),
+                          v0=np.array([0.0, 1.0, 0.0])):
         """
-        Return analytic solution as a function of t, assuming a uniform field
+        Return analytic solution as a function of time , assuming a uniform
+        field
         """
         return None
 
-    def analytic_solution_1d(self, t):
+    def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0, 0.0]),
+                          v0=np.array([0.0, 1.0, 0.0])):
         """
         Return 1D (B = (0, 0, B_z), uniform) analytic solution as a function of
-        time, t
+        time
         """
         return None
 
@@ -132,17 +135,16 @@ class QtnmBaseSolver(ABC):
         elif np.size(v0) == 2:
             _v0 = v0
         else:
-            # Could possible fall back to 3D solve here? If np.size(x0 == 3)
-            # TODO raise exception here
-            print('error')
+            # We could possibly fall back to full 3D solve here, but that's
+            # a lot of second guessing
+            raise TypeError('Argument v0 must be scalar, or size 2')
 
         if np.size(x0) == 1:
             _x0 = np.array([x0, 0.0])
         elif np.size(x0) == 2:
             _x0 = x0
         else:
-            # TODO raise exception here
-            print('error')
+            raise TypeError('Argument x0 must be scalar, or size 2')
 
         # Caculate omega (t=0) to set end time and max dt
         omega0 = self.get_omega(np.append(_x0, 0.0))[2]
