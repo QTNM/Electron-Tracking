@@ -68,7 +68,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
         return [v[0], v[1], accx, accy]
 
-    def rhs_3d(self, t, x):
+    def rhs(self, t, x):
         """Calculate RHS for Lorentz equation in 3D
 
         Args:

@@ -202,7 +202,7 @@ class QtnmBaseField(ABC):
         z: z positions to evaluate field at (1D).
         """
 
-        sizes = self.__sizes(x,  y, z)
+        sizes = self.__sizes(x, y, z)
 
         # If all three arguments are scalars, call evalute_field
         if np.all(sizes == 1):
