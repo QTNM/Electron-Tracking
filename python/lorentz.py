@@ -17,7 +17,8 @@ from ford1991 import Ford1991Solver
 class LorentzSolver(Ford1991Solver):
 
     def __init__(self, charge=-qe, mass=me, b_field=1.0, calc_b_field=None):
-        super().__init__(charge=charge, mass=mass, b_field=b_field, calc_b_field=calc_b_field, tau=0.0)
+        super().__init__(charge=charge, mass=mass, b_field=b_field,
+                         calc_b_field=calc_b_field, tau=0.0)
 
     # RHS according to Lorentz equation. Non-relativistic
     def rhs_1d(t, x):

@@ -24,9 +24,10 @@ class QtnmBaseSolver(ABC):
         self.calc_b_field = calc_b_field
 
         if calc_b_field is not None:
-          # Handle cases where calc_b_field returns a single component
-          if np.size(calc_b_field(0,0,0)) == 1:
-              self.calc_b_field = lambda x, y, z: np.array([0.0, 0.0, calc_b_field(x,y,z)])
+            # Handle cases where calc_b_field returns a single component
+            if np.size(calc_b_field(0, 0, 0)) == 1:
+                self.calc_b_field = lambda x, y, z: \
+                    np.array([0.0, 0.0, calc_b_field(x, y, z)])
 
         # If calc_b_field not provided, assume constant field, and store omega
         if calc_b_field is None:
@@ -34,7 +35,7 @@ class QtnmBaseSolver(ABC):
             if np.size(omega0) == 3:
                 self.omega0 = omega0
             elif np.size(omega0) == 1:
-                self.omega0 = np.array([0,0,omega0], dtype=float)
+                self.omega0 = np.array([0, 0, omega0], dtype=float)
             else:
                 # Raise error here. TODO raise exception
                 print('error')
@@ -49,7 +50,8 @@ class QtnmBaseSolver(ABC):
             return self.omega0
 
         bfield = self.calc_b_field(pos[0], pos[1], pos[2])
-        return calculate_omega(bfield, mass=self.mass, charge=self.charge, energy=0.0)
+        return calculate_omega(bfield, mass=self.mass, charge=self.charge,
+                               energy=0.0)
 
     @abstractmethod
     def rhs(self, t, x):
@@ -72,11 +74,13 @@ class QtnmBaseSolver(ABC):
 
     def analytic_solution_1d(self, t):
         """
-        Return 1D (B = (0, 0, B_z), uniform) analytic solution as a function of t
+        Return 1D (B = (0, 0, B_z), uniform) analytic solution as a function of
+        time, t
         """
         return None
 
-    def solve(self, n_rotations, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0]), cfl=1e-3):
+    def solve(self, n_rotations, x0=np.array([1.0, 0.0, 0.0]),
+              v0=np.array([0.0, 1.0, 0.0]), cfl=1e-3):
         """
         Numerically solve equation set for n_rotations.
 
@@ -97,14 +101,18 @@ class QtnmBaseSolver(ABC):
         # Final time
         t_end = n_rotations * 2.0 * np.pi / omega0
 
-        # Check how many variables we're solving for. If > 6 pad initial conditions with zeros
+        # Check how many variables we're solving for.
+        # If > 6 pad initial conditions with zeros
         initial_conditions = np.append(x0, v0)
         n_additional_vars = np.size(self.rhs(0.0, initial_conditions)) - 6
-        initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
+        initial_conditions = np.append(initial_conditions,
+                                       np.zeros(n_additional_vars))
 
-        return solve_ivp(self.rhs, (0, t_end), initial_conditions, max_step=max_step)
+        return solve_ivp(self.rhs, (0, t_end), initial_conditions,
+                         max_step=max_step)
 
-    def solve_1d(self, n_rotations, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0]), cfl=1e-3):
+    def solve_1d(self, n_rotations, x0=np.array([1.0, 0.0]),
+                 v0=np.array([0.0, 1.0]), cfl=1e-3):
         """
         Numerically solve equation set in 1D, for n_rotations
 
@@ -145,12 +153,16 @@ class QtnmBaseSolver(ABC):
         # Final time
         t_end = n_rotations * 2.0 * np.pi / np.abs(omega0)
 
-        # Check how many variables we're solving for. If > 4 pad initial conditions with zeros
+        # Check how many variables we're solving for.
+        # If > 4 pad initial conditions with zeros
         initial_conditions = np.append(_x0, _v0)
         n_additional_vars = np.size(self.rhs_1d(0.0, initial_conditions)) - 4
-        initial_conditions = np.append(initial_conditions, np.zeros(n_additional_vars))
+        initial_conditions = np.append(initial_conditions,
+                                       np.zeros(n_additional_vars))
 
-        return solve_ivp(self.rhs_1d, (0, t_end), initial_conditions, max_step=max_step)
+        return solve_ivp(self.rhs_1d, (0, t_end), initial_conditions,
+                         max_step=max_step)
+
 
 class QtnmBaseField(ABC):
     """

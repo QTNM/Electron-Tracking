@@ -14,7 +14,8 @@ from ford1991 import Ford1991Solver
 class LorentzSolverRelativistic(Ford1991Solver):
 
     def __init__(self, charge=-qe, mass=me, b_field=1.0, calc_b_field=None):
-        super().__init__(charge=charge, mass=mass, b_field=b_field, calc_b_field=calc_b_field, tau=0.0)
+        super().__init__(charge=charge, mass=mass, b_field=b_field,
+                         calc_b_field=calc_b_field, tau=0.0)
 
     @staticmethod
     def calculate_gamma_from_u(u):
@@ -43,9 +44,9 @@ class LorentzSolverRelativistic(Ford1991Solver):
         # Not safe for v -> c
         return 1.0 / np.sqrt(1.0 - np.sum((v / c)**2))
 
-
     # RHS according to Lorentz equation.
     def rhs_1d(t, x):
+
         """Calculate RHS for Ford & O'Connell equation
 
         Args:
@@ -67,7 +68,6 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
         return [v[0], v[1], accx, accy]
 
-
     def rhs_3d(t, x):
         """Calculate RHS for Lorentz equation in 3D
 
@@ -87,12 +87,12 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
         return vel[0], vel[1], vel[2], acc[0], acc[1], acc[2]
 
-
-    def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0])):
+    def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0]),
+                             v0=np.array([0.0, 1.0])):
         """Calculate analytic solution for Lorentz equation
 
-        Thin wrapper to Ford 1991 solution, but with tau = 0.0, and mass replaced with
-        gamma * mass
+        Thin wrapper to Ford 1991 solution, but with tau = 0.0, and mass
+        replaced with gamma * mass
 
         Returns:
             Analytic Solution: [x, y, vx, vy]
@@ -109,16 +109,16 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
         return soln
 
-
-    def analytic_solution(self, time, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0])):
+    def analytic_solution(self, time, x0=np.array([1.0, 0.0, 0.0]),
+                          v0=np.array([0.0, 1.0, 0.0])):
         """Calculate analytic solution for Ford & O'Connell equation in 3D
 
-        Thin wrapper to Ford 1991 solution, but with tau = 0.0, and mass replaced with
-        gamma * mass
+        Thin wrapper to Ford 1991 solution, but with tau = 0.0, and mass
+        replaced with gamma * mass
 
         Returns:
             Analytic Solution: [x, y, z, vx, vy, vz]
-        
+
         """
 
         gamma = calculate_gamma_from_v(v0)

@@ -6,8 +6,10 @@ from utils import rotate_b_field, rotate_b_field_inverse, decompose_velocity
 
 class Ford1991Solver(QtnmBaseSolver):
 
-    def __init__(self, charge=-qe, mass=me, b_field=1.0, calc_b_field=None, tau=0.0):
-        super().__init__(charge=charge, mass=mass, b_field=b_field, calc_b_field=calc_b_field)
+    def __init__(self, charge=-qe, mass=me, b_field=1.0, calc_b_field=None,
+                 tau=0.0):
+        super().__init__(charge=charge, mass=mass, b_field=b_field,
+                         calc_b_field=calc_b_field)
         self.tau = tau
 
     def rhs(self, t, x):
@@ -30,23 +32,24 @@ class Ford1991Solver(QtnmBaseSolver):
         omega = self.get_omega(x[:3])
 
         denom = (1 + self.tau**2 * np.dot(omega, omega))
-        accx = omega[2] * x[4] - omega[1] * x[5] - self.tau * (omega[2]**2
-                                                      + omega[1]**2) * x[3]
-        accx += self.tau * omega[0] * (omega[2] * x[5] + omega[1] * x[4])
-        accy = omega[0] * x[5] - omega[2] * x[3] - self.tau * (omega[2]**2
-                                                      + omega[0]**2) * x[4]
-        accy += self.tau * omega[1] * (omega[2] * x[5] + omega[0] * x[4])
-        accz = omega[1] * x[3] - omega[0] * x[4] - self.tau * (omega[0]**2
-                                                      + omega[1]**2) * x[5]
-        accz += self.tau * omega[2] * (omega[0] * x[3] + omega[1] * x[4])
-        accx /= denom
-        accy /= denom
-        accz /= denom
+        acc = np.cross(x[3:], omega)
+
+        # Now add on Larmor terms
+        acc[0] -= self.tau * (omega[2]**2 + omega[1]**2) * x[3]
+        acc[0] += self.tau * omega[0] * (omega[2] * x[5] + omega[1] * x[4])
+
+        acc[1] -= self.tau * (omega[2]**2 + omega[0]**2) * x[4]
+        acc[1] += self.tau * omega[1] * (omega[2] * x[5] + omega[0] * x[4])
+
+        acc[2] -= self.tau * (omega[0]**2 + omega[1]**2) * x[5]
+        acc[2] += self.tau * omega[2] * (omega[0] * x[3] + omega[1] * x[4])
+
+        acc /= denom
 
         # Power according to Larmor formula
-        power = self.tau * self.mass * (accx**2 + accy**2 + accz**2)
+        power = self.tau * self.mass * np.sum(acc**2)
 
-        return x[3], x[4], x[5], accx, accy, accz, power
+        return x[3], x[4], x[5], acc[0], acc[1], acc[2], power
 
     def rhs_1d(self, t, x):
         """Calculate RHS for Ford & O'Connell equation
@@ -68,15 +71,18 @@ class Ford1991Solver(QtnmBaseSolver):
 
         omega = self.get_omega(pos=np.array([x[0], x[1], 0.0]))[2]
 
+        denom = 1.0 + self.tau**2 * omega**2
+
         # Calculate acceleration according to Lorentz force and Larmor term
-        accx = (omega * x[3] - self.tau * omega**2 * x[2]) / (1 + self.tau**2 * omega**2)
-        accy = (-omega * x[2] - self.tau * omega**2 * x[3]) / (1 + self.tau**2 * omega**2)
+        accx = (omega * x[3] - self.tau * omega**2 * x[2]) / denom
+        accy = (-omega * x[2] - self.tau * omega**2 * x[3]) / denom
 
         # Power according to Larmor formula
         power = self.tau * self.mass * (accx**2 + accy**2)
         return [x[2], x[3], accx, accy, power]
 
-    def analytic_solution(self, time, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0])):
+    def analytic_solution(self, time, x0=np.array([1.0, 0.0, 0.0]),
+                          v0=np.array([0.0, 1.0, 0.0])):
         """Calculate analytic solution for Ford & O'Connell equation in 3D
 
         Assumes a uniform magnetic field
@@ -118,7 +124,8 @@ class Ford1991Solver(QtnmBaseSolver):
 
         return x_soln, y_soln, z_soln, vx_soln, vy_soln, vz_soln
 
-    def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0]), v0=np.array([0.0, 1.0])):
+    def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0]),
+                             v0=np.array([0.0, 1.0])):
         """Calculate analytic solution for Ford & O'Connell equation
 
         Assumes a uniform magnetic field, in the z-direction
@@ -161,15 +168,13 @@ class Ford1991Solver(QtnmBaseSolver):
         mu = self.tau * omega**2
 
         phase = omega * time + phi
-        # Factor of 1 / (1 + tau * mu) not needed, as we scale solution such that
-        # initial velocity is correct
+        # Factor of 1 / (1 + tau * mu) not needed as we scale solution such
+        # that initial velocity is correct
         vx_soln = np.exp(-mu * time) * np.sin(phase)
         vy_soln = np.exp(-mu * time) * np.cos(phase)
 
-        x_soln = -np.exp(-mu * time) * ((mu * np.sin(phase) + omega * np.cos(phase))
-                                 / (omega**2 + mu**2))
-        y_soln = np.exp(-mu * time) * ((omega * np.sin(phase) - mu * np.cos(phase))
-                                / (omega**2 + mu**2))
+        x_soln = -(vx_soln * mu + vy_soln * omega) / (omega**2 + mu**2)
+        y_soln = (vx_soln * omega - vy_soln * mu) / (omega**2 + mu**2)
 
         # Scale results by initial velocity
         vx_soln *= v0_mag
