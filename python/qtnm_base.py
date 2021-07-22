@@ -76,7 +76,7 @@ class QtnmBaseSolver(ABC):
         """
         return None
 
-    def solve(self, n_rotations, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0]), ic=None, cfl=1e-3):
+    def solve(self, n_rotations, x0=np.array([1.0, 0.0, 0.0]), v0=np.array([0.0, 1.0, 0.0]), cfl=1e-3):
         """
         Numerically solve equation set for n_rotations.
 
