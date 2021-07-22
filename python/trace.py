@@ -5,14 +5,30 @@ Module provides wrappers to various electron tracing routines
 in an import-able form, which is required for threading.
 """
 
-from ford1991 import solve_3d as solve_3d_ford
-from lorentz import solve_3d as solve_3d_lorentz
 import numpy as np
+from qtnm_base import QtnmBaseSolver
 
-def electron_trace_ford(theta, B0, v0, bfield, nrot=3000):
-    ic = [0, 0, 0, v0 * np.cos(theta), 0, v0 * np.sin(theta), 0.0]
-    return solve_3d_ford(nrot, b0=B0, v0=v0, calc_b_field=bfield.evaluate_field, ic=ic, cfl=1e-1)
 
-def electron_trace_lorentz(theta, B0, v0, bfield, nrot=3000):
-    ic = [0, 0, 0, v0 * np.cos(theta), 0, v0 * np.sin(theta), 0.0]
-    return solve_3d_lorentz(nrot, b0=B0, v0=v0, calc_b_field=bfield.evaluate_field, ic=ic, cfl=1e-1)
+def trace_theta(theta, solver, v0, nrot=3000):
+    if not isinstance(solver, QtnmBaseSolver):
+        raise TypeError('Argument solver must be a subclass of QtnmBaseSolver')
+
+    _x0 = np.zeros(3)
+    _v0 = np.array([v0 * np.cos(theta), 0.0, v0 * np.sin(theta)])
+
+    return solver.solve(nrot, x0=_x0, v0=_v0, cfl=1e-1)
+
+
+# A better implementation would be a wrapper to trace_theta
+def electron_trace_2d(params, solver, v0, nrot=3000):
+    if not isinstance(solver, QtnmBaseSolver):
+        raise TypeError('Argument solver must be a subclass of QtnmBaseSolver')
+
+    theta = params[0]
+    r0 = params[1]
+    print('Processing run: theta = %f, r0 = %f' % (theta, r0))
+
+    _x0 = np.zarray([0.0, r0, 0.0])
+    _v0 = np.array([v0 * np.cos(theta), 0.0, v0 * np.sin(theta)])
+
+    return solver.solve(nrot, x0=_x0, v0=_v0, cfl=1e-1)
