@@ -47,7 +47,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
     # RHS according to Lorentz equation.
     def rhs_1d(self, t, x):
 
-        """Calculate RHS for Ford & O'Connell equation
+        """Calculate RHS for Lorentz equation in 1D.
 
         Args:
             t: Time. Not used, but required for solve_ivp
@@ -89,7 +89,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
     def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0]),
                              v0=np.array([0.0, 1.0])):
-        """Calculate analytic solution for Lorentz equation
+        """Calculate analytic solution for Lorentz equation in 1D.
 
         Thin wrapper to Ford 1991 solution, but with tau = 0.0, and mass
         replaced with gamma * mass
@@ -111,7 +111,7 @@ class LorentzSolverRelativistic(Ford1991Solver):
 
     def analytic_solution(self, time, x0=np.array([1.0, 0.0, 0.0]),
                           v0=np.array([0.0, 1.0, 0.0])):
-        """Calculate analytic solution for Ford & O'Connell equation in 3D
+        """Calculate analytic solution for Lorentz equation in 3D
 
         Thin wrapper to Ford 1991 solution, but with tau = 0.0, and mass
         replaced with gamma * mass
