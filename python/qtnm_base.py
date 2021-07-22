@@ -37,8 +37,7 @@ class QtnmBaseSolver(ABC):
             elif np.size(omega0) == 1:
                 self.omega0 = np.array([0, 0, omega0], dtype=float)
             else:
-                # Raise error here. TODO raise exception
-                print('error')
+                raise ValueError('Calculate omega returned erroneous size')
 
     def get_omega(self, pos=np.zeros(3)):
         """
@@ -75,7 +74,7 @@ class QtnmBaseSolver(ABC):
         return None
 
     def analytic_solution_1d(self, time, x0=np.array([1.0, 0.0, 0.0]),
-                          v0=np.array([0.0, 1.0, 0.0])):
+                             v0=np.array([0.0, 1.0, 0.0])):
         """
         Return 1D (B = (0, 0, B_z), uniform) analytic solution as a function of
         time
