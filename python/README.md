@@ -73,6 +73,6 @@ force due to the change in magnetic field along the electron path.
 
 ##
 
-Q: I have a question that's not listed in the FAQ:
+Q: I have a question that's not listed in the FAQ.
 
 A: Please open an issue on the [issue tracker](https://github.com/QTNM/Electron-Tracking/issues).
