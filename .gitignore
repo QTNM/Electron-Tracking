@@ -39,3 +39,5 @@ workdir
 # editor
 *.*~
 
+# Jupyter checkpoints
+python/.ipynb_checkpoints/
