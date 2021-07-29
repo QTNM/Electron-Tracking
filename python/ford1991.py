@@ -32,7 +32,7 @@ class Ford1991Solver(QtnmBaseSolver):
         omega = self.get_omega(x[:3])
 
         denom = (1 + self.tau**2 * np.dot(omega, omega))
-        acc = np.cross(x[3:], omega)
+        acc = np.cross(x[3:6], omega)
 
         # Now add on Larmor terms
         acc[0] -= self.tau * (omega[2]**2 + omega[1]**2) * x[3]
