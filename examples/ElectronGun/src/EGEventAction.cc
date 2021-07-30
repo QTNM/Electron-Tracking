@@ -50,7 +50,8 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // dummy storage
-  std::vector<double> tkin, tedep, ttime, tex, xp, yp;
+  std::vector<double> tedep, px, py, pz;
+  std::vector<int> tid;
 
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -63,18 +64,30 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
   {
     auto hh = (*GasHC)[i];
 
-    double e = (hh->GetEdep())    / G4Analysis::GetUnitValue("keV");
+    int    id = (hh->GetTrackID());
+    double e  = (hh->GetEdep())    / G4Analysis::GetUnitValue("keV");
+    double mx = (hh->GetPx()); // normalised momentum direction vector
+    double my = (hh->GetPy());
+    double mz = (hh->GetPz());
 
+    tid.push_back(id);
     tedep.push_back(e);
+    px.push_back(mx);
+    py.push_back(my);
+    pz.push_back(mz);
   }
 
   // fill the ntuple - check column id?
   G4int eventID = event->GetEventID();
   for (unsigned int i=0;i<tedep.size();i++)
   {
-    analysisManager->FillNtupleIColumn(0, 0, eventID); // repeat all rows
-    analysisManager->FillNtupleDColumn(0, 1, tedep.at(i));
-    analysisManager->AddNtupleRow(0);
+    analysisManager->FillNtupleIColumn(0, eventID); // repeat all rows
+    analysisManager->FillNtupleIColumn(1, tid.at(i));
+    analysisManager->FillNtupleDColumn(2, tedep.at(i));
+    analysisManager->FillNtupleDColumn(3, px.at(i));
+    analysisManager->FillNtupleDColumn(4, py.at(i));
+    analysisManager->FillNtupleDColumn(5, pz.at(i));
+    analysisManager->AddNtupleRow();
   }
 
   // printing

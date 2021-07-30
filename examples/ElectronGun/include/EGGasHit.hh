@@ -29,14 +29,26 @@ class EGGasHit : public G4VHit
     virtual void Print();
 
     // Set methods
-    void SetEdep     (G4double de)  { fEdep = de; };
+    void SetTrackID     (G4int id)     { fTrackID = id; };
+    void SetEdep        (G4double de)  { fEdep = de; };
+    void SetPx          (G4double px)  { fPx = px; };
+    void SetPy          (G4double py)  { fPy = py; };
+    void SetPz          (G4double pz)  { fPz = pz; };
 
     // Get methods
-    G4double GetEdep() const     { return fEdep; };
+    G4double GetTrackID() const     { return fTrackID; };
+    G4double GetEdep()    const     { return fEdep; };
+    G4double GetPx()      const     { return fPx; };
+    G4double GetPy()      const     { return fPy; };
+    G4double GetPz()      const     { return fPz; };
 
   private:
 
+      G4int         fTrackID;
       G4double      fEdep;
+      G4double      fPx;
+      G4double      fPy;
+      G4double      fPz;
 };
 
 typedef G4THitsCollection<EGGasHit> EGGasHitsCollection;

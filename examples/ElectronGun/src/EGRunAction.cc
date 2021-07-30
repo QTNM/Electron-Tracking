@@ -22,7 +22,12 @@ EGRunAction::EGRunAction(EGEventAction* eventAction, G4String name)
   // Creating ntuple with vector entries
   //
   analysisManager->CreateNtuple("Score", "Hits");
+  analysisManager->CreateNtupleIColumn("EventID");
+  analysisManager->CreateNtupleIColumn("TrackID");
   analysisManager->CreateNtupleDColumn("Edep");
+  analysisManager->CreateNtupleDColumn("Px");
+  analysisManager->CreateNtupleDColumn("Py");
+  analysisManager->CreateNtupleDColumn("Pz");
   analysisManager->FinishNtuple();
 
 }

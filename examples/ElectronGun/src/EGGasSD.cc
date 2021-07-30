@@ -40,7 +40,11 @@ G4bool EGGasSD::ProcessHits(G4Step* aStep,
 
   EGGasHit* newHit = new EGGasHit();
 
+  newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
   newHit->SetEdep(edep);
+  newHit->SetPx(aStep->GetPostStepPoint()->GetMomentumDirection().x());
+  newHit->SetPy(aStep->GetPostStepPoint()->GetMomentumDirection().y());
+  newHit->SetPz(aStep->GetPostStepPoint()->GetMomentumDirection().z());
 
   fHitsCollection->insert( newHit );
 
