@@ -27,7 +27,7 @@
 
 EGDetectorConstruction::EGDetectorConstruction()
 {
-  fdensity = 1.e-12 * g / cm3;
+  fdensity = 1.66322e-4 * g / cm3; // STP Helium gas density
 
   DefineCommands();
   DefineMaterials();
@@ -57,7 +57,9 @@ void EGDetectorConstruction::DefineMaterials()
   G4NistManager* nistManager = G4NistManager::Instance();
   nistManager->FindOrBuildMaterial("G4_Galactic");
   nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-  nistManager->FindOrBuildMaterial("G4_Helium");
+
+  auto* gasMat = new G4Material("Helium", 2., 4.*g/mole, fdensity);  // low density He
+
 }
 
 void EGDetectorConstruction::ConstructSDandField()
@@ -85,7 +87,7 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
   auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
-  auto* bunchMat      = G4Material::GetMaterial("G4_Helium");
+  auto* gasMat        = G4Material::GetMaterial("Helium");
     
   // size parameter, unit [cm]
   // world
@@ -122,7 +124,7 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   //
   // logical volumes
   auto* pipeLogical = new G4LogicalVolume(pipeSolid, worldMaterial, "Pipe_log");
-  auto* gasLogical  = new G4LogicalVolume(gasSolid, bunchMat, "Gas_log");
+  auto* gasLogical  = new G4LogicalVolume(gasSolid, gasMat, "Gas_log");
     
   // placements
   new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, 0. * cm),
