@@ -30,7 +30,6 @@ EGDetectorConstruction::EGDetectorConstruction()
   fdensity = 1.66322e-4 * g / cm3; // STP Helium gas density
 
   DefineCommands();
-  DefineMaterials();
 }
 
 EGDetectorConstruction::~EGDetectorConstruction()
@@ -47,6 +46,8 @@ auto EGDetectorConstruction::Construct() -> G4VPhysicalVolume*
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
+
+  DefineMaterials();
 
   return SetupShort();
 
