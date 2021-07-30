@@ -8,7 +8,7 @@ for the QTNM project, simulating electron scattering in a thin Helium gas.
 Set default physics list as QTNMPhysicsList; G4ParticleGun for simple event generation,
 default is an electron with 18.575 keV, can change in macro; 
 
-Geometry is a vacuum box world with a cylinder filled with Helium gas at variable pressure (default 1e-5 mbar)
+Geometry is a vacuum box world with a cylinder filled with Helium gas at variable density (default STP: 1.66322e-4 g/ccm)
 
 Scorer: interactions in the gas - particle momentum vector pre- and post-step and deposited energy 
 Output in ROOT file.
