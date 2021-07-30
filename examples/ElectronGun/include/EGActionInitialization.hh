@@ -1,16 +1,16 @@
-#ifndef SEActionInitialization_h
-#define SEActionInitialization_h 1
+#ifndef EGActionInitialization_h
+#define EGActionInitialization_h 1
 
 #include "G4VUserActionInitialization.hh"
 #include "G4String.hh"
 
 /// Action initialization class.
 
-class SEActionInitialization : public G4VUserActionInitialization
+class EGActionInitialization : public G4VUserActionInitialization
 {
 public:
-  SEActionInitialization(G4String name);
-  virtual ~SEActionInitialization();
+  EGActionInitialization(G4String name);
+  virtual ~EGActionInitialization();
 
   virtual void BuildForMaster() const;
   virtual void Build() const;

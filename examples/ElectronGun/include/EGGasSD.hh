@@ -1,27 +1,27 @@
-#ifndef SEGasSD_h
-#define SEGasSD_h 1
+#ifndef EGGasSD_h
+#define EGGasSD_h 1
 
 #include "G4VSensitiveDetector.hh"
 
-#include "SEGasHit.hh"
+#include "EGGasHit.hh"
 
 #include <vector>
 
 class G4Step;
 class G4HCofThisEvent;
 
-/// SEGas sensitive detector class
+/// EGGas sensitive detector class
 ///
 /// The hits are accounted in hits in ProcessHits() function which is called
 /// by Geant4 kernel at each step. A hit is created with each step with non zero 
 /// energy deposit.
 
-class SEGasSD : public G4VSensitiveDetector
+class EGGasSD : public G4VSensitiveDetector
 {
   public:
-    SEGasSD(const G4String& name, 
+    EGGasSD(const G4String& name, 
             const G4String& hitsCollectionName);
-    virtual ~SEGasSD();
+    virtual ~EGGasSD();
   
     // methods from base class
     virtual void   Initialize(G4HCofThisEvent* hitCollection);
@@ -29,7 +29,7 @@ class SEGasSD : public G4VSensitiveDetector
     virtual void   EndOfEvent(G4HCofThisEvent* hitCollection);
 
   private:
-    SEGasHitsCollection* fHitsCollection;
+    EGGasHitsCollection* fHitsCollection;
 };
 
 #endif

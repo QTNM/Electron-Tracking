@@ -1,5 +1,5 @@
 // us
-#include "SEPrimaryGeneratorAction.hh"
+#include "EGPrimaryGeneratorAction.hh"
 
 // geant
 #include "G4Event.hh"
@@ -13,7 +13,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
 
-SEPrimaryGeneratorAction::SEPrimaryGeneratorAction()
+EGPrimaryGeneratorAction::EGPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction()
 , fParticleGun(nullptr)
 {
@@ -28,12 +28,12 @@ SEPrimaryGeneratorAction::SEPrimaryGeneratorAction()
   fParticleGun->SetParticleEnergy(18.575*keV);
 }
 
-SEPrimaryGeneratorAction::~SEPrimaryGeneratorAction()
+EGPrimaryGeneratorAction::~EGPrimaryGeneratorAction()
 {
   delete fParticleGun;
 }
 
-void SEPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
+void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
   // In order to avoid dependence of PrimaryGeneratorAction
   // on DetectorConstruction class we get world volume 

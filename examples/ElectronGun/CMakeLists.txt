@@ -18,10 +18,10 @@ add_executable(egun
   src/EGActionInitialization.cc
   src/EGDetectorConstruction.cc
   src/EGGasHit.cc
-  src/egGasSD.cc
+  src/EGGasSD.cc
   src/EGEventAction.cc
   src/EGPrimaryGeneratorAction.cc
-  src/egRunAction.cc 
+  src/EGRunAction.cc 
   src/QTNMPhysicsList.cc)
 target_include_directories(egun PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(egun PRIVATE ${Geant4_LIBRARIES})

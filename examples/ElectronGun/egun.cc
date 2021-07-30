@@ -1,9 +1,10 @@
 // ********************************************************************
-// scattering example
+// electron gun example
 
 // standard
 #include <algorithm>
 #include <string>
+#include <vector>
 
 // Geant4
 #include "G4Types.hh"
@@ -22,8 +23,8 @@
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
-#include "SEActionInitialization.hh"
-#include "SEDetectorConstruction.hh"
+#include "EGActionInitialization.hh"
+#include "EGDetectorConstruction.hh"
 
 int main(int argc, char** argv)
 {
@@ -32,10 +33,8 @@ int main(int argc, char** argv)
   int         nthreads = 4;
   std::string outputFileName("qtnm.root");
   std::string macroName;
-  std::string physListMacro;
 
   app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
-  app.add_option("-p,--physlist", physListMacro, "<Geant4 physics list macro> Default: QTNMPhysicsList");
   app.add_option("-o,--outputFile", outputFileName,
                  "<FULL PATH ROOT FILENAME> Default: qtnm.root");
   app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
@@ -67,7 +66,7 @@ int main(int argc, char** argv)
 
 
   // -- Set mandatory initialization classes
-  auto* detector = new SEDetectorConstruction;
+  auto* detector = new EGDetectorConstruction;
   runManager->SetUserInitialization(detector);
 
 
@@ -75,26 +74,17 @@ int main(int argc, char** argv)
   // Physics list factory
   G4VModularPhysicsList* physList = nullptr;
 
-  if ( physListMacro.size() ) {
-    // via macro
-    physList = new G4GenericPhysicsList();
-    UImanager->ApplyCommand("/control/execute "+physListMacro);
-  }
-  else {
-    // from vector of physics cobstructor names
-    std::vector<G4String>* myConstructors = new std::vector<G4String>;
-
-    myConstructors->push_back("QTNMPhysicsList");
-
-    physList = new G4GenericPhysicsList(myConstructors);
-  }
+  // from vector of physics constructor names
+  std::vector<G4String>* myConstructors = new std::vector<G4String>;
+  myConstructors->push_back("QTNMPhysicsList");
+  physList = new G4GenericPhysicsList(myConstructors);
 
   // finish physics list
   runManager->SetUserInitialization(physList);
 
 
   // -- Set user action initialization class.
-  auto* actions = new SEActionInitialization(outputFileName);
+  auto* actions = new EGActionInitialization(outputFileName);
   runManager->SetUserInitialization(actions);
 
 

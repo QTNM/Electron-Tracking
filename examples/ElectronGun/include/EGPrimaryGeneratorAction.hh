@@ -1,5 +1,5 @@
-#ifndef SEPrimaryGeneratorAction_h
-#define SEPrimaryGeneratorAction_h 1
+#ifndef EGPrimaryGeneratorAction_h
+#define EGPrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
@@ -13,11 +13,11 @@ class G4Event;
 /// A single particle is generated.
 /// macro commands can change primary properties.
 
-class SEPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class EGPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-  SEPrimaryGeneratorAction();
-  virtual ~SEPrimaryGeneratorAction();
+  EGPrimaryGeneratorAction();
+  virtual ~EGPrimaryGeneratorAction();
 
   virtual void GeneratePrimaries(G4Event*);
 
