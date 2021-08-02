@@ -25,6 +25,7 @@ EGRunAction::EGRunAction(EGEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleIColumn("EventID");
   analysisManager->CreateNtupleIColumn("TrackID");
   analysisManager->CreateNtupleDColumn("Edep");
+  analysisManager->CreateNtupleDColumn("Kine");
   analysisManager->CreateNtupleDColumn("Px");
   analysisManager->CreateNtupleDColumn("Py");
   analysisManager->CreateNtupleDColumn("Pz");

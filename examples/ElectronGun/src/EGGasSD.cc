@@ -35,16 +35,20 @@ G4bool EGGasSD::ProcessHits(G4Step* aStep,
 {  
   // energy deposit
   G4double edep = aStep->GetTotalEnergyDeposit();
+  G4ThreeVector premom  = aStep->GetPreStepPoint()->GetMomentumDirection();
+  G4ThreeVector postmom = aStep->GetPostStepPoint()->GetMomentumDirection();
 
   if (edep / CLHEP::keV <= 1.e-6) return false;
+  else if ((premom.cross(postmom)).mag() <= 1.e-8) return false; // parallel = not interested
 
   EGGasHit* newHit = new EGGasHit();
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
   newHit->SetEdep(edep);
-  newHit->SetPx(aStep->GetPostStepPoint()->GetMomentumDirection().x());
-  newHit->SetPy(aStep->GetPostStepPoint()->GetMomentumDirection().y());
-  newHit->SetPz(aStep->GetPostStepPoint()->GetMomentumDirection().z());
+  newHit->SetKine(aStep->GetPostStepPoint()->GetKineticEnergy());
+  newHit->SetPx(postmom.x());
+  newHit->SetPy(postmom.y());
+  newHit->SetPz(postmom.z());
 
   fHitsCollection->insert( newHit );
 

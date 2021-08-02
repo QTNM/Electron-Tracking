@@ -1,7 +1,5 @@
 #include "EGDetectorConstruction.hh"
 
-#include <set>
-
 #include "G4RunManager.hh"
 
 #include "G4Box.hh"
@@ -14,10 +12,6 @@
 #include "G4SolidStore.hh"
 #include "G4Tubs.hh"
 #include "G4PVPlacement.hh"
-
-#include "G4GlobalMagFieldMessenger.hh"
-#include "G4UniformMagField.hh"
-#include "G4AutoDelete.hh"
 
 #include "G4SDManager.hh"
 #include "EGGasSD.hh"
@@ -68,7 +62,7 @@ void EGDetectorConstruction::ConstructSDandField()
   G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
 
   // Only need to construct the (per-thread) SD once
-  if(!fSD.Get()) // both declared together, test one is enough
+  if(!fSD.Get())
   {
     G4String SD1name  = "GasSD";
     EGGasSD* aGasSD = new EGGasSD(SD1name,

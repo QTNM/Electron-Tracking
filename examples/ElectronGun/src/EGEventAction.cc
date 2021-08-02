@@ -50,7 +50,7 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // dummy storage
-  std::vector<double> tedep, px, py, pz;
+  std::vector<double> tedep, tkine, px, py, pz;
   std::vector<int> tid;
 
   // get analysis manager
@@ -66,12 +66,14 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
 
     int    id = (hh->GetTrackID());
     double e  = (hh->GetEdep())    / G4Analysis::GetUnitValue("keV");
+    double k  = (hh->GetKine())    / G4Analysis::GetUnitValue("keV");
     double mx = (hh->GetPx()); // normalised momentum direction vector
     double my = (hh->GetPy());
     double mz = (hh->GetPz());
 
     tid.push_back(id);
     tedep.push_back(e);
+    tkine.push_back(k);
     px.push_back(mx);
     py.push_back(my);
     pz.push_back(mz);
@@ -84,9 +86,10 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleIColumn(0, eventID); // repeat all rows
     analysisManager->FillNtupleIColumn(1, tid.at(i));
     analysisManager->FillNtupleDColumn(2, tedep.at(i));
-    analysisManager->FillNtupleDColumn(3, px.at(i));
-    analysisManager->FillNtupleDColumn(4, py.at(i));
-    analysisManager->FillNtupleDColumn(5, pz.at(i));
+    analysisManager->FillNtupleDColumn(3, tkine.at(i));
+    analysisManager->FillNtupleDColumn(4, px.at(i));
+    analysisManager->FillNtupleDColumn(5, py.at(i));
+    analysisManager->FillNtupleDColumn(6, pz.at(i));
     analysisManager->AddNtupleRow();
   }
 

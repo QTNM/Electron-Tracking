@@ -6,6 +6,7 @@ EGGasHit::EGGasHit()
  : G4VHit(),
    fTrackID(0),
    fEdep(0.),
+   fKine(0.),
    fPx(0.),
    fPy(0.),
    fPz(0.)
@@ -18,6 +19,7 @@ EGGasHit::EGGasHit(const EGGasHit& right)
 {
   fTrackID      = right.fTrackID;
   fEdep         = right.fEdep;
+  fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;
   fPz           = right.fPz;
@@ -27,6 +29,7 @@ const EGGasHit& EGGasHit::operator=(const EGGasHit& right)
 {
   fTrackID      = right.fTrackID;
   fEdep         = right.fEdep;
+  fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;
   fPz           = right.fPz;

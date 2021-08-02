@@ -1,6 +1,6 @@
 # Electron Gun Example
 
-This example Geant4 application addresses models the action of an electron gun 
+This example Geant4 application models the action of an electron gun 
 for the QTNM project, simulating electron scattering in a thin Helium gas.
 
 ## Notes 
@@ -8,10 +8,11 @@ for the QTNM project, simulating electron scattering in a thin Helium gas.
 Set default physics list as QTNMPhysicsList; G4ParticleGun for simple event generation,
 default is an electron with 18.575 keV, can change in macro; 
 
-Geometry is a vacuum box world with a cylinder filled with Helium gas at variable density (default STP: 1.66322e-4 g/ccm)
+Geometry is a vacuum box world with a cylinder, the pipe, filled with Helium gas at variable density (default STP: 1.66322e-4 g/ccm). 
+The density can be changed with a macro command.
 
-Scorer: interactions in the gas - particle momentum vector pre- and post-step and deposited energy 
-Output in ROOT file.
+Scorer: interactions in the gas - particle momentum vector and kinetic energy post-step and deposited energy together
+with event ID and track ID. Output in ROOT file.
 
 A simple ROOT analysis script is included to read from the file. Target question is the number of scattered 
 electrons in a given angle range.
