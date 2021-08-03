@@ -30,6 +30,6 @@ cd build; cmake ..; make
 
 and run in the build directory for instance as 
 
-./scattering -m run.mac
+./egun -m run.mac
 
 Find out about CLI options using --help option.

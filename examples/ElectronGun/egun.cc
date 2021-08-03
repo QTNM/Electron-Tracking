@@ -37,7 +37,7 @@ int main(int argc, char** argv)
   std::string macroName;
 
   app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
-  app.add_option("-s,--seed", seed, "<Geant4 random number seed> Default: 1234");
+  app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
   app.add_option("-o,--outputFile", outputFileName,
                  "<FULL PATH ROOT FILENAME> Default: qtnm.root");
   app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  // set the random seed
+  // set the random seed + offset 1234; avoiding zero seed -> runtime error
   CLHEP::HepRandom::setTheSeed(1234+seed);
 
   // -- Construct the run manager : MT or sequential one
