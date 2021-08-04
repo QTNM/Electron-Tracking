@@ -81,7 +81,7 @@ void analyse(std::string fnamelist, double angle) {
     if (scatangle >= TMath::PiOver2()-anglerad && scatangle<=TMath::PiOver2()+anglerad)
       hk->Fill(*kine);
   }
-  std::cout << "Entries: " << hh->GetEntries() << std::endl;
+  std::cout << "Entries: " << hk->GetEntries() << std::endl;
   hk->DrawCopy();
   
 }
