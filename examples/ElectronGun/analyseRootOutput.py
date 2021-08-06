@@ -88,7 +88,7 @@ def analyse(fnamelist, angle):
     chScore = ROOT.TChain("Score")
 
     for f in filelist:
-        chScore.Add(f)
+        chScore.Add(f.strip())
 
     nt1 = ROOT.TTreeReader(chScore)
 
