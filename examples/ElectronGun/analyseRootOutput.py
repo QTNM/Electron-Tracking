@@ -25,6 +25,16 @@ def parse_arguments():
     parser.add_argument("--short_summary", help="Carry out short summary only",
                         action="store_true")
 
+    parser.add_argument("--save_plot", help="Save plot to file",
+                        action="store_true")
+
+    parser.add_argument("--filename",
+                        default="qtnm.root",
+                        type=str,
+                        help="File, or file containing list of files to analyse",
+                        nargs="?",
+                        )
+
     return parser.parse_args()
 
 
@@ -59,7 +69,7 @@ def summary(fname='qtnm.root'):
         print('momentum angle to ref: %.6f' % ref.Angle(data))
 
 
-def analyse(fnamelist, angle):
+def analyse(fnamelist, angle, save=False):
     # Extract list of files
     try:
         with open(fnamelist, 'r') as flist:
@@ -100,6 +110,10 @@ def analyse(fnamelist, angle):
     pz = ROOT.TTreeReaderValue(ROOT.double)(nt1, "Pz")
     tid = ROOT.TTreeReaderValue(ROOT.int)(nt1, "TrackID")
 
+    # Set up canvas
+    canvas = ROOT.TCanvas("Kinetic Energy")
+    canvas.cd()
+
     # Loop over events
     anglerad = angle * ROOT.TMath.DegToRad()
     hk = ROOT.TH1D("energy", "Kinetic energy [keV]", 100, 0.0, 20.0)
@@ -122,6 +136,9 @@ def analyse(fnamelist, angle):
     # Appears to be needed to display plot
     ROOT.gPad.Update()
 
+    if save:
+        canvas.SaveAs("ElectronGun.png")
+
 if __name__ == "__main__":
     options = parse_arguments()
 
@@ -130,4 +147,4 @@ if __name__ == "__main__":
     elif options.summary:
         summary()
     else:
-        analyse('qtnm.root', options.angle)
+        analyse(options.filename, options.angle, options.save_plot)
