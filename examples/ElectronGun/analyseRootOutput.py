@@ -94,7 +94,7 @@ def analyse(fnamelist, angle, outputfile=None):
             inputFile.Get('')
             filelist = [fnamelist]
         except ReferenceError:
-            print('Could not parse %s as either a text file or a ROOT file' % 'aaa')
+            print('Could not parse %s as either a text file or a ROOT file' % fnamelist)
             return -1
 
 
