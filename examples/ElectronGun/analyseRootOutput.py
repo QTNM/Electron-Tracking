@@ -79,7 +79,7 @@ def analyse(fnamelist, angle, outputfile=None):
             filelist = flist.readlines()
     except IOError:
         print('Failed to open file: %s' % fnamelist)
-        return -1
+        return
     # Allow the user to pass in a list(like) argument
     except TypeError:
         filelist = list(fnamelist)
@@ -96,7 +96,7 @@ def analyse(fnamelist, angle, outputfile=None):
         except ReferenceError:
             print('Could not parse %s as either a text file or a ROOT file'
                   % fnamelist)
-            return -1
+            return
 
     chScore = ROOT.TChain("Score")
 
