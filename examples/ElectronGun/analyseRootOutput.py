@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import ROOT
 import argparse
+import ROOT
 
 
 def parse_arguments():
