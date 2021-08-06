@@ -25,8 +25,11 @@ def parse_arguments():
     parser.add_argument("--short_summary", help="Carry out short summary only",
                         action="store_true")
 
-    parser.add_argument("--save_plot", help="Save plot to file",
-                        action="store_true")
+    parser.add_argument("--output",
+                        help="Filename to save plot to.",
+                        type=str,
+                        nargs="?"
+                        )
 
     parser.add_argument("--filename",
                         default="qtnm.root",
@@ -69,7 +72,7 @@ def summary(fname='qtnm.root'):
         print('momentum angle to ref: %.6f' % ref.Angle(data))
 
 
-def analyse(fnamelist, angle, save=False):
+def analyse(fnamelist, angle, outputfile=None):
     # Extract list of files
     try:
         with open(fnamelist, 'r') as flist:
@@ -136,8 +139,8 @@ def analyse(fnamelist, angle, save=False):
     # Appears to be needed to display plot
     ROOT.gPad.Update()
 
-    if save:
-        canvas.SaveAs("ElectronGun.png")
+    if outputfile is not None:
+        canvas.SaveAs(outputfile)
 
 if __name__ == "__main__":
     options = parse_arguments()
@@ -147,4 +150,4 @@ if __name__ == "__main__":
     elif options.summary:
         summary()
     else:
-        analyse(options.filename, options.angle, options.save_plot)
+        analyse(options.filename, options.angle, options.output)
