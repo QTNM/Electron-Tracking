@@ -135,8 +135,10 @@ def analyse(fnamelist, angle, outputfile=None):
     print('Entries: %.6d' % hk.GetEntries())
 
     hk.DrawCopy()
-    # Appears to be needed to display plot
+    # Appears to be needed to display plot in interactive mode
     ROOT.gPad.Update()
+    # Required for jupyter notebook
+    canvas.Draw()
 
     if outputfile is not None:
         canvas.SaveAs(outputfile)
