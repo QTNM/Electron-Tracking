@@ -1,4 +1,32 @@
+#!/usr/bin/env python3
 import ROOT
+import argparse
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description="""Electron gun analysis tool
+        """,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+
+
+    parser.add_argument(
+        "--angle",
+        default=10.0,
+        type=float,
+        help="Analyse scattering angles between 90 +/- angle degrees",
+        nargs="?",
+    )
+
+    parser.add_argument("--summary", help="Carry out summary only",
+                        action="store_true")
+
+    parser.add_argument("--short_summary", help="Carry out short summary only",
+                        action="store_true")
+
+    return parser.parse_args()
+
 
 def shortsummary(fname='qtnm.root'):
     inputFile = ROOT.TFile(fname)
@@ -95,5 +123,11 @@ def analyse(fnamelist, angle):
     ROOT.gPad.Update()
 
 if __name__ == "__main__":
-    shortsummary()
-    analyse('qtnm.root', 10)
+    options = parse_arguments()
+
+    if options.short_summary:
+        shortsummary()
+    elif options.summary:
+        summary()
+    else:
+        analyse('qtnm.root', options.angle)
