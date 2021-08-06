@@ -10,7 +10,6 @@ def parse_arguments():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
-
     parser.add_argument(
         "--angle",
         default=10.0,
@@ -34,7 +33,8 @@ def parse_arguments():
     parser.add_argument("--filename",
                         default="qtnm.root",
                         type=str,
-                        help="File, or file containing list of files to analyse",
+                        help="File, or file containing list of files to \
+                        analyse",
                         nargs="?",
                         )
 
@@ -94,9 +94,9 @@ def analyse(fnamelist, angle, outputfile=None):
             inputFile.Get('')
             filelist = [fnamelist]
         except ReferenceError:
-            print('Could not parse %s as either a text file or a ROOT file' % fnamelist)
+            print('Could not parse %s as either a text file or a ROOT file'
+                  % fnamelist)
             return -1
-
 
     chScore = ROOT.TChain("Score")
 
@@ -129,9 +129,8 @@ def analyse(fnamelist, angle, outputfile=None):
         data.SetXYZ(px.Get()[0], py.Get()[0], pz.Get()[0])
         scatangle = ref.Angle(data)
         if (ROOT.TMath.PiOver2() - anglerad <= scatangle
-            <= ROOT.TMath.PiOver2() + anglerad):
+                <= ROOT.TMath.PiOver2() + anglerad):
             hk.Fill(kine.Get()[0])
-
 
     print('Entries: %.6d' % hk.GetEntries())
 
@@ -141,6 +140,7 @@ def analyse(fnamelist, angle, outputfile=None):
 
     if outputfile is not None:
         canvas.SaveAs(outputfile)
+
 
 if __name__ == "__main__":
     options = parse_arguments()
