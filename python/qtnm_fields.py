@@ -9,6 +9,7 @@ BiotSavart: General purpose numerical integration of current elements.
 CoilField: Magnetic field due to a circular loop of wire.
 BathTub: Magnetic field based on Project8 bathtub trap.
 Solenoid: Approximate magnetic field due to solenoid.
+ExternalField: Reads and interpolates field from external file.
 """
 
 import numpy as np
