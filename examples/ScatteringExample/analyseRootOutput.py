@@ -50,7 +50,7 @@ def summary_TTreeReader(fname="qtnm.root"):
 
     while nt2.Next():
         print('Event: %d' % EventID2.Get()[0])
-        print('Track ID: %d' % HitI2.Get()[0])
+        print('Track ID: %d' % HitID2.Get()[0])
         print('Stopwatch: %.10F' % time2.Get()[0])
         print('x pos: %.10F' % xpos.Get()[0])
         print('y pos: %.10F' % ypos.Get()[0])
