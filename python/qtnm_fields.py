@@ -9,11 +9,13 @@ BiotSavart: General purpose numerical integration of current elements.
 CoilField: Magnetic field due to a circular loop of wire.
 BathTub: Magnetic field based on Project8 bathtub trap.
 Solenoid: Approximate magnetic field due to solenoid.
+ExternalField: Reads and interpolates field from external file.
 """
 
 import numpy as np
 from scipy.constants import mu_0 as mu0
 from scipy.special import ellipk, ellipe
+from scipy.spatial import KDTree
 from qtnm_base import QtnmBaseField
 
 
@@ -191,3 +193,52 @@ class SolenoidField(QtnmBaseField):
             field = field + coil.evaluate_field_at_point(x, y, z)
 
         return field
+
+
+class ExternalField(QtnmBaseField):
+    """
+    Reads the field in from an external (plain text) file
+
+    Assumes the file is formatted as (x, y, z, Bx, By, Bz) with
+    a variable number of header lines before the data
+    """
+
+    def __init__(self, fname, nheader=8, interp_pts=11):
+        """
+        Parameters
+        ----------
+        fname: Name of file to read data from
+        nheader: Number of lines to skip at start of file (Default 6)
+        interp_pts: Number of points to use for interpolation (Default 11)
+        """
+
+        try:
+            data = np.loadtxt(fname, skiprows=nheader)
+            positions = data[:,:3]
+            self.bx = data[:,3]
+            self.by = data[:,4]
+            self.bz = data[:,5]
+        except IOError:
+            print('Requested file: %s could not be opened' % fname)
+
+        # Set up KD Tree
+        self.tree = KDTree(positions)
+
+        # Number of points for IDW
+        self.ipts = interp_pts
+
+    def evaluate_field_at_point(self, x, y, z):
+        # Use nearest neighbour for now
+        distances, indices = self.tree.query([x, y, z], k=self.ipts)
+
+        # If we got lucky
+        if distances[0] < 1e-10:
+            return self.bx[indices[0]], self.by[indices[0]], self.bz[indices[0]]
+
+        # Otherwise
+        weights = 1.0 / distances
+        weights_tot = np.sum(weights)
+        bx = np.dot(self.bx[indices], weights) / weights_tot
+        by = np.dot(self.by[indices], weights) / weights_tot
+        bz = np.dot(self.bz[indices], weights) / weights_tot
+        return bx, by, bz
