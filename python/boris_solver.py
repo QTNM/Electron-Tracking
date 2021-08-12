@@ -79,19 +79,15 @@ class BorisSolver():
         v_n = v0
         
         times = np.zeros(n_steps)
-        xPos = np.zeros(n_steps)
-        yPos = np.zeros(n_steps)
-        zPos = np.zeros(n_steps)
-        xVel = np.zeros(n_steps)
-        yVel = np.zeros(n_steps)
-        zVel = np.zeros(n_steps)
+        pos = np.zeros(3, n_steps)
+        vel = np.zeros(3, n_steps)
 
-        xPos[0] = x0[0]
-        yPos[0] = x0[1]
-        zPos[0] = x0[2]
-        xVel[0] = v0[0]
-        yVel[0] = v0[1]
-        zVel[0] = v0[2]
+        pos[0][0] = x0[0]
+        pos[1][0] = x0[1]
+        pos[2][0] = x0[2]
+        vel[0][0] = v0[0]
+        vel[1][0] = v0[1]
+        vel[2][0] = v0[2]
         
         # Now loop through steps
         for step in range(1, n_steps):
@@ -113,18 +109,18 @@ class BorisSolver():
 
             # Update output arrays
             times[step] = step * step_size
-            xPos[step] = x_nplus1[0]
-            yPos[step] = x_nplus1[1]
-            zPos[step] = x_nplus1[2]
-            xVel[step] = v_nplus1[0]
-            yVel[step] = v_nplus1[1]
-            zVel[step] = v_nplus1[2]
+            pos[0][step] = x_nplus1[0]
+            pos[1][step] = x_nplus1[1]
+            pos[2][step] = x_nplus1[2]
+            vel[0][step] = v_nplus1[0]
+            vel[1][step] = v_nplus1[1]
+            vel[2][step] = v_nplus1[2]
 
             u_n = u_nplus1
             x_n = x_nplus1
             v_n = v_nplus1
             
-        return times, xPos, yPos, zPos, xVel, yVel, zVel
+        return times, pos, vel
 
     def acc(self, x, v):
         """
