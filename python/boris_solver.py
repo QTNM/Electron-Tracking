@@ -79,8 +79,8 @@ class BorisSolver():
         v_n = v0
         
         times = np.zeros(n_steps)
-        pos = np.zeros(3, n_steps)
-        vel = np.zeros(3, n_steps)
+        pos   = np.zeros((3, n_steps))
+        vel   = np.zeros((3, n_steps))
 
         pos[0][0] = x0[0]
         pos[1][0] = x0[1]
