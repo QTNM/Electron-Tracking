@@ -9,7 +9,14 @@ from utils import calculate_omega
 
 class BorisSolver():
     """ 
-    Copy of the QTNM base while I figure out what is going on
+    Copy of the QTNM base in the absence of a link to the base class
+    
+    Args:                                                                                            
+        charge: Charge of the particle
+        mass: Mass of particle                                                                     
+        tau: Larmor power parameter, such that P = tau * mass * a**2                             
+        calc_b_field: Method to calculate magnetic field as function                              
+                      of (x, y, z)
     """
     
     def __init__(self, charge=-qe, mass=me, b_field=1.0, calc_b_field=None, tau=0.0):
@@ -47,7 +54,39 @@ class BorisSolver():
         bfield = self.calc_b_field(pos[0], pos[1], pos[2])
         return calculate_omega(bfield, mass=self.mass, charge=self.charge,
                                energy=0.0)
-            
+
+    def radiation_acceleration(self, pos, vel):
+        """
+        Calculate the acceleration from the radiation reaction force 
+        Form is from Ford & O'Connell equation in 3D
+
+        Args: 
+            pos: 3D position array
+            vel: 3D velocity array
+
+        Returns:
+            Array of accelerations
+        """
+        omega = self.get_omega(pos)
+
+        denom = (1 + self.tau**2 * np.dot(omega, omega))
+        acc = np.zeros(3)
+
+        # Larmor terms
+        acc[0] -= self.tau * (omega[2]**2 + omega[1]**2) * vel[0]
+        acc[0] += self.tau * omega[0] * (omega[2] * vel[2] + omega[1] * vel[1])
+
+        acc[1] -= self.tau * (omega[2]**2 + omega[0]**2) * vel[1]
+        acc[1] += self.tau * omega[1] * (omega[2] * vel[2] + omega[0] * vel[0])
+
+        acc[2] -= self.tau * (omega[0]**2 + omega[1]**2) * vel[2]
+        acc[2] += self.tau * omega[2] * (omega[0] * vel[0] + omega[1] * vel[1])
+        
+        acc /= denom
+        
+        return acc
+    
+    
     def solve(self, n_rotations, x0=np.array([1.0, 0.0, 0.0]),
               v0=np.array([0.0, 1.0, 0.0]), cfl=1e-3):
         """
@@ -95,12 +134,18 @@ class BorisSolver():
             gamma_n = 1 / np.sqrt( 1 - (np.linalg.norm(v_n)/c)**2 )
             x_nplushalf = x_n + u_n * step_size / (2.0 * gamma_n)
 
-            # Inversion step
-            # No electric fields so this is a lot simpler
+            # Do the first half of the radiation reaction acceleration
+            u_minus = u_n + (step_size / 2.0) * self.radiation_acceleration(x_nplushalf, u_n)
             gamma_minus = np.sqrt( 1 + (np.linalg.norm(u_n)/c)**2 )
+            
+            # Rotation step
+            # No electric fields so this is a lot simpler
             t = self.calc_b_field(x_nplushalf[0], x_nplushalf[1], x_nplushalf[2]) * self.charge * step_size/(2.0 * self.mass * gamma_minus)
             s = 2.0 * t / (1.0 + np.linalg.norm(t)**2) 
-            u_nplus1 = u_n + np.cross(u_n + np.cross(u_n, t), s)
+            u_plus = u_minus + np.cross(u_minus + np.cross(u_minus, t), s)
+
+            # Second half of the radiation reaction acceleration
+            u_nplus1 = u_plus + (step_size / 2.0) * self.radiation_acceleration(x_nplushalf, u_plus)
             
             # Now update position
             gamma_nplus1 = np.sqrt( 1 + (np.linalg.norm(u_nplus1)/c)**2 )
