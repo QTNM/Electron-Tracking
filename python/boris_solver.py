@@ -169,16 +169,20 @@ class BorisSolver():
 
     def acc(self, x, v):
         """
-        Returns acceleration due B field
+        Returns acceleration due B field and radiation losses
 
         Args:
             x: position vector
             v: velocity vector
         """
 
-        dudt = self.charge / self.mass * ( np.cross(v, self.calc_b_field(x[0], x[1], x[2])) )
-        gamma = 1.0 / np.sqrt( 1 - (np.linalg.norm(v)/c)**2 )
-        acc = dudt / gamma
+        omega = self.get_omega(x)
+
+        # Lorentz force
+        acc = np.cross(v, omega)
+
+        # Larmor terms
+        acc += self.radiation_acceleration(x, v)
         
         return acc
     
