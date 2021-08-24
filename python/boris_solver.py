@@ -86,7 +86,47 @@ class BorisSolver():
         
         return acc
     
-    
+    def advance_step(self, time_step, x0, v0):
+        """
+        Advances the equations of motions by a single time step using Boris method
+
+        Args:
+            time_step: The distance forward in time we are stepping
+            x0: Initial position
+            v0: Initial velocity
+
+        Returns the position and velocity at the next step
+        """
+
+        gamma_n = 1 / np.sqrt( 1 - (np.linalg.norm(v0)/c)**2 )    
+        u_n = v0 * gamma_n
+        x_n = x0
+        v_n = v0        
+
+        # Half position step
+        x_nplushalf = x_n + u_n * time_step / (2.0 * gamma_n)
+
+        # Do the first half of the radiation reaction acceleration
+        u_minus = u_n + (time_step / 2.0) * self.radiation_acceleration(x_nplushalf, u_n)
+        gamma_minus = np.sqrt( 1 + (np.linalg.norm(u_n)/c)**2 )
+
+        # Rotation step
+        # No electric fields so this is a lot simpler
+        t = self.calc_b_field(x_nplushalf[0], x_nplushalf[1], x_nplushalf[2]) * self.charge * time_step/(2.0 * self.mass * gamma_minus)
+        s = 2.0 * t / (1.0 + np.linalg.norm(t)**2) 
+        u_plus = u_minus + np.cross(u_minus + np.cross(u_minus, t), s)
+
+        # Second half of the radiation reaction acceleration
+        u_nplus1 = u_plus + (time_step / 2.0) * self.radiation_acceleration(x_nplushalf, u_plus)
+
+        # Now update position
+        gamma_nplus1 = np.sqrt( 1 + (np.linalg.norm(u_nplus1)/c)**2 )
+        x_nplus1 = x_nplushalf + u_nplus1 * time_step / (2.0 * gamma_nplus1)
+        v_nplus1 = u_nplus1 / gamma_nplus1
+
+        return x_nplus1, v_nplus1
+
+
     def solve(self, n_rotations, x0=np.array([1.0, 0.0, 0.0]),
               v0=np.array([0.0, 1.0, 0.0]), cfl=1e-3):
         """
@@ -95,7 +135,7 @@ class BorisSolver():
         Args:                                                                                       
             n_rotations: Number of gyro-orbits (as function of B(x0))                                  
             x0: Initial position. Default: (1.0, 0.0, 0.0)                                          
-            v0: Initial position. Default: (0.0, 1.0, 0.0)                                            
+            v0: Initial velocity. Default: (0.0, 1.0, 0.0)                                            
 
         Returns times, positions and velocities
         """
