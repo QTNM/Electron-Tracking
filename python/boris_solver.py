@@ -167,45 +167,19 @@ class BorisSolver():
         vel[0][0] = v0[0]
         vel[1][0] = v0[1]
         vel[2][0] = v0[2]
-        
-        # Now loop through steps
+
+        # Loop through steps, using the advance_step function at each point
         for step in range(1, n_steps):
-            # Calculate first half of the position update
-            gamma_n = 1 / np.sqrt( 1 - (np.linalg.norm(v_n)/c)**2 )
-            x_nplushalf = x_n + u_n * step_size / (2.0 * gamma_n)
-
-            # Do the first half of the radiation reaction acceleration
-            u_minus = u_n + (step_size / 2.0) * self.radiation_acceleration(x_nplushalf, u_n)
-            gamma_minus = np.sqrt( 1 + (np.linalg.norm(u_n)/c)**2 )
-            
-            # Rotation step
-            # No electric fields so this is a lot simpler
-            t = self.calc_b_field(x_nplushalf[0], x_nplushalf[1], x_nplushalf[2]) * self.charge * step_size/(2.0 * self.mass * gamma_minus)
-            s = 2.0 * t / (1.0 + np.linalg.norm(t)**2) 
-            u_plus = u_minus + np.cross(u_minus + np.cross(u_minus, t), s)
-
-            # Second half of the radiation reaction acceleration
-            u_nplus1 = u_plus + (step_size / 2.0) * self.radiation_acceleration(x_nplushalf, u_plus)
-            
-            # Now update position
-            gamma_nplus1 = np.sqrt( 1 + (np.linalg.norm(u_nplus1)/c)**2 )
-            x_nplus1 = x_nplushalf + u_nplus1 * step_size / (2.0 * gamma_nplus1)
-            v_nplus1 = u_nplus1 / gamma_nplus1
-
-            # Update output arrays
+            pos_n, vel_n = self.advance_step(step_size,
+                                             np.array([pos[0][step-1], pos[1][step-1], pos[2][step-1]]),
+                                             np.array([vel[0][step-1], vel[1][step-1], vel[2][step-1]]))
             times[step] = step * step_size
-            pos[0][step] = x_nplus1[0]
-            pos[1][step] = x_nplus1[1]
-            pos[2][step] = x_nplus1[2]
-            vel[0][step] = v_nplus1[0]
-            vel[1][step] = v_nplus1[1]
-            vel[2][step] = v_nplus1[2]
-
-            u_n = u_nplus1
-            x_n = x_nplus1
-            v_n = v_nplus1
-            
-        return times, pos, vel
+            pos[0][step] = pos_n[0]
+            pos[1][step] = pos_n[1]
+            pos[2][step] = pos_n[2]
+            vel[0][step] = vel_n[0]
+            vel[1][step] = vel_n[1]
+            vel[2][step] = vel_n[2]
 
     def acc(self, x, v):
         """
