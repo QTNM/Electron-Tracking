@@ -111,10 +111,11 @@ class BorisSolver():
         gamma_minus = np.sqrt( 1 + (np.linalg.norm(u_n)/c)**2 )
 
         # Rotation step
-        # No electric fields so this is a lot simpler
-        t = self.calc_b_field(x_nplushalf[0], x_nplushalf[1], x_nplushalf[2]) * self.charge * time_step/(2.0 * self.mass * gamma_minus)
-        s = 2.0 * t / (1.0 + np.linalg.norm(t)**2) 
-        u_plus = u_minus + np.cross(u_minus + np.cross(u_minus, t), s)
+        B_nplushalf = self.calc_b_field(x_nplushalf[0], x_nplushalf[1], x_nplushalf[2])
+        theta = self.charge * time_step / (self.mass * gamma_minus) * np.linalg.norm(B_nplushalf)
+        t = np.tan(theta/2.0) * B_nplushalf / np.linalg.norm(B_nplushalf) 
+        u_prime = u_minus + np.cross(u_minus, t)
+        u_plus = u_minus + 2.0 / (1.0 + np.dot(t, t)) * np.cross(u_prime, t)
 
         # Second half of the radiation reaction acceleration
         u_nplus1 = u_plus + (time_step / 2.0) * self.radiation_acceleration(x_nplushalf, u_plus)
