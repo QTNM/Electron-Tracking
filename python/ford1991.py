@@ -39,7 +39,7 @@ class Ford1991Solver(QtnmBaseSolver):
         acc[0] += self.tau * omega[0] * (omega[2] * x[5] + omega[1] * x[4])
 
         acc[1] -= self.tau * (omega[2]**2 + omega[0]**2) * x[4]
-        acc[1] += self.tau * omega[1] * (omega[2] * x[5] + omega[0] * x[4])
+        acc[1] += self.tau * omega[1] * (omega[2] * x[5] + omega[0] * x[3])
 
         acc[2] -= self.tau * (omega[0]**2 + omega[1]**2) * x[5]
         acc[2] += self.tau * omega[2] * (omega[0] * x[3] + omega[1] * x[4])
