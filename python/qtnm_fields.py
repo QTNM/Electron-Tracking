@@ -241,4 +241,4 @@ class ExternalField(QtnmBaseField):
         bx = np.dot(self.bx[indices], weights) / weights_tot
         by = np.dot(self.by[indices], weights) / weights_tot
         bz = np.dot(self.bz[indices], weights) / weights_tot
-        return bx, by, bz
+        return np.array([bx, by, bz])
