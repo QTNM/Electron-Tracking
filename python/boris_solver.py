@@ -111,7 +111,13 @@ class BorisSolver():
         gamma_minus = np.sqrt( 1 + (np.linalg.norm(u_n)/c)**2 )
 
         # Rotation step
-        B_nplushalf = self.calc_b_field(x_nplushalf[0], x_nplushalf[1], x_nplushalf[2])
+        B_nplushalf = np.zeros(3)
+        # Allows us to use a constant field without calculating if necessary
+        if self.calc_b_field is None:
+            B_nplushalf = self.b_field
+        else:
+            B_nplushalf = self.calc_b_field(x_nplushalf[0], x_nplushalf[1], x_nplushalf[2])
+            
         theta = self.charge * time_step / (self.mass * gamma_minus) * np.linalg.norm(B_nplushalf)
         t = np.tan(theta/2.0) * B_nplushalf / np.linalg.norm(B_nplushalf) 
         u_prime = u_minus + np.cross(u_minus, t)
