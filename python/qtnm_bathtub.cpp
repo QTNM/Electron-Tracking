@@ -12,20 +12,20 @@ class qtnm_field {
   double z1, z2;
   double background;
   double b_central;
-public:
-  void set_values(double, double, double, double, double);
   void evaluate_coil(double, double, double, double, double[]);
+public:
+  qtnm_field(double, double, double, double, double);
+  void set_values(double, double, double, double, double);
   void evaluate_field(double, double, double, double[]);
 };
 
-void qtnm_field::set_values(double _r, double _I, double _z1, double _z2, double _b) {
-  radius = _r;
-  current = _I;
-  z1 = _z1;
-  z2 = _z2;
-  background = _b;
-
-  // Set secondary values here
+qtnm_field::qtnm_field(double r_, double I_, double z1_, double z2_, double background_) :
+  radius(r_),
+  current(I_),
+  z1(z1_),
+  z2(z2_),
+  background(background_)
+{
   b_central = current * constants::mu0 / radius / 2.0;
 }
 
@@ -35,7 +35,7 @@ void qtnm_field::evaluate_field(double x, double y, double z, double field[3]) {
   double field2[3];
   evaluate_coil(x, y, z, z1, field1);
   evaluate_coil(x, y, z, z2, field2);
-  field[0] = field1[0]+ field2[0];
+  field[0] = field1[0] + field2[0];
   field[1] = field1[1] + field2[1];
   field[2] = field1[2] + field2[2] + background;
 }
@@ -71,14 +71,16 @@ void qtnm_field::evaluate_coil(double x, double y, double z, double zcoil, doubl
   field[2] = b_z;
 }
 
-qtnm_field field;
-
 extern "C" {
-  void set_values(double r, double I, double z1, double z2, double background) {
-    field.set_values(r, I, z1, z2, background);
+  qtnm_field* new_field(double r, double I, double z1, double z2, double background) {
+    return new qtnm_field(r, I, z1, z2, background);
   }
 
-  void calculate_field(double x, double y, double z, double bfield[3]){
-    field.evaluate_field(x, y, z, bfield);
+  void delete_field(qtnm_field* field) {
+    delete field;
+  }
+
+  void calculate_field(qtnm_field* field, double x, double y, double z, double bfield[3]){
+    field->evaluate_field(x, y, z, bfield);
   }
 }
