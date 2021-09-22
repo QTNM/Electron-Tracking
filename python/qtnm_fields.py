@@ -17,6 +17,7 @@ from scipy.constants import mu_0 as mu0
 from scipy.special import ellipk, ellipe
 from scipy.spatial import KDTree
 from qtnm_base import QtnmBaseField
+import ctypes
 
 
 class BiotSavart(QtnmBaseField):
@@ -242,3 +243,41 @@ class ExternalField(QtnmBaseField):
         by = np.dot(self.by[indices], weights) / weights_tot
         bz = np.dot(self.bz[indices], weights) / weights_tot
         return bx, by, bz
+
+class QtnmBathTubCpp(QtnmBaseField):
+    def __init__(self, radius=0.005, current=40, Z1=0.1, Z2=-0.1, background=0.0):
+        self.field_so = ctypes.CDLL('cpp/lib/qtnm_bathtub.so')
+
+        # Set arg and restypes
+        self.field_so.new_field.restype = ctypes.c_void_p
+        self.field_so.calculate_field.restype =	None
+        self.field_so.delete_field.restype = None
+
+        self.field_so.new_field.argtypes = [ctypes.c_double, ctypes.c_double, ctypes.c_double,
+                                            ctypes.c_double,ctypes.c_double]
+        self.field_so.calculate_field.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_double,
+                                                  ctypes.c_double, ctypes.POINTER(ctypes.c_double)]
+        self.field_so.delete_field.argtypes = [ctypes.c_void_p]
+
+        # Only allow z-background
+        background_arr = np.atleast_1d(background)
+        if np.size(background_arr) > 1:
+            print('Warning! QtnmBathTubCpp only allows scalar backgrounds! Using: ', background_arr[-1])
+
+        Z1_ = ctypes.c_double(Z1)
+        Z2_ = ctypes.c_double(Z2)
+        current_ = ctypes.c_double(current)
+        radius_ = ctypes.c_double(radius)
+        background_ = ctypes.c_double(background_arr[-1])
+
+        self.field_ptr = self.field_so.new_field(radius_, current_, Z1_, Z2_, background_)
+
+    def evaluate_field_at_point(self, x, y, z):
+        _x = ctypes.c_double(x)
+        _y = ctypes.c_double(y)
+        _z = ctypes.c_double(z)
+        bfield = (ctypes.c_double*3)()
+
+        self.field_so.calculate_field(self.field_ptr, _x, _y, _z, bfield)
+
+        return np.array(bfield)
