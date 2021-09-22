@@ -16,3 +16,5 @@ endif()
 
 add_library(qtnm_bathtub MODULE
   src/qtnm_bathtub.cpp)
+
+target_include_directories(qtnm_bathtub PRIVATE ${PROJECT_SOURCE_DIR}/include)
