@@ -1,6 +1,12 @@
-#define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 #include <iostream>
 #include <cmath>
+
+#ifdef HAVE_BOOST
+#include <boost/math/special_functions/ellint_1.hpp>
+#include <boost/math/special_functions/ellint_2.hpp>
+#else
+#define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
+#endif
 
 namespace constants{
   constexpr double pi = 3.141592653589793238462643383279502884;
@@ -59,8 +65,13 @@ void QTNMField::EvaluateCoil(double x, double y, double z, double zcoil, double 
   double alpha = pow(1.0 + rad_norm, 2) + z_norm2;
   double root_alpha_pi = sqrt(alpha) * constants::pi;
   double root_beta = sqrt(4.0 * rad_norm / alpha);
+#ifdef HAVE_BOOST
+  double int_e = boost::math::ellint_2(root_beta);
+  double int_k = boost::math::ellint_1(root_beta);
+#else
   double int_e = std::comp_ellint_2(root_beta);
   double int_k = std::comp_ellint_1(root_beta);
+#endif
   double gamma = alpha - 4.0 * rad_norm;
   double b_r = b_central_ * (int_e * ((1.0 + rad_norm2 + z_norm2) / gamma) - int_k) / root_alpha_pi * (z_rel / rad);
   double b_z = b_central_ * (int_e * ((1.0 - rad_norm2 - z_norm2) / gamma) + int_k) / root_alpha_pi;
