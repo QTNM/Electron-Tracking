@@ -2,9 +2,10 @@
 #include <iostream>
 #include <cmath>
 
-// Put in constants namespace
-constexpr double pi = std::acos(-1);
-constexpr double mu0 = 4.0e-7 * pi;
+namespace constants{
+  constexpr double pi = std::acos(-1);
+  constexpr double mu0 = 4.0e-7 * pi;
+}
 
 class qtnm_field {
   double radius, current;
@@ -25,7 +26,7 @@ void qtnm_field::set_values(double _r, double _I, double _z1, double _z2, double
   background = _b;
 
   // Set secondary values here
-  b_central = current * mu0 / radius / 2.0;
+  b_central = current * constants::mu0 / radius / 2.0;
 }
 
 void qtnm_field::evaluate_field(double x, double y, double z, double field[3]) {
@@ -47,18 +48,17 @@ void qtnm_field::evaluate_coil(double x, double y, double z, double zcoil, doubl
     double radius2 = pow(radius,2);
     field[0] = 0.0;
     field[1] = 0.0;
-    field[2] = mu0 * current * radius2 / (2.0 * pow(radius2 + pow(zcoil - z,2), 1.5));
+    field[2] = constants::mu0 * current * radius2 / (2.0 * pow(radius2 + pow(zcoil - z,2), 1.5));
     return;
   }
 
   double z_rel = z - zcoil;
   double rad_norm = rad / radius;
-  double z_norm = z_rel / radius;
   double rad_norm2 = pow(rad_norm, 2);
-  double z_norm2 = pow(z_norm, 2);
+  double z_norm2 = pow(z_rel / radius, 2);
 
   double alpha = pow(1.0 + rad_norm, 2) + z_norm2;
-  double root_alpha_pi = sqrt(alpha) * pi;
+  double root_alpha_pi = sqrt(alpha) * constants::pi;
   double root_beta = sqrt(4.0 * rad_norm / alpha);
   double int_e = std::comp_ellint_2(root_beta);
   double int_k = std::comp_ellint_1(root_beta);
