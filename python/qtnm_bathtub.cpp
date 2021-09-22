@@ -7,55 +7,54 @@ namespace constants{
   constexpr double mu0 = 4.0e-7 * pi;
 }
 
-class qtnm_field {
-  double radius, current;
-  double z1, z2;
-  double background;
-  double b_central;
-  void evaluate_coil(double, double, double, double, double[]);
+class QTNMField {
+  double radius_, current_;
+  double z1_, z2_;
+  double background_;
+  double b_central_;
+  void EvaluateCoil(double, double, double, double, double[]);
 public:
-  qtnm_field(double, double, double, double, double);
-  void set_values(double, double, double, double, double);
-  void evaluate_field(double, double, double, double[]);
+  QTNMField(double, double, double, double, double);
+  void EvaluateField(double, double, double, double[]);
 };
 
-qtnm_field::qtnm_field(double r_, double I_, double z1_, double z2_, double background_) :
-  radius(r_),
-  current(I_),
-  z1(z1_),
-  z2(z2_),
-  background(background_)
+QTNMField::QTNMField(double radius, double current, double z1, double z2, double background) :
+  radius_(radius),
+  current_(current),
+  z1_(z1),
+  z2_(z2),
+  background_(background)
 {
-  b_central = current * constants::mu0 / radius / 2.0;
+  b_central_ = current_ * constants::mu0 / radius_ / 2.0;
 }
 
-void qtnm_field::evaluate_field(double x, double y, double z, double field[3]) {
+void QTNMField::EvaluateField(double x, double y, double z, double field[3]) {
 
   double field1[3];
   double field2[3];
-  evaluate_coil(x, y, z, z1, field1);
-  evaluate_coil(x, y, z, z2, field2);
+  EvaluateCoil(x, y, z, z1_, field1);
+  EvaluateCoil(x, y, z, z2_, field2);
   field[0] = field1[0] + field2[0];
   field[1] = field1[1] + field2[1];
-  field[2] = field1[2] + field2[2] + background;
+  field[2] = field1[2] + field2[2] + background_;
 }
 
-void qtnm_field::evaluate_coil(double x, double y, double z, double zcoil, double field[3]) {
+void QTNMField::EvaluateCoil(double x, double y, double z, double zcoil, double field[3]) {
 
   double rad = sqrt(pow(x,2) + pow(y,2));
 
-  if (rad / radius < 1e-10) {
-    double radius2 = pow(radius,2);
+  if (rad / radius_ < 1e-10) {
+    double radius2 = pow(radius_,2);
     field[0] = 0.0;
     field[1] = 0.0;
-    field[2] = constants::mu0 * current * radius2 / (2.0 * pow(radius2 + pow(zcoil - z,2), 1.5));
+    field[2] = constants::mu0 * current_ * radius2 / (2.0 * pow(radius2 + pow(zcoil - z,2), 1.5));
     return;
   }
 
   double z_rel = z - zcoil;
-  double rad_norm = rad / radius;
+  double rad_norm = rad / radius_;
   double rad_norm2 = pow(rad_norm, 2);
-  double z_norm2 = pow(z_rel / radius, 2);
+  double z_norm2 = pow(z_rel / radius_, 2);
 
   double alpha = pow(1.0 + rad_norm, 2) + z_norm2;
   double root_alpha_pi = sqrt(alpha) * constants::pi;
@@ -63,8 +62,8 @@ void qtnm_field::evaluate_coil(double x, double y, double z, double zcoil, doubl
   double int_e = std::comp_ellint_2(root_beta);
   double int_k = std::comp_ellint_1(root_beta);
   double gamma = alpha - 4.0 * rad_norm;
-  double b_r = b_central * (int_e * ((1.0 + rad_norm2 + z_norm2) / gamma) - int_k) / root_alpha_pi * (z_rel / rad);
-  double b_z = b_central * (int_e * ((1.0 - rad_norm2 - z_norm2) / gamma) + int_k) / root_alpha_pi;
+  double b_r = b_central_ * (int_e * ((1.0 + rad_norm2 + z_norm2) / gamma) - int_k) / root_alpha_pi * (z_rel / rad);
+  double b_z = b_central_ * (int_e * ((1.0 - rad_norm2 - z_norm2) / gamma) + int_k) / root_alpha_pi;
 
   field[0] = b_r * x / rad;
   field[1] = b_r * y / rad;
@@ -72,15 +71,15 @@ void qtnm_field::evaluate_coil(double x, double y, double z, double zcoil, doubl
 }
 
 extern "C" {
-  qtnm_field* new_field(double r, double I, double z1, double z2, double background) {
-    return new qtnm_field(r, I, z1, z2, background);
+  QTNMField* new_field(double r, double I, double z1, double z2, double background) {
+    return new QTNMField(r, I, z1, z2, background);
   }
 
-  void delete_field(qtnm_field* field) {
+  void delete_field(QTNMField* field) {
     delete field;
   }
 
-  void calculate_field(qtnm_field* field, double x, double y, double z, double bfield[3]){
-    field->evaluate_field(x, y, z, bfield);
+  void calculate_field(QTNMField* field, double x, double y, double z, double bfield[3]){
+    field->EvaluateField(x, y, z, bfield);
   }
 }
