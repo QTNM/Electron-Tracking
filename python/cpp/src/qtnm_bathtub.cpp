@@ -11,14 +11,11 @@ QTNMField::QTNMField(double radius, double current, double z1, double z2, double
 }
 
 void QTNMField::EvaluateField(double x, double y, double z, double field[3]) {
-
-  double field1[3];
   double field2[3];
-  EvaluateCoil(x, y, z, z1_, field1);
+  EvaluateCoil(x, y, z, z1_, field);
   EvaluateCoil(x, y, z, z2_, field2);
-  field[0] = field1[0] + field2[0];
-  field[1] = field1[1] + field2[1];
-  field[2] = field1[2] + field2[2] + background_;
+  for (int i = 0; i < 3; ++i) field[i] += field2[i];
+  field[2] += background_;
 }
 
 void QTNMField::EvaluateCoil(double x, double y, double z, double zcoil, double field[3]) {

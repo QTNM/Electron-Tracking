@@ -21,9 +21,9 @@ class QTNMField {
   double z1_, z2_;
   double background_;
   double b_central_;
-  void EvaluateCoil(double, double, double, double, double[]);
+  void EvaluateCoil(double, double, double, double, double[3]);
 public:
   QTNMField(double, double, double, double, double);
-  void EvaluateField(double, double, double, double[]);
+  void EvaluateField(double, double, double, double[3]);
 };
 #endif
