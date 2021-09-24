@@ -98,20 +98,19 @@ class BorisSolver():
         Returns the position and velocity at the next step
         """
 
-        gamma_n = 1 / np.sqrt( 1 - (np.linalg.norm(v0)/c)**2 )    
+        gamma_n = 1 / np.sqrt( 1.0 - np.dot(v0, v0) / c**2 )    
         u_n = v0 * gamma_n
         x_n = x0
         v_n = v0        
 
         # Half position step
-        x_nplushalf = x_n + u_n * time_step / (2.0 * gamma_n)
+        x_nplushalf = x_n + v_n * time_step / 2.0
 
         # Do the first half of the radiation reaction acceleration
         u_minus = u_n + (time_step / 2.0) * self.radiation_acceleration(x_nplushalf, u_n)
-        gamma_minus = np.sqrt( 1 + (np.linalg.norm(u_n)/c)**2 )
+        gamma_minus = np.sqrt( 1.0 + np.dot(u_n, u_n) / c**2 )
 
         # Rotation step
-        B_nplushalf = np.zeros(3)
         # Allows us to use a constant field without calculating if necessary
         if self.calc_b_field is None:
             B_nplushalf = self.b_field
@@ -128,8 +127,8 @@ class BorisSolver():
 
         # Now update position
         gamma_nplus1 = np.sqrt( 1 + (np.linalg.norm(u_nplus1)/c)**2 )
-        x_nplus1 = x_nplushalf + u_nplus1 * time_step / (2.0 * gamma_nplus1)
         v_nplus1 = u_nplus1 / gamma_nplus1
+        x_nplus1 = x_nplushalf + v_nplus1 * time_step / 2.0
 
         return x_nplus1, v_nplus1
 
@@ -158,9 +157,9 @@ class BorisSolver():
 
         # Calculate number of steps
         n_steps = int(np.ceil(t_end / max_step))
-        step_size = t_end / n_steps
+        step_size = max_step
 
-        u_n = v0 * 1 / np.sqrt( 1 - (np.linalg.norm(v0)/c)**2 )
+        u_n = v0 * 1.0 / np.sqrt( 1.0 - np.dot(v0, v0) / c**2 )
         x_n = x0
         v_n = v0
         
