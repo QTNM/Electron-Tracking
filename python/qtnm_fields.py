@@ -242,7 +242,8 @@ class ExternalField(QtnmBaseField):
         bx = np.dot(self.bx[indices], weights) / weights_tot
         by = np.dot(self.by[indices], weights) / weights_tot
         bz = np.dot(self.bz[indices], weights) / weights_tot
-        return bx, by, bz
+
+        return np.array([bx, by, bz])
 
 class QtnmBathTubCpp(QtnmBaseField):
     def __init__(self, radius=0.005, current=40, Z1=0.1, Z2=-0.1, background=0.0):
