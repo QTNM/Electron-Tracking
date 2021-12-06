@@ -156,13 +156,13 @@ class BorisSolver():
         omega0 /= gamma
 
         # Maximum time step
-        max_step = cfl / omega0
+        max_step = 2.0 * np.pi * cfl / omega0
 
         # Final time
         t_end = n_rotations * 2.0 * np.pi / omega0
 
         # Calculate number of steps
-        n_steps = int(np.ceil(t_end / max_step))
+        n_steps = int(np.ceil(t_end / max_step)) + 1
         step_size = max_step
 
         u_n = v0 * 1.0 / np.sqrt( 1.0 - np.dot(v0, v0) / c**2 )
