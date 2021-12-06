@@ -151,7 +151,11 @@ class BorisSolver():
         # Calculate magnitude of omega                                                              
         omega0 = np.linalg.norm(self.get_omega(x0))
 
-        # Maximum time step                                                                          
+        # Correct for relativity
+        gamma = 1 / np.sqrt( 1.0 - np.dot(v0, v0) / c**2 )
+        omega0 /= gamma
+
+        # Maximum time step
         max_step = cfl / omega0
 
         # Final time                                                                                
