@@ -189,6 +189,8 @@ class BorisSolver():
             vel[1][step] = vel_n[1]
             vel[2][step] = vel_n[2]
 
+        return times, pos, vel
+
     def acc(self, x, v):
         """
         Returns acceleration due B field and radiation losses
