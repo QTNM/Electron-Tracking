@@ -39,6 +39,8 @@ class BorisSolver():
                 self.omega0 = omega0
             elif np.size(omega0) == 1:
                 self.omega0 = np.array([0, 0, omega0], dtype=float)
+                # Boris solver requires a vector for b. Assume B = B_z
+                self.b_field = np.array([0.0, 0.0, b_field])
             else:
                 raise ValueError('Calculate omega returned erroneous size')
 
