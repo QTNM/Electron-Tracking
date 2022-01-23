@@ -139,7 +139,7 @@ auto SEDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   G4int nbunches     = (int) (pipehZ / (2*bunchhZ + gap)); // integer, lower limit half number
 
   G4cout << ">> shortPipe: nbunches fit in pipe: " << 2*nbunches-2 << G4endl;
-  G4cout << ">> shortPipe: at density [g/cm3] " << fdensity / (g / cm3) << G4endl;
+  G4cout << ">> shortPipe: at density [g/cm3] " << bunchMat->GetDensity() / (g / cm3) << G4endl;
   
   // stopwatch volume with piperad and thickness in z
   G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
