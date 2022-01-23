@@ -31,7 +31,6 @@ SEDetectorConstruction::SEDetectorConstruction()
   fdensity = 5.e-12 * g / cm3;
 
   DefineCommands();
-  DefineMaterials();
 }
 
 SEDetectorConstruction::~SEDetectorConstruction()
@@ -46,6 +45,8 @@ auto SEDetectorConstruction::Construct() -> G4VPhysicalVolume*
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
+
+  DefineMaterials();
 
   if(fGeometryName == "bunches")
   {
