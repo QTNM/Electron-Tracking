@@ -31,7 +31,6 @@ SEDetectorConstruction::SEDetectorConstruction()
   fdensity = 5.e-12 * g / cm3;
 
   DefineCommands();
-  DefineMaterials();
 }
 
 SEDetectorConstruction::~SEDetectorConstruction()
@@ -46,6 +45,8 @@ auto SEDetectorConstruction::Construct() -> G4VPhysicalVolume*
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
+
+  DefineMaterials();
 
   if(fGeometryName == "bunches")
   {
@@ -139,7 +140,7 @@ auto SEDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   G4int nbunches     = (int) (pipehZ / (2*bunchhZ + gap)); // integer, lower limit half number
 
   G4cout << ">> shortPipe: nbunches fit in pipe: " << 2*nbunches-2 << G4endl;
-  G4cout << ">> shortPipe: at density [g/cm3] " << fdensity / (g / cm3) << G4endl;
+  G4cout << ">> shortPipe: at density [g/cm3] " << bunchMat->GetDensity() / (g / cm3) << G4endl;
   
   // stopwatch volume with piperad and thickness in z
   G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
