@@ -98,7 +98,7 @@ class QtnmBaseSolver(ABC):
         omega0 = np.linalg.norm(self.get_omega(x0))
 
         # Maximum time step
-        max_step = cfl / omega0
+        max_step = 2.0 * np.pi * cfl / omega0
 
         # Final time
         t_end = n_rotations * 2.0 * np.pi / omega0
