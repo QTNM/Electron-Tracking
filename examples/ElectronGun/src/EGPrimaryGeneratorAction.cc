@@ -57,8 +57,8 @@ void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()*mm, loc.y()*mm, -worldZHalfLength + 1.*cm));
 
   // Gaussian random energy [keV]
-  G4double rndEnergy = G4RandGauss(fMean, fStdev);
-  fParticleGun->SetParticleEnergy(rndEnergy * keV);
+  auto rndEnergy = G4RandGauss(CLHEP::HepRandom::getTheEngine(), fMean, fStdev);
+  fParticleGun->SetParticleEnergy(rndEnergy() * keV);
 
   fParticleGun->GeneratePrimaryVertex(event);
 }

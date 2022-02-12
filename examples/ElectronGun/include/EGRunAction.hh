@@ -12,7 +12,7 @@ class G4Run;
 class EGRunAction : public G4UserRunAction
 {
 public:
-  EGRunAction(EGEventAction* eventAction, G4String name);
+  EGRunAction(G4String name);
   virtual ~EGRunAction();
 
   virtual void BeginOfRunAction(const G4Run*);
