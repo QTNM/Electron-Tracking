@@ -103,6 +103,6 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // printing
-//  G4cout << ">>> Event: " << eventID << G4endl;
-//  G4cout << "    " << GnofHits << " gas hits stored in this event." << G4endl;
+  G4cout << ">>> Event: " << eventID << G4endl;
+  G4cout << "    " << GnofHits << " gas hits stored in this event." << G4endl;
 }

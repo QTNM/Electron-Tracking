@@ -3,6 +3,7 @@
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4GenericMessenger.hh"
+#include "Randomize.hh"
 #include "globals.hh"
 
 class G4ParticleGun;
@@ -29,6 +30,7 @@ private:
   G4ParticleGun*      fParticleGun;
   G4GenericMessenger* fMessenger;
 
+  G4RandGauss*        frndEnergy;
   G4double            fMean;
   G4double            fStdev;
   G4double            fSpot;
