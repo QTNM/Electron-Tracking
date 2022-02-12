@@ -12,7 +12,10 @@ Geometry is a vacuum box world with a cylinder, the pipe, filled with Helium gas
 The density can be changed with a macro command.
 
 Scorer: interactions in the gas - particle momentum vector and kinetic energy post-step and deposited energy together
-with event ID and track ID. Output in ROOT file.
+with event ID and track ID. Output in ROOT file. Added: store interaction location.
+
+Added: macro commands for the event generator. Set mean and std deviation in energy, cooresponding to a realistic electron gun. 
+Also, define a finite spot source, again as given in electron gun - a circle spot beam with diameter as input.
 
 A simple ROOT analysis script is included to read from the file. Target question is the number of scattered 
 electrons in a given angle range.
