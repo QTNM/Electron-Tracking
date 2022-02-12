@@ -4,7 +4,6 @@
 #include "G4UserRunAction.hh"
 #include "globals.hh"
 
-class EGEventAction;
 class G4Run;
 
 /// Run action class
@@ -20,7 +19,6 @@ public:
   virtual void EndOfRunAction(const G4Run*);
 
 private:
-  EGEventAction*   fEventAction;  // have event information for run
   G4String         fout;          // output file name
 };
 

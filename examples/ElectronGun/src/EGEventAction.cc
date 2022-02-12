@@ -50,7 +50,7 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // dummy storage
-  std::vector<double> tedep, tkine, px, py, pz;
+  std::vector<double> tedep, tkine, px, py, pz, posx, posy, posz;
   std::vector<int> tid;
 
   // get analysis manager
@@ -70,6 +70,9 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
     double mx = (hh->GetPx()); // normalised momentum direction vector
     double my = (hh->GetPy());
     double mz = (hh->GetPz());
+    double lx = (hh->GetPosx()); // interaction location
+    double ly = (hh->GetPosy());
+    double lz = (hh->GetPosz());
 
     tid.push_back(id);
     tedep.push_back(e);
@@ -77,6 +80,9 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
     px.push_back(mx);
     py.push_back(my);
     pz.push_back(mz);
+    posx.push_back(lx);
+    posy.push_back(ly);
+    posz.push_back(lz);
   }
 
   // fill the ntuple - check column id?
@@ -90,6 +96,9 @@ void EGEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleDColumn(4, px.at(i));
     analysisManager->FillNtupleDColumn(5, py.at(i));
     analysisManager->FillNtupleDColumn(6, pz.at(i));
+    analysisManager->FillNtupleDColumn(7, posx.at(i));
+    analysisManager->FillNtupleDColumn(8, posy.at(i));
+    analysisManager->FillNtupleDColumn(9, posz.at(i));
     analysisManager->AddNtupleRow();
   }
 

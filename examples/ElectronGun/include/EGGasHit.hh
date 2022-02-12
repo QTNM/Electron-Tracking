@@ -35,6 +35,9 @@ class EGGasHit : public G4VHit
     void SetPx          (G4double px)  { fPx = px; };
     void SetPy          (G4double py)  { fPy = py; };
     void SetPz          (G4double pz)  { fPz = pz; };
+    void SetPosx        (G4double lx)  { fPosx = lx; };
+    void SetPosy        (G4double ly)  { fPosy = ly; };
+    void SetPosz        (G4double lz)  { fPosz = lz; };
 
     // Get methods
     G4double GetTrackID() const     { return fTrackID; };
@@ -43,6 +46,9 @@ class EGGasHit : public G4VHit
     G4double GetPx()      const     { return fPx; };
     G4double GetPy()      const     { return fPy; };
     G4double GetPz()      const     { return fPz; };
+    G4double GetPosx()    const     { return fPosx; };
+    G4double GetPosy()    const     { return fPosy; };
+    G4double GetPosz()    const     { return fPosz; };
 
   private:
 
@@ -52,6 +58,9 @@ class EGGasHit : public G4VHit
       G4double      fPx;
       G4double      fPy;
       G4double      fPz;
+      G4double      fPosx;
+      G4double      fPosy;
+      G4double      fPosz;
 };
 
 typedef G4THitsCollection<EGGasHit> EGGasHitsCollection;

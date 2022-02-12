@@ -1,5 +1,4 @@
 #include "EGRunAction.hh"
-#include "EGEventAction.hh"
 #include "g4root.hh"
 
 #include "G4Run.hh"
@@ -7,9 +6,8 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
-EGRunAction::EGRunAction(EGEventAction* eventAction, G4String name)
+EGRunAction::EGRunAction(G4String name)
 : G4UserRunAction()
-, fEventAction(eventAction)
 , fout(std::move(name))
 {
   // Create analysis manager
@@ -29,6 +27,9 @@ EGRunAction::EGRunAction(EGEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Px");
   analysisManager->CreateNtupleDColumn("Py");
   analysisManager->CreateNtupleDColumn("Pz");
+  analysisManager->CreateNtupleDColumn("Posx");
+  analysisManager->CreateNtupleDColumn("Posy");
+  analysisManager->CreateNtupleDColumn("Posz");
   analysisManager->FinishNtuple();
 
 }
