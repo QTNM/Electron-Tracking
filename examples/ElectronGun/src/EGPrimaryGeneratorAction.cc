@@ -55,7 +55,7 @@ void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   G4double worldZHalfLength = worldBox->GetZHalfLength();
 
   // random spot location [mm]
-  G4TwoVector loc = G4RandomPointInEllipse(fSpot, fSpot); // circle
+  G4TwoVector loc = G4RandomPointInEllipse(fSpot/2.0, fSpot/2.0); // circle
   fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()*mm, loc.y()*mm, -worldZHalfLength + 1.*cm));
 
   // Gaussian random energy [keV]
