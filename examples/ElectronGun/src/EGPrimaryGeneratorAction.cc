@@ -19,7 +19,6 @@ EGPrimaryGeneratorAction::EGPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction()
 , fParticleGun(nullptr)
 , fMessenger(nullptr)
-, frndEnergy(nullptr)
 , fMean(18.575)
 , fStdev(5.e-4)
 , fSpot(0.5)
@@ -33,7 +32,6 @@ EGPrimaryGeneratorAction::EGPrimaryGeneratorAction()
   fParticleGun->SetParticleDefinition(particleTable->FindParticle("e-"));
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.)); // z-axis
 
-  frndEnergy = new G4RandGauss(CLHEP::HepRandom::getTheEngine(), 0.0, 1.0);
   DefineCommands();
 }
 
@@ -41,7 +39,6 @@ EGPrimaryGeneratorAction::~EGPrimaryGeneratorAction()
 {
   delete fMessenger;
   delete fParticleGun;
-  delete frndEnergy;
 }
 
 void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
@@ -59,8 +56,8 @@ void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()*mm, loc.y()*mm, -worldZHalfLength + 1.*cm));
 
   // Gaussian random energy [keV]
-  G4double en = frndEnergy->fire(fMean, fStdev) * keV;
-  fParticleGun->SetParticleEnergy(en);
+  G4double en = G4RandGauss::shoot(fMean, fStdev);
+  fParticleGun->SetParticleEnergy(en * keV);
 
   fParticleGun->GeneratePrimaryVertex(event);
 }

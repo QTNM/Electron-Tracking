@@ -30,7 +30,6 @@ private:
   G4ParticleGun*      fParticleGun;
   G4GenericMessenger* fMessenger;
 
-  G4RandGauss*        frndEnergy;
   G4double            fMean;
   G4double            fStdev;
   G4double            fSpot;
