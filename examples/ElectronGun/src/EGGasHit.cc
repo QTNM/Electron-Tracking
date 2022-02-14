@@ -9,7 +9,10 @@ EGGasHit::EGGasHit()
    fKine(0.),
    fPx(0.),
    fPy(0.),
-   fPz(0.)
+   fPz(0.),
+   fPosx(0.),
+   fPosy(0.),
+   fPosz(0.)
 {}
 
 EGGasHit::~EGGasHit() {}
@@ -23,6 +26,9 @@ EGGasHit::EGGasHit(const EGGasHit& right)
   fPx           = right.fPx;
   fPy           = right.fPy;
   fPz           = right.fPz;
+  fPosx         = right.fPosx;
+  fPosy         = right.fPosy;
+  fPosz         = right.fPosz;
 }
 
 const EGGasHit& EGGasHit::operator=(const EGGasHit& right)
@@ -33,6 +39,9 @@ const EGGasHit& EGGasHit::operator=(const EGGasHit& right)
   fPx           = right.fPx;
   fPy           = right.fPy;
   fPz           = right.fPz;
+  fPosx         = right.fPosx;
+  fPosy         = right.fPosy;
+  fPosz         = right.fPosz;
 
   return *this;
 }

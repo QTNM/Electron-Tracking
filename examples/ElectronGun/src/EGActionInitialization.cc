@@ -13,8 +13,7 @@ EGActionInitialization::~EGActionInitialization() = default;
 
 void EGActionInitialization::BuildForMaster() const
 {
-  auto event = new EGEventAction;
-  SetUserAction(new EGRunAction(event, foutname));
+  SetUserAction(new EGRunAction(foutname));
 }
 
 void EGActionInitialization::Build() const
@@ -23,5 +22,5 @@ void EGActionInitialization::Build() const
   SetUserAction(new EGPrimaryGeneratorAction());
   auto event = new EGEventAction;
   SetUserAction(event);
-  SetUserAction(new EGRunAction(event, foutname));
+  SetUserAction(new EGRunAction(foutname));
 }

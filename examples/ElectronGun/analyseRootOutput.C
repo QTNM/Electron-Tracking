@@ -24,6 +24,9 @@ void summary(TString fname) {
   TTreeReaderValue<double> px(nt1, "Px");
   TTreeReaderValue<double> py(nt1, "Py");
   TTreeReaderValue<double> pz(nt1, "Pz");
+  TTreeReaderValue<double> locx(nt1, "Posx");
+  TTreeReaderValue<double> locy(nt1, "Posy");
+  TTreeReaderValue<double> locz(nt1, "Posz");
   TTreeReaderValue<int>    tid(nt1, "TrackID");
 
   // event loop
@@ -37,6 +40,7 @@ void summary(TString fname) {
     std::cout << "post step kinetic energy: " << *kine << " [keV]" << std::endl;
     data.SetXYZ(*px, *py, *pz);
     std::cout << "momentum angle to ref: " << ref.Angle(data) << std::endl;
+    std::cout << "location: x=" << *locx << " y=" << *locy << " z=" << *locz << std::endl;
   }
 }
 
@@ -66,12 +70,16 @@ void analyse(std::string fnamelist, double angle) {
   TTreeReaderValue<double> px(nt1, "Px");
   TTreeReaderValue<double> py(nt1, "Py");
   TTreeReaderValue<double> pz(nt1, "Pz");
+  TTreeReaderValue<double> locx(nt1, "Posx");
+  TTreeReaderValue<double> locy(nt1, "Posy");
+  TTreeReaderValue<double> locz(nt1, "Posz");
   TTreeReaderValue<int>    tid(nt1, "TrackID");
 
   // event loop
   double scatangle;
   double anglerad = angle * TMath::DegToRad();
-  TH1D* hk = new TH1D("energy","Kinetic energy [keV]", 100, 0.0, 20.0);
+  TH1D* hk  = new TH1D("energy","Kinetic energy [keV]", 100, 0.0, 20.0);
+  // TH1D* loc = new TH1D("locations","Z interaction locations [mm]", 1000, 0.0, 1000.0);
   TVector3 ref(0.0,0.0,1.0); // z-direction reference
   TVector3 data;
   while (nt1.Next())

@@ -42,6 +42,7 @@ G4bool EGGasSD::ProcessHits(G4Step* aStep,
   else if ((premom.cross(postmom)).mag() <= 1.e-8) return false; // parallel = not interested
 
   EGGasHit* newHit = new EGGasHit();
+  G4ThreeVector postloc = aStep->GetPostStepPoint()->GetPosition();
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
   newHit->SetEdep(edep);
@@ -49,6 +50,9 @@ G4bool EGGasSD::ProcessHits(G4Step* aStep,
   newHit->SetPx(postmom.x());
   newHit->SetPy(postmom.y());
   newHit->SetPz(postmom.z());
+  newHit->SetPosx(postloc.x());
+  newHit->SetPosy(postloc.y());
+  newHit->SetPosz(postloc.z());
 
   fHitsCollection->insert( newHit );
 
