@@ -21,8 +21,6 @@
 
 EGDetectorConstruction::EGDetectorConstruction()
 {
-  fdensity = 1.66322e-4 * g / cm3; // STP Helium gas density
-
   DefineCommands();
 }
 
@@ -53,8 +51,6 @@ void EGDetectorConstruction::DefineMaterials()
   nistManager->FindOrBuildMaterial("G4_Galactic");
   nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
-  auto* gasMat = new G4Material("Helium", 2., 4.*g/mole, fdensity);  // low density He
-
 }
 
 void EGDetectorConstruction::ConstructSDandField()
@@ -82,7 +78,7 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
   auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
-  auto* gasMat        = G4Material::GetMaterial("Helium");
+  auto* gasMat        = G4Material::GetMaterial("G4_Galactic");
     
   // size parameter, unit [cm]
   // world
@@ -131,31 +127,9 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   return worldPhysical;
 }
 
-
-void EGDetectorConstruction::SetDensity(G4double d)
-{
-  if(d <= 0.)
-  {
-    G4Exception("EGDetectorConstruction::SetDensity", "EG0001", JustWarning,
-                "Invalid density value ");
-    return;
-  }
-  
-  fdensity = d * g/cm3;
-  // Reinit wiping out stores
-  G4RunManager::GetRunManager()->ReinitializeGeometry();
-}   
-
 void EGDetectorConstruction::DefineCommands()
 {
   // Define geometry command directory using generic messenger class
   fDetectorMessenger = new G4GenericMessenger(this, "/EG/detector/",
                                               "Commands for controlling detector setup");
-
-  // switch command
-  fDetectorMessenger->DeclareMethod("setDensity", &EGDetectorConstruction::SetDensity)
-    .SetGuidance("Set detector He-gas density [g/cm^3]")
-    .SetStates(G4State_PreInit)
-    .SetToBeBroadcasted(false);
-
 }

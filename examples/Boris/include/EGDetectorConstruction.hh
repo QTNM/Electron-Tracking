@@ -19,8 +19,6 @@ public:
   virtual G4VPhysicalVolume* Construct();
   virtual void               ConstructSDandField();
 
-  void     SetDensity(G4double d);
-
 private:
   void DefineCommands();
   void DefineMaterials();
@@ -28,7 +26,6 @@ private:
   G4VPhysicalVolume* SetupShort();
 
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
-  G4double                                  fdensity;
   G4Cache<EGGasSD*>                         fSD                = nullptr;
 };
 
