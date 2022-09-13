@@ -44,7 +44,7 @@ EGPrimaryGeneratorAction::~EGPrimaryGeneratorAction()
 void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
   // In order to avoid dependence of PrimaryGeneratorAction
-  // on DetectorConstruction class we get world volume 
+  // on DetectorConstruction class we get world volume
   // from G4LogicalVolumeStore: assumes name is World_log!
   //
   auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
@@ -58,6 +58,17 @@ void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   // Gaussian random energy [keV]
   G4double en = G4RandGauss::shoot(fMean, fStdev);
   fParticleGun->SetParticleEnergy(en * keV);
+
+  // Random direction
+  G4double theta_max = 0.07; // ~+/- 4 degrees
+  G4double theta = G4UniformRand() *2.0 * theta_max - theta_max;
+  G4double cosTheta = std::cos(theta), sinTheta = std::sqrt(1.0 - cosTheta*cosTheta);
+  G4double cosPhi = std::cos(twopi*G4UniformRand()), sinPhi = std::sqrt(1.0 - cosPhi*cosPhi);
+  G4double ux = sinTheta*cosPhi,
+           uy = sinTheta*sinPhi,
+           uz = cosTheta;
+
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(ux,uy,uz)); // z-axis
 
   fParticleGun->GeneratePrimaryVertex(event);
 
