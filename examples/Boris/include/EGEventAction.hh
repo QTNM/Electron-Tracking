@@ -2,6 +2,7 @@
 #define EGEventAction_h 1
 
 #include "EGGasHit.hh"
+#include "EGWatchHit.hh"
 
 #include "G4UserEventAction.hh"
 #include "globals.hh"
@@ -23,9 +24,13 @@ private:
   EGGasHitsCollection*     GetGasHitsCollection(G4int hcID,
                                               const G4Event* event) const;
 
+  EGWatchHitsCollection*     GetWatchHitsCollection(G4int hcID,
+                                              const G4Event* event) const;
+
   // data members
   // hit data
   G4int                 fGID    = -1;
+  G4int                 fWID    = -1;
 
 };
 

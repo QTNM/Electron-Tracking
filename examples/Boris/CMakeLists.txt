@@ -22,6 +22,8 @@ add_executable(egun
   src/EGEventAction.cc
   src/EGPrimaryGeneratorAction.cc
   src/EGRunAction.cc
+  src/EGWatchHit.cc
+  src/EGWatchSD.cc
   src/QTNMPhysicsList.cc)
 target_include_directories(egun PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(egun PRIVATE ${Geant4_LIBRARIES})

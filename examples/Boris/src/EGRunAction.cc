@@ -32,6 +32,19 @@ EGRunAction::EGRunAction(G4String name)
   analysisManager->CreateNtupleDColumn("Posz");
   analysisManager->FinishNtuple();
 
+  // Stop Watch
+  analysisManager->CreateNtuple("Watch", "Timing");
+  analysisManager->CreateNtupleIColumn("EventID");
+  analysisManager->CreateNtupleIColumn("ExitID");
+  analysisManager->CreateNtupleDColumn("ExitTime");
+  analysisManager->CreateNtupleDColumn("Posx");
+  analysisManager->CreateNtupleDColumn("Posy");
+  analysisManager->CreateNtupleDColumn("Posz");
+  analysisManager->CreateNtupleDColumn("Px");
+  analysisManager->CreateNtupleDColumn("Py");
+  analysisManager->CreateNtupleDColumn("Pz");
+  analysisManager->CreateNtupleDColumn("Kine");
+  analysisManager->FinishNtuple();
 }
 
 EGRunAction::~EGRunAction() { delete G4AnalysisManager::Instance(); }

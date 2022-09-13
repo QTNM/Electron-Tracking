@@ -15,6 +15,7 @@
 
 #include "G4SDManager.hh"
 #include "EGGasSD.hh"
+#include "EGWatchSD.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -58,17 +59,24 @@ void EGDetectorConstruction::ConstructSDandField()
   G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
 
   // Only need to construct the (per-thread) SD once
-  if(!fSD.Get())
+  if(!fSD1.Get())
   {
     G4String SD1name  = "GasSD";
     EGGasSD* aGasSD = new EGGasSD(SD1name,
                                   "GasHitsCollection");
-    fSD.Put(aGasSD);
+    fSD1.Put(aGasSD);
+
+    G4String SD2name  = "WatchSD";
+    EGWatchSD* aWatchSD = new EGWatchSD(SD2name,
+                                        "WatchHitsCollection");
+    fSD2.Put(aWatchSD);
 
     // Also only add it once to the SD manager!
-    G4SDManager::GetSDMpointer()->AddNewDetector(fSD.Get());
+    G4SDManager::GetSDMpointer()->AddNewDetector(fSD1.Get());
+    G4SDManager::GetSDMpointer()->AddNewDetector(fSD2.Get());
 
-    SetSensitiveDetector("Gas_log", fSD.Get());
+    SetSensitiveDetector("Gas_log", fSD1.Get());
+    SetSensitiveDetector("Stop_log", fSD2.Get());
   }
 
 }
@@ -89,6 +97,9 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   G4double pipewall  = 0.1 * cm;    // tube thickness 1 mm
   G4double piperad   = 5.0 * cm;    // tube diam 10 cm
   G4double pipehZ    = worldhZ - 1*cm;  // fit into world 1cm either side=1m
+
+  // stopwatch volume with piperad and thickness in z
+  G4double heightZ   = 0.1 * cm;   // 2 mm thick in z
  
   // Volumes for this geometry
   
@@ -111,11 +122,17 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   // 
   auto* gasSolid = new G4Tubs("Gas", 0.0 * cm, piperad, pipehZ,
                                0.0, CLHEP::twopi);
+
+  // stopwatch disk at end of pipe
+  auto* stopSolid = new G4Tubs("Stop", 0.0 * cm, piperad, heightZ,
+                                0.0, CLHEP::twopi);
   
   //
   // logical volumes
   auto* pipeLogical = new G4LogicalVolume(pipeSolid, worldMaterial, "Pipe_log");
   auto* gasLogical  = new G4LogicalVolume(gasSolid, gasMat, "Gas_log");
+  auto* stopLogical = new G4LogicalVolume(stopSolid, worldMaterial, "Stop_log");
+
     
   // placements
   new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, 0. * cm),
@@ -123,7 +140,10 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   
   new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, 0. * cm), gasLogical,
                     "Gas_phys", worldLogical, false, 0, true); 
-    
+
+  new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, pipehZ + heightZ), stopLogical,
+                    "Stop_phys", worldLogical, false, 0, true);
+
   return worldPhysical;
 }
 

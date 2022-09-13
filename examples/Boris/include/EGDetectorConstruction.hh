@@ -8,6 +8,7 @@
 
 class G4VPhysicalVolume;
 class EGGasSD;
+class EGWatchSD;
 
 class EGDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -26,7 +27,8 @@ private:
   G4VPhysicalVolume* SetupShort();
 
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
-  G4Cache<EGGasSD*>                         fSD                = nullptr;
+  G4Cache<EGGasSD*>                         fSD1               = nullptr;
+  G4Cache<EGWatchSD*>                       fSD2               = nullptr;
 };
 
 #endif
