@@ -9,6 +9,7 @@
 class G4VPhysicalVolume;
 class EGGasSD;
 class EGWatchSD;
+class G4GlobalMagFieldMessenger;
 
 class EGDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -29,6 +30,7 @@ private:
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
   G4Cache<EGGasSD*>                         fSD1               = nullptr;
   G4Cache<EGWatchSD*>                       fSD2               = nullptr;
+  G4Cache<G4GlobalMagFieldMessenger*>       fFieldMessenger    = nullptr;
 };
 
 #endif

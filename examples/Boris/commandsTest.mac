@@ -16,6 +16,10 @@
 # run init
 #/run/initialize
 #
+# Magnetic field
+# x or y value -> perpendicular to z-axis electron emission
+#/globalField/setValue 0.2 0 0 tesla
+#
 # Properties - define commands needs run init first
 # mean energy in [keV]
 #/EG/generator/energy 3

@@ -13,6 +13,10 @@
 #include "G4Tubs.hh"
 #include "G4PVPlacement.hh"
 
+#include "G4GlobalMagFieldMessenger.hh"
+#include "G4UniformMagField.hh"
+#include "G4AutoDelete.hh"
+
 #include "G4SDManager.hh"
 #include "EGGasSD.hh"
 #include "EGWatchSD.hh"
@@ -77,6 +81,19 @@ void EGDetectorConstruction::ConstructSDandField()
 
     SetSensitiveDetector("Gas_log", fSD1.Get());
     SetSensitiveDetector("Stop_log", fSD2.Get());
+  }
+
+  // Field setup
+  if( !fFieldMessenger.Get() ) {
+    // Create global magnetic field messenger.
+    // Uniform magnetic field is then created automatically if
+    // the field value is not zero.
+    G4ThreeVector fieldValue = G4ThreeVector();
+    G4GlobalMagFieldMessenger* msg =
+      new G4GlobalMagFieldMessenger(fieldValue);
+    msg->SetVerboseLevel(1);
+    G4AutoDelete::Register(msg);
+    fFieldMessenger.Put( msg );
   }
 
 }
