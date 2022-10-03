@@ -81,7 +81,7 @@ void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   analysisManager->FillNtupleDColumn(2, 2, 0.0);
   analysisManager->FillNtupleDColumn(2, 3, loc.x());
   analysisManager->FillNtupleDColumn(2, 4, loc.y());
-  analysisManager->FillNtupleDColumn(2, 5, 0.0);
+  analysisManager->FillNtupleDColumn(2, 5, -worldZHalfLength + 1.*cm);
   analysisManager->FillNtupleDColumn(2, 6, fParticleGun->GetParticleMomentumDirection().x());
   analysisManager->FillNtupleDColumn(2, 7, fParticleGun->GetParticleMomentumDirection().y());
   analysisManager->FillNtupleDColumn(2, 8, fParticleGun->GetParticleMomentumDirection().z());
