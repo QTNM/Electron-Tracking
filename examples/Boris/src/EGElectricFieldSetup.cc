@@ -76,7 +76,7 @@ F02ElectricFieldSetup::F02ElectricFieldSetup()
    fElFieldValue(),
    fStepper(0),
    fIntgrDriver(0),
-   fStepperType(4),    // ClassicalRK4 -- the default stepper
+   fStepperType(2),    // ClassicalRK4 -- the default stepper
    fFieldMessenger(nullptr)   
 {
   fEMfield = new G4UniformMagField(0.0, 0.0, 1.0*tesla);
@@ -99,7 +99,7 @@ F02ElectricFieldSetup::F02ElectricFieldSetup(G4ThreeVector fieldVector)
     fElFieldValue(),
     fStepper(0),
     fIntgrDriver(0),
-    fStepperType(4),    // ClassicalRK4 -- the default stepper
+    fStepperType(2),    // ClassicalRK4 -- the default stepper
     fFieldMessenger(nullptr)
 {
   fEMfield = new G4UniformMagField(fieldVector);
@@ -198,39 +198,10 @@ void F02ElectricFieldSetup::CreateStepper()
       G4cout<<"G4ImplicitEuler is called"<<G4endl;
       break;
     case 2:
-      fStepper = new G4SimpleRunge( fEquation, nvar );
-      G4cout<<"G4SimpleRunge is called"<<G4endl;
-      break;
-    case 3:
-      fStepper = new G4SimpleHeum( fEquation, nvar );
-      G4cout<<"G4SimpleHeum is called"<<G4endl;
-      break;
-    case 4:
       fStepper = new G4ClassicalRK4( fEquation, nvar );
       G4cout<<"G4ClassicalRK4 is called"<<G4endl;
       break;
-    case 5:
-      fStepper = new G4CashKarpRKF45( fEquation, nvar );
-      G4cout<<"G4CashKarpRKF45 is called"<<G4endl;
-      break;
-    case 6:
-      fStepper = 0; // new G4RKG3_Stepper( fEquation, nvar );
-      G4cout<<"G4RKG3_Stepper is not currently working for Electric Field"
-            <<G4endl;
-      break;
-    case 7:
-      fStepper = 0; // new G4HelixExplicitEuler( fEquation );
-      G4cout<<"G4HelixExplicitEuler is not valid for Electric Field"<<G4endl;
-      break;
-    case 8:
-      fStepper = 0; // new G4HelixImplicitEuler( fEquation );
-      G4cout<<"G4HelixImplicitEuler is not valid for Electric Field"<<G4endl;
-      break;
-    case 9:
-      fStepper = 0; // new G4HelixSimpleRunge( fEquation );
-      G4cout<<"G4HelixSimpleRunge is not valid for Electric Field"<<G4endl;
-      break;
-    default:  /* fStepper = 0; // Older code */
+    default:
       fStepper = new G4ClassicalRK4( fEquation, nvar );
       G4cout<<"G4ClassicalRK4 (default) is called"<<G4endl;
       break;
