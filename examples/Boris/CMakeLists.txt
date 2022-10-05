@@ -20,6 +20,8 @@ add_executable(egun
   src/EGGasHit.cc
   src/EGGasSD.cc
   src/EGEventAction.cc
+  src/EGElectricFieldSetup.cc
+  src/EGFieldMessenger.cc
   src/EGPrimaryGeneratorAction.cc
   src/EGRunAction.cc
   src/EGWatchHit.cc
