@@ -82,20 +82,6 @@ void EGDetectorConstruction::ConstructSDandField()
     SetSensitiveDetector("Gas_log", fSD1.Get());
     SetSensitiveDetector("Stop_log", fSD2.Get());
   }
-
-  // Field setup
-  if( !fFieldMessenger.Get() ) {
-    // Create global magnetic field messenger.
-    // Uniform magnetic field is then created automatically if
-    // the field value is not zero.
-    G4ThreeVector fieldValue = G4ThreeVector();
-    G4GlobalMagFieldMessenger* msg =
-      new G4GlobalMagFieldMessenger(fieldValue);
-    msg->SetVerboseLevel(1);
-    G4AutoDelete::Register(msg);
-    fFieldMessenger.Put( msg );
-  }
-
 }
 
 auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
