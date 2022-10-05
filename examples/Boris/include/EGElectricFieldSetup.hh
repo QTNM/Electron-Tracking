@@ -36,6 +36,7 @@
 #define F02ElectricFieldSetup_h 1
 
 #include "G4ElectricField.hh"
+#include "G4MagneticField.hh"
 #include "G4UniformElectricField.hh"
 
 class G4FieldManager;
@@ -94,9 +95,9 @@ private:
 
   G4ChordFinder*          fChordFinder;
 
-  G4EqMagElectricField*   fEquation;
+  G4Mag_EqRhs*            fEquation;
 
-  G4ElectricField*        fEMfield;
+  G4MagneticField*        fEMfield;
  
   G4ThreeVector           fElFieldValue;
 

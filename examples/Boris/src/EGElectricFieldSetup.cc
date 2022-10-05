@@ -79,9 +79,8 @@ F02ElectricFieldSetup::F02ElectricFieldSetup()
    fStepperType(4),    // ClassicalRK4 -- the default stepper
    fFieldMessenger(nullptr)   
 {
-  fEMfield = new G4UniformElectricField(
-                   G4ThreeVector(0.0,100000.0*kilovolt/cm,0.0));
-  fEquation = new G4EqMagElectricField(fEMfield);
+  fEMfield = new G4UniformMagField(0.0, 0.0, 1.0*tesla);
+  fEquation = new G4Mag_UsualEqRhs(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
 
@@ -103,8 +102,8 @@ F02ElectricFieldSetup::F02ElectricFieldSetup(G4ThreeVector fieldVector)
     fStepperType(4),    // ClassicalRK4 -- the default stepper
     fFieldMessenger(nullptr)
 {
-  fEMfield = new G4UniformElectricField(fieldVector);
-  fEquation = new G4EqMagElectricField(fEMfield);
+  fEMfield = new G4UniformMagField(fieldVector);
+  fEquation = new G4Mag_UsualEqRhs(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
   UpdateIntegrator();
@@ -271,7 +270,7 @@ void F02ElectricFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 
   if (fieldVector != G4ThreeVector(0.,0.,0.))
   {
-    fEMfield = new G4UniformElectricField(fieldVector);
+    fEMfield = new G4UniformMagField(fieldVector);
   }
   else
   {
