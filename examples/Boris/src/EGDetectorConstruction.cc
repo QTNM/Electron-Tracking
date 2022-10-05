@@ -20,6 +20,7 @@
 #include "G4SDManager.hh"
 #include "EGGasSD.hh"
 #include "EGWatchSD.hh"
+#include "EGElectricFieldSetup.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -81,6 +82,14 @@ void EGDetectorConstruction::ConstructSDandField()
 
     SetSensitiveDetector("Gas_log", fSD1.Get());
     SetSensitiveDetector("Stop_log", fSD2.Get());
+  }
+
+  // Construct the field creator - this will register the field it creates
+
+  if (!fEmFieldSetup.Get()) {
+    F02ElectricFieldSetup* fieldSetup = new F02ElectricFieldSetup();
+    G4AutoDelete::Register(fieldSetup); //Kernel will delete the messenger
+    fEmFieldSetup.Put(fieldSetup);
   }
 }
 

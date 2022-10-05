@@ -7,7 +7,7 @@
 /run/initialize
 
 # Magnetic Field
-/globalField/setValue 0 0 1 tesla
+/field/setFieldZ 0
 
 # start
 /run/beamOn 4
