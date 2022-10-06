@@ -72,14 +72,14 @@ BIFieldMessenger::BIFieldMessenger(BIElectricFieldSetup* fieldSetup)
   fBFieldZCmd->SetGuidance("Magnetic field will be in Z direction.");
   fBFieldZCmd->SetGuidance("Value of magnetic field has to be given in Tesla");
   fBFieldZCmd->SetParameterName("Bz",false,false);
-  fBFieldZCmd->SetDefaultUnit("Tesla");
+  fBFieldZCmd->SetDefaultUnit("tesla");
   fBFieldZCmd->AvailableForStates(G4State_Idle);
  
   fBFieldCmd = new G4UIcmdWith3VectorAndUnit("/field/setField",this);
   fBFieldCmd->SetGuidance("Define uniform magnetic field.");
   fBFieldCmd->SetGuidance("Value of magnetic field has to be given in Tesla");
   fBFieldCmd->SetParameterName("Bx","By","Bz",false,false);
-  fBFieldCmd->SetDefaultUnit("Tesla");
+  fBFieldCmd->SetDefaultUnit("tesla");
   fBFieldCmd->AvailableForStates(G4State_Idle);
  
   fMinStepCmd = new G4UIcmdWithADoubleAndUnit("/field/setMinStep",this);
