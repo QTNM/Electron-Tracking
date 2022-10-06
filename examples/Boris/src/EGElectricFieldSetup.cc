@@ -37,13 +37,9 @@
 #include "EGElectricFieldSetup.hh"
 #include "EGFieldMessenger.hh"
 
-#include "G4UniformElectricField.hh"
 #include "G4UniformMagField.hh"
-#include "G4MagneticField.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
-#include "G4EquationOfMotion.hh"
-#include "G4EqMagElectricField.hh"
 #include "G4Mag_UsualEqRhs.hh"
 #include "G4MagIntegratorStepper.hh"
 #include "G4MagIntegratorDriver.hh"
@@ -51,14 +47,8 @@
 
 #include "G4ExplicitEuler.hh"
 #include "G4ImplicitEuler.hh"
-#include "G4SimpleRunge.hh"
-#include "G4SimpleHeum.hh"
 #include "G4ClassicalRK4.hh"
-#include "G4HelixExplicitEuler.hh"
-#include "G4HelixImplicitEuler.hh"
-#include "G4HelixSimpleRunge.hh"
-#include "G4CashKarpRKF45.hh"
-#include "G4RKG3_Stepper.hh"
+#include "G4ExactHelixStepper.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -200,6 +190,10 @@ void F02ElectricFieldSetup::CreateStepper()
     case 2:
       fStepper = new G4ClassicalRK4( fEquation, nvar );
       G4cout<<"G4ClassicalRK4 is called"<<G4endl;
+      break;
+    case 3:
+      fStepper = new G4ExactHelixStepper( fEquation );
+      G4cout<<"G4ExactHelixStepper is called"<<G4endl;
       break;
     default:
       fStepper = new G4ClassicalRK4( fEquation, nvar );

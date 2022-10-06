@@ -35,15 +35,12 @@
 #ifndef F02ElectricFieldSetup_h
 #define F02ElectricFieldSetup_h 1
 
-#include "G4ElectricField.hh"
 #include "G4MagneticField.hh"
-#include "G4UniformElectricField.hh"
+#include "G4ThreeVector.hh"
 
 class G4FieldManager;
 class G4ChordFinder;
-class G4EquationOfMotion;
 class G4Mag_EqRhs;
-class G4EqMagElectricField;
 class G4MagIntegratorStepper;
 class G4MagInt_Driver;
 class F02FieldMessenger;
