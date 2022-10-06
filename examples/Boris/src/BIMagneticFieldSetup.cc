@@ -49,6 +49,7 @@
 #include "G4ImplicitEuler.hh"
 #include "G4ClassicalRK4.hh"
 #include "G4ExactHelixStepper.hh"
+#include "BorisStepper.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -194,6 +195,10 @@ void BIElectricFieldSetup::CreateStepper()
     case 3:
       fStepper = new G4ExactHelixStepper( fEquation );
       G4cout<<"G4ExactHelixStepper is called"<<G4endl;
+      break;
+    case 4:
+      fStepper = new BorisStepper( fEquation );
+      G4cout<<"BorisStepper is called"<<G4endl;
       break;
     default:
       fStepper = new G4ClassicalRK4( fEquation, nvar );
