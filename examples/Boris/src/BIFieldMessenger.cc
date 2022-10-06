@@ -32,9 +32,9 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "EGFieldMessenger.hh"
+#include "BIFieldMessenger.hh"
 
-#include "EGElectricFieldSetup.hh"
+#include "BIMagneticFieldSetup.hh"
 #include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
@@ -42,7 +42,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
+BIFieldMessenger::BIFieldMessenger(BIElectricFieldSetup* fieldSetup)
  : G4UImessenger(),
    fElFieldSetup(fieldSetup),
    fFieldDir(0),
@@ -53,7 +53,7 @@ F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
    fUpdateCmd(0)
 {
   fFieldDir = new G4UIdirectory("/field/");
-  fFieldDir->SetGuidance("F02 field tracking control.");
+  fFieldDir->SetGuidance("BI field tracking control.");
 
   fStepperCmd = new G4UIcmdWithAnInteger("/field/setStepperType",this);
   fStepperCmd->SetGuidance("Select stepper type for electric field");
@@ -91,7 +91,7 @@ F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F02FieldMessenger::~F02FieldMessenger()
+BIFieldMessenger::~BIFieldMessenger()
 {
   delete fStepperCmd;
   delete fBFieldZCmd;
@@ -103,7 +103,7 @@ F02FieldMessenger::~F02FieldMessenger()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F02FieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
+void BIFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if( command == fStepperCmd )
     fElFieldSetup->SetStepperType(fStepperCmd->GetNewIntValue(newValue));

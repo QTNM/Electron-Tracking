@@ -1,5 +1,5 @@
 // us
-#include "EGPrimaryGeneratorAction.hh"
+#include "BIPrimaryGeneratorAction.hh"
 
 // geant
 #include "G4Event.hh"
@@ -15,7 +15,7 @@
 #include "G4RandomTools.hh"
 #include "g4root.hh"
 
-EGPrimaryGeneratorAction::EGPrimaryGeneratorAction()
+BIPrimaryGeneratorAction::BIPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction()
 , fParticleGun(nullptr)
 , fMessenger(nullptr)
@@ -35,13 +35,13 @@ EGPrimaryGeneratorAction::EGPrimaryGeneratorAction()
   DefineCommands();
 }
 
-EGPrimaryGeneratorAction::~EGPrimaryGeneratorAction()
+BIPrimaryGeneratorAction::~BIPrimaryGeneratorAction()
 {
   delete fMessenger;
   delete fParticleGun;
 }
 
-void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
+void BIPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
   // In order to avoid dependence of PrimaryGeneratorAction
   // on DetectorConstruction class we get world volume
@@ -90,11 +90,11 @@ void EGPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 }
 
 
-void EGPrimaryGeneratorAction::DefineCommands()
+void BIPrimaryGeneratorAction::DefineCommands()
 {
-  // Define /EG/generator command directory using generic messenger class
+  // Define /BI/generator command directory using generic messenger class
   fMessenger =
-    new G4GenericMessenger(this, "/EG/generator/", "Primary generator control");
+    new G4GenericMessenger(this, "/BI/generator/", "Primary generator control");
 
   // depth command
   auto& energyCmd = fMessenger->DeclareProperty("energy", fMean,

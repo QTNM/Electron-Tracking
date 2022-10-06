@@ -1,4 +1,4 @@
-# Electron Gun Example
+# Boris Inegration Example
 
 This example Geant4 application models the action of an electron gun 
 for the QTNM project, simulating electron scattering in a thin Helium gas.
@@ -33,6 +33,6 @@ cd build; cmake ..; make
 
 and run in the build directory for instance as 
 
-./egun -m run.mac
+./boris -m run.mac
 
 Find out about CLI options using --help option.

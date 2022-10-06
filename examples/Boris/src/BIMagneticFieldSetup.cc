@@ -34,8 +34,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "EGElectricFieldSetup.hh"
-#include "EGFieldMessenger.hh"
+#include "BIMagneticFieldSetup.hh"
+#include "BIFieldMessenger.hh"
 
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
@@ -57,7 +57,7 @@
 
 //  Constructors:
 
-F02ElectricFieldSetup::F02ElectricFieldSetup()
+BIElectricFieldSetup::BIElectricFieldSetup()
  : fMinStep(0.010*mm),  // minimal step of 10 microns
    fFieldManager(0),
    fChordFinder(0),
@@ -75,12 +75,12 @@ F02ElectricFieldSetup::F02ElectricFieldSetup()
   fFieldManager = GetGlobalFieldManager();
 
   UpdateIntegrator();
-  fFieldMessenger = new F02FieldMessenger(this);
+  fFieldMessenger = new BIFieldMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F02ElectricFieldSetup::F02ElectricFieldSetup(G4ThreeVector fieldVector)
+BIElectricFieldSetup::BIElectricFieldSetup(G4ThreeVector fieldVector)
   : fMinStep(0.010*mm),  // minimal step of 10 microns
     fFieldManager(0),
     fChordFinder(0),
@@ -98,12 +98,12 @@ F02ElectricFieldSetup::F02ElectricFieldSetup(G4ThreeVector fieldVector)
   fFieldManager = GetGlobalFieldManager();
   UpdateIntegrator();
   
-  fFieldMessenger = new F02FieldMessenger(this);
+  fFieldMessenger = new BIFieldMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F02ElectricFieldSetup::~F02ElectricFieldSetup()
+BIElectricFieldSetup::~BIElectricFieldSetup()
 {
   // G4cout << " F02ElectricFieldSetup - dtor called. " << G4endl;
 
@@ -118,7 +118,7 @@ F02ElectricFieldSetup::~F02ElectricFieldSetup()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F02ElectricFieldSetup::UpdateIntegrator()
+void BIElectricFieldSetup::UpdateIntegrator()
 {
   // Register this field to 'global' Field Manager and
   // Create Stepper and Chord Finder with predefined type, minstep (resp.)
@@ -127,7 +127,7 @@ void F02ElectricFieldSetup::UpdateIntegrator()
   //   has been chosen, or other changes have been made
   assert(fEquation!=nullptr);
 
-  G4cout<< " F02ElectricFieldSetup: The minimal step is equal to "
+  G4cout<< " BIElectricFieldSetup: The minimal step is equal to "
         << fMinStep/mm << " mm" << G4endl;
 
   if (fChordFinder) {
@@ -168,7 +168,7 @@ void F02ElectricFieldSetup::UpdateIntegrator()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F02ElectricFieldSetup::CreateStepper()
+void BIElectricFieldSetup::CreateStepper()
 {
   // Deletes the existing stepper
   //   and creates a new stepper object of the chosen stepper type
@@ -213,7 +213,7 @@ void F02ElectricFieldSetup::CreateStepper()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F02ElectricFieldSetup::SetFieldZValue(G4double fieldValue)
+void BIElectricFieldSetup::SetFieldZValue(G4double fieldValue)
 {
   // Set the value of the Global Field to fieldValue along Z
 
@@ -224,7 +224,7 @@ void F02ElectricFieldSetup::SetFieldZValue(G4double fieldValue)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F02ElectricFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
+void BIElectricFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 {
   if (fEMfield) delete fEMfield;
 
@@ -249,7 +249,7 @@ void F02ElectricFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4FieldManager*  F02ElectricFieldSetup::GetGlobalFieldManager()
+G4FieldManager*  BIElectricFieldSetup::GetGlobalFieldManager()
 {
 //  Utility method
 

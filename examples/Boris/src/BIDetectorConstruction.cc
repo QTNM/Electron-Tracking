@@ -1,4 +1,4 @@
-#include "EGDetectorConstruction.hh"
+#include "BIDetectorConstruction.hh"
 
 #include "G4RunManager.hh"
 
@@ -18,26 +18,26 @@
 #include "G4AutoDelete.hh"
 
 #include "G4SDManager.hh"
-#include "EGGasSD.hh"
-#include "EGWatchSD.hh"
-#include "EGElectricFieldSetup.hh"
+#include "BIGasSD.hh"
+#include "BIWatchSD.hh"
+#include "BIMagneticFieldSetup.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
-EGDetectorConstruction::EGDetectorConstruction()
+BIDetectorConstruction::BIDetectorConstruction()
 {
   DefineCommands();
 }
 
-EGDetectorConstruction::~EGDetectorConstruction()
+BIDetectorConstruction::~BIDetectorConstruction()
 {
 
   delete fDetectorMessenger;
 
 }
 
-auto EGDetectorConstruction::Construct() -> G4VPhysicalVolume*
+auto BIDetectorConstruction::Construct() -> G4VPhysicalVolume*
 {
   // Cleanup old geometry
   G4GeometryManager::GetInstance()->OpenGeometry();
@@ -51,7 +51,7 @@ auto EGDetectorConstruction::Construct() -> G4VPhysicalVolume*
 
 }
 
-void EGDetectorConstruction::DefineMaterials()
+void BIDetectorConstruction::DefineMaterials()
 {
   G4NistManager* nistManager = G4NistManager::Instance();
   nistManager->FindOrBuildMaterial("G4_Galactic");
@@ -59,7 +59,7 @@ void EGDetectorConstruction::DefineMaterials()
 
 }
 
-void EGDetectorConstruction::ConstructSDandField()
+void BIDetectorConstruction::ConstructSDandField()
 {
   G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
 
@@ -67,12 +67,12 @@ void EGDetectorConstruction::ConstructSDandField()
   if(!fSD1.Get())
   {
     G4String SD1name  = "GasSD";
-    EGGasSD* aGasSD = new EGGasSD(SD1name,
+    BIGasSD* aGasSD = new BIGasSD(SD1name,
                                   "GasHitsCollection");
     fSD1.Put(aGasSD);
 
     G4String SD2name  = "WatchSD";
-    EGWatchSD* aWatchSD = new EGWatchSD(SD2name,
+    BIWatchSD* aWatchSD = new BIWatchSD(SD2name,
                                         "WatchHitsCollection");
     fSD2.Put(aWatchSD);
 
@@ -87,13 +87,13 @@ void EGDetectorConstruction::ConstructSDandField()
   // Construct the field creator - this will register the field it creates
 
   if (!fEmFieldSetup.Get()) {
-    F02ElectricFieldSetup* fieldSetup = new F02ElectricFieldSetup();
+    BIElectricFieldSetup* fieldSetup = new BIElectricFieldSetup();
     G4AutoDelete::Register(fieldSetup); //Kernel will delete the messenger
     fEmFieldSetup.Put(fieldSetup);
   }
 }
 
-auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
+auto BIDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
 {
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
@@ -159,9 +159,9 @@ auto EGDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   return worldPhysical;
 }
 
-void EGDetectorConstruction::DefineCommands()
+void BIDetectorConstruction::DefineCommands()
 {
   // Define geometry command directory using generic messenger class
-  fDetectorMessenger = new G4GenericMessenger(this, "/EG/detector/",
+  fDetectorMessenger = new G4GenericMessenger(this, "/BI/detector/",
                                               "Commands for controlling detector setup");
 }

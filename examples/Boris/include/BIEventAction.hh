@@ -1,8 +1,8 @@
-#ifndef EGEventAction_h
-#define EGEventAction_h 1
+#ifndef BIEventAction_h
+#define BIEventAction_h 1
 
-#include "EGGasHit.hh"
-#include "EGWatchHit.hh"
+#include "BIGasHit.hh"
+#include "BIWatchHit.hh"
 
 #include "G4UserEventAction.hh"
 #include "globals.hh"
@@ -10,21 +10,21 @@
 /// Event action class
 ///
 
-class EGEventAction : public G4UserEventAction
+class BIEventAction : public G4UserEventAction
 {
 public:
-  EGEventAction()          = default;
-  virtual ~EGEventAction() = default;
+  BIEventAction()          = default;
+  virtual ~BIEventAction() = default;
 
   virtual void BeginOfEventAction(const G4Event* event);
   virtual void EndOfEventAction(const G4Event* event);
 
 private:
   // methods
-  EGGasHitsCollection*     GetGasHitsCollection(G4int hcID,
+  BIGasHitsCollection*     GetGasHitsCollection(G4int hcID,
                                               const G4Event* event) const;
 
-  EGWatchHitsCollection*     GetWatchHitsCollection(G4int hcID,
+  BIWatchHitsCollection*     GetWatchHitsCollection(G4int hcID,
                                               const G4Event* event) const;
 
   // data members

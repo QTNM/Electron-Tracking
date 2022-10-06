@@ -1,5 +1,5 @@
-#ifndef EGWatchHit_h
-#define EGWatchHit_h 1
+#ifndef BIWatchHit_h
+#define BIWatchHit_h 1
 
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
@@ -11,16 +11,16 @@
 /// It defines data members to store the track ID, Time
 /// and position on crossing the stop watch boundary:
 
-class EGWatchHit : public G4VHit
+class BIWatchHit : public G4VHit
 {
   public:
-    EGWatchHit();
-    EGWatchHit(const EGWatchHit&);
-    virtual ~EGWatchHit();
+    BIWatchHit();
+    BIWatchHit(const BIWatchHit&);
+    virtual ~BIWatchHit();
 
     // operators
-    const EGWatchHit& operator=(const EGWatchHit&);
-    G4bool operator==(const EGWatchHit&) const;
+    const BIWatchHit& operator=(const BIWatchHit&);
+    G4bool operator==(const BIWatchHit&) const;
 
     inline void* operator new(size_t);
     inline void  operator delete(void*);
@@ -52,20 +52,20 @@ class EGWatchHit : public G4VHit
       G4ThreeVector fMom;
 };
 
-typedef G4THitsCollection<EGWatchHit> EGWatchHitsCollection;
+typedef G4THitsCollection<BIWatchHit> BIWatchHitsCollection;
 
-extern G4ThreadLocal G4Allocator<EGWatchHit>* EGWatchHitAllocator;
+extern G4ThreadLocal G4Allocator<BIWatchHit>* BIWatchHitAllocator;
 
-inline void* EGWatchHit::operator new(size_t)
+inline void* BIWatchHit::operator new(size_t)
 {
-  if(!EGWatchHitAllocator)
-      EGWatchHitAllocator = new G4Allocator<EGWatchHit>;
-  return (void *) EGWatchHitAllocator->MallocSingle();
+  if(!BIWatchHitAllocator)
+      BIWatchHitAllocator = new G4Allocator<BIWatchHit>;
+  return (void *) BIWatchHitAllocator->MallocSingle();
 }
 
-inline void EGWatchHit::operator delete(void *hit)
+inline void BIWatchHit::operator delete(void *hit)
 {
-  EGWatchHitAllocator->FreeSingle((EGWatchHit*) hit);
+  BIWatchHitAllocator->FreeSingle((BIWatchHit*) hit);
 }
 
 #endif

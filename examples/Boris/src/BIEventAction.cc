@@ -1,4 +1,4 @@
-#include "EGEventAction.hh"
+#include "BIEventAction.hh"
 #include "g4root.hh"
 
 #include <vector>
@@ -8,51 +8,51 @@
 #include "G4SDManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4ios.hh"
-#include "EGGasSD.hh"
-#include "EGWatchSD.hh"
+#include "BIGasSD.hh"
+#include "BIWatchSD.hh"
 
 
-EGGasHitsCollection* 
-EGEventAction::GetGasHitsCollection(G4int hcID,
+BIGasHitsCollection* 
+BIEventAction::GetGasHitsCollection(G4int hcID,
                                     const G4Event* event) const
 {
   auto hitsCollection 
-    = static_cast<EGGasHitsCollection*>(
+    = static_cast<BIGasHitsCollection*>(
         event->GetHCofThisEvent()->GetHC(hcID));
   
   if ( ! hitsCollection ) {
     G4ExceptionDescription msg;
     msg << "Cannot access hitsCollection ID " << hcID; 
-    G4Exception("EGEventAction::GetGasHitsCollection()",
+    G4Exception("BIEventAction::GetGasHitsCollection()",
       "MyCode0001", FatalException, msg);
   }         
 
   return hitsCollection;
 }    
 
-EGWatchHitsCollection*
-EGEventAction::GetWatchHitsCollection(G4int hcID,
+BIWatchHitsCollection*
+BIEventAction::GetWatchHitsCollection(G4int hcID,
                                     const G4Event* event) const
 {
   auto hitsCollection
-    = static_cast<EGWatchHitsCollection*>(
+    = static_cast<BIWatchHitsCollection*>(
         event->GetHCofThisEvent()->GetHC(hcID));
 
   if ( ! hitsCollection ) {
     G4ExceptionDescription msg;
     msg << "Cannot access hitsCollection ID " << hcID;
-    G4Exception("EGEventAction::GetWatchHitsCollection()",
+    G4Exception("BIEventAction::GetWatchHitsCollection()",
       "MyCode0001", FatalException, msg);
   }
 
   return hitsCollection;
 }
 
-void EGEventAction::BeginOfEventAction(const G4Event*
+void BIEventAction::BeginOfEventAction(const G4Event*
                                          /*event*/)
 { ; }
 
-void EGEventAction::EndOfEventAction(const G4Event* event)
+void BIEventAction::EndOfEventAction(const G4Event* event)
 {
   // Get GAS hits collections IDs
   if(fGID < 0) 

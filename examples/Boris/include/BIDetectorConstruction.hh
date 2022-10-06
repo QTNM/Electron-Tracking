@@ -1,5 +1,5 @@
-#ifndef EGDetectorConstruction_h
-#define EGDetectorConstruction_h 1
+#ifndef BIDetectorConstruction_h
+#define BIDetectorConstruction_h 1
 
 #include "G4Cache.hh"
 #include "G4GenericMessenger.hh"
@@ -7,16 +7,16 @@
 #include "globals.hh"
 
 class G4VPhysicalVolume;
-class EGGasSD;
-class EGWatchSD;
+class BIGasSD;
+class BIWatchSD;
 class G4GlobalMagFieldMessenger;
-class F02ElectricFieldSetup;
+class BIElectricFieldSetup;
 
-class EGDetectorConstruction : public G4VUserDetectorConstruction
+class BIDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-  EGDetectorConstruction();
-  ~EGDetectorConstruction();
+  BIDetectorConstruction();
+  ~BIDetectorConstruction();
 
 public:
   virtual G4VPhysicalVolume* Construct();
@@ -29,9 +29,9 @@ private:
   G4VPhysicalVolume* SetupShort();
 
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
-  G4Cache<EGGasSD*>                         fSD1               = nullptr;
-  G4Cache<EGWatchSD*>                       fSD2               = nullptr;
-  G4Cache<F02ElectricFieldSetup*> fEmFieldSetup;
+  G4Cache<BIGasSD*>                         fSD1               = nullptr;
+  G4Cache<BIWatchSD*>                       fSD2               = nullptr;
+  G4Cache<BIElectricFieldSetup*>            fEmFieldSetup      = nullptr;
 };
 
 #endif

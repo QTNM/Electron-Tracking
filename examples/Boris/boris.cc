@@ -24,8 +24,8 @@
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
-#include "EGActionInitialization.hh"
-#include "EGDetectorConstruction.hh"
+#include "BIActionInitialization.hh"
+#include "BIDetectorConstruction.hh"
 
 int main(int argc, char** argv)
 {
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 
 
   // -- Set mandatory initialization classes
-  auto* detector = new EGDetectorConstruction;
+  auto* detector = new BIDetectorConstruction;
   runManager->SetUserInitialization(detector);
 
 
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  auto* actions = new EGActionInitialization(outputFileName);
+  auto* actions = new BIActionInitialization(outputFileName);
   runManager->SetUserInitialization(actions);
 
 

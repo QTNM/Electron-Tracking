@@ -1,11 +1,11 @@
-#include "EGWatchSD.hh"
+#include "BIWatchSD.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4Step.hh"
 #include "G4ThreeVector.hh"
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 
-EGWatchSD::EGWatchSD(const G4String& name,
+BIWatchSD::BIWatchSD(const G4String& name,
                      const G4String& hitsCollectionName) 
  : G4VSensitiveDetector(name),
    fHitsCollection(NULL)
@@ -13,15 +13,15 @@ EGWatchSD::EGWatchSD(const G4String& name,
   collectionName.insert(hitsCollectionName);
 }
 
-EGWatchSD::~EGWatchSD() 
+BIWatchSD::~BIWatchSD() 
 {}
 
-void EGWatchSD::Initialize(G4HCofThisEvent* hce)
+void BIWatchSD::Initialize(G4HCofThisEvent* hce)
 {
   // Create hits collection
 
   fHitsCollection 
-    = new EGWatchHitsCollection(SensitiveDetectorName, collectionName[0]); 
+    = new BIWatchHitsCollection(SensitiveDetectorName, collectionName[0]); 
 
   // Add this collection in hce
 
@@ -32,7 +32,7 @@ void EGWatchSD::Initialize(G4HCofThisEvent* hce)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool EGWatchSD::ProcessHits(G4Step* aStep, 
+G4bool BIWatchSD::ProcessHits(G4Step* aStep, 
                               G4TouchableHistory*)
 {  
   // boundary crossing
@@ -41,7 +41,7 @@ G4bool EGWatchSD::ProcessHits(G4Step* aStep,
 
   if (!IsEnter) return false; // boundary check
 
-  EGWatchHit* newHit = new EGWatchHit();
+  BIWatchHit* newHit = new BIWatchHit();
 
   newHit->SetHid(aStep->GetTrack()->GetTrackID());
   newHit->SetTime(aStep->GetTrack()->GetGlobalTime());
@@ -54,7 +54,7 @@ G4bool EGWatchSD::ProcessHits(G4Step* aStep,
   return true;
 }
 
-void EGWatchSD::EndOfEvent(G4HCofThisEvent*)
+void BIWatchSD::EndOfEvent(G4HCofThisEvent*)
 {
   if ( verboseLevel>1 ) { 
      G4int nofHits = fHitsCollection->entries();

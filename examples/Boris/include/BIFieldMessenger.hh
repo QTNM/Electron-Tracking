@@ -32,12 +32,12 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef F02FieldMessenger_h
-#define F02FieldMessenger_h 1
+#ifndef BIFieldMessenger_h
+#define BIFieldMessenger_h 1
 
 #include "G4UImessenger.hh"
 
-class F02ElectricFieldSetup;
+class BIElectricFieldSetup;
 class G4UIdirectory;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
@@ -46,17 +46,17 @@ class G4UIcmdWithoutParameter;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class F02FieldMessenger: public G4UImessenger
+class BIFieldMessenger: public G4UImessenger
 {
   public:
-    F02FieldMessenger(F02ElectricFieldSetup* );
-    virtual ~F02FieldMessenger();
+    BIFieldMessenger(BIElectricFieldSetup* );
+    virtual ~BIFieldMessenger();
 
     virtual void SetNewValue(G4UIcommand*, G4String);
  
   private:
 
-    F02ElectricFieldSetup*     fElFieldSetup;
+    BIElectricFieldSetup*      fElFieldSetup;
 
     G4UIdirectory*             fFieldDir;
     G4UIcmdWithAnInteger*      fStepperCmd;

@@ -1,8 +1,8 @@
-#include "EGGasHit.hh"
+#include "BIGasHit.hh"
 
-G4ThreadLocal G4Allocator<EGGasHit>* EGGasHitAllocator=0;
+G4ThreadLocal G4Allocator<BIGasHit>* BIGasHitAllocator=0;
 
-EGGasHit::EGGasHit()
+BIGasHit::BIGasHit()
  : G4VHit(),
    fTrackID(0),
    fEdep(0.),
@@ -15,9 +15,9 @@ EGGasHit::EGGasHit()
    fPosz(0.)
 {}
 
-EGGasHit::~EGGasHit() {}
+BIGasHit::~BIGasHit() {}
 
-EGGasHit::EGGasHit(const EGGasHit& right)
+BIGasHit::BIGasHit(const BIGasHit& right)
   : G4VHit()
 {
   fTrackID      = right.fTrackID;
@@ -31,7 +31,7 @@ EGGasHit::EGGasHit(const EGGasHit& right)
   fPosz         = right.fPosz;
 }
 
-const EGGasHit& EGGasHit::operator=(const EGGasHit& right)
+const BIGasHit& BIGasHit::operator=(const BIGasHit& right)
 {
   fTrackID      = right.fTrackID;
   fEdep         = right.fEdep;
@@ -46,14 +46,14 @@ const EGGasHit& EGGasHit::operator=(const EGGasHit& right)
   return *this;
 }
 
-G4bool EGGasHit::operator==(const EGGasHit& right) const
+G4bool BIGasHit::operator==(const BIGasHit& right) const
 {
   return ( this == &right ) ? true : false;
 }
 
-void EGGasHit::Draw()
+void BIGasHit::Draw()
 { ; }
 
-void EGGasHit::Print()
+void BIGasHit::Print()
 { ; }
 

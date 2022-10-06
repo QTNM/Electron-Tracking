@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(egun VERSION 0.1.0)
+project(boris VERSION 0.1.0)
 
 # Compiler/build settings
 set(CMAKE_CXX_STANDARD 17)
@@ -13,22 +13,22 @@ include(CTest)
 find_package(Geant4 10.7 REQUIRED)
 
 # Build
-add_executable(egun
-  egun.cc
-  src/EGActionInitialization.cc
-  src/EGDetectorConstruction.cc
-  src/EGGasHit.cc
-  src/EGGasSD.cc
-  src/EGEventAction.cc
-  src/EGElectricFieldSetup.cc
-  src/EGFieldMessenger.cc
-  src/EGPrimaryGeneratorAction.cc
-  src/EGRunAction.cc
-  src/EGWatchHit.cc
-  src/EGWatchSD.cc
+add_executable(boris
+  boris.cc
+  src/BIActionInitialization.cc
+  src/BIDetectorConstruction.cc
+  src/BIGasHit.cc
+  src/BIGasSD.cc
+  src/BIEventAction.cc
+  src/BIMagneticFieldSetup.cc
+  src/BIFieldMessenger.cc
+  src/BIPrimaryGeneratorAction.cc
+  src/BIRunAction.cc
+  src/BIWatchHit.cc
+  src/BIWatchSD.cc
   src/QTNMPhysicsList.cc)
-target_include_directories(egun PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(egun PRIVATE ${Geant4_LIBRARIES})
+target_include_directories(boris PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(boris PRIVATE ${Geant4_LIBRARIES})
 
 # Test
 if(BUILD_TESTING)

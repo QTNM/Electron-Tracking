@@ -1,8 +1,8 @@
-#include "EGWatchHit.hh"
+#include "BIWatchHit.hh"
 
-G4ThreadLocal G4Allocator<EGWatchHit>* EGWatchHitAllocator=0;
+G4ThreadLocal G4Allocator<BIWatchHit>* BIWatchHitAllocator=0;
 
-EGWatchHit::EGWatchHit()
+BIWatchHit::BIWatchHit()
  : G4VHit(),
    fHid(0),
    fTime(0.),
@@ -11,9 +11,9 @@ EGWatchHit::EGWatchHit()
    fKine(0.)
 {}
 
-EGWatchHit::~EGWatchHit() {}
+BIWatchHit::~BIWatchHit() {}
 
-EGWatchHit::EGWatchHit(const EGWatchHit& right)
+BIWatchHit::BIWatchHit(const BIWatchHit& right)
   : G4VHit()
 {
   fHid       = right.fHid;
@@ -23,7 +23,7 @@ EGWatchHit::EGWatchHit(const EGWatchHit& right)
   fKine      = right.fKine;
 }
 
-const EGWatchHit& EGWatchHit::operator=(const EGWatchHit& right)
+const BIWatchHit& BIWatchHit::operator=(const BIWatchHit& right)
 {
   fHid       = right.fHid;
   fTime      = right.fTime;
@@ -34,14 +34,14 @@ const EGWatchHit& EGWatchHit::operator=(const EGWatchHit& right)
   return *this;
 }
 
-G4bool EGWatchHit::operator==(const EGWatchHit& right) const
+G4bool BIWatchHit::operator==(const BIWatchHit& right) const
 {
   return ( this == &right ) ? true : false;
 }
 
-void EGWatchHit::Draw()
+void BIWatchHit::Draw()
 { ; }
 
-void EGWatchHit::Print()
+void BIWatchHit::Print()
 { ; }
 

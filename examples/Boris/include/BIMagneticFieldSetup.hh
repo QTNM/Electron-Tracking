@@ -32,8 +32,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef F02ElectricFieldSetup_h
-#define F02ElectricFieldSetup_h 1
+#ifndef BIElectricFieldSetup_h
+#define BIElectricFieldSetup_h 1
 
 #include "G4MagneticField.hh"
 #include "G4ThreeVector.hh"
@@ -43,7 +43,7 @@ class G4ChordFinder;
 class G4Mag_EqRhs;
 class G4MagIntegratorStepper;
 class G4MagInt_Driver;
-class F02FieldMessenger;
+class BIFieldMessenger;
 
 /// A class for control of the Electric Field of the detector.
 ///     The field for this case is uniform.
@@ -52,13 +52,13 @@ class F02FieldMessenger;
 /// It is simply a 'setup' class that creates the field and necessary
 /// other parts
 
-class F02ElectricFieldSetup
+class BIElectricFieldSetup
 {
 public:
-  F02ElectricFieldSetup(G4ThreeVector);  //  The value of the field
-  F02ElectricFieldSetup();               //  A zero field - true value set later
+  BIElectricFieldSetup(G4ThreeVector);  //  The value of the field
+  BIElectricFieldSetup();               //  A zero field - true value set later
 
-  virtual ~F02ElectricFieldSetup();
+  virtual ~BIElectricFieldSetup();
 
    // Methods to set parameters or select 
   void SetStepperType( G4int i) { fStepperType = i ; CreateStepper(); }
@@ -104,7 +104,7 @@ private:
   G4int                   fStepperType;
 
    
-  F02FieldMessenger*      fFieldMessenger;
+  BIFieldMessenger*       fFieldMessenger;
 
 };
 

@@ -1,11 +1,11 @@
-#include "EGGasSD.hh"
+#include "BIGasSD.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4Step.hh"
 #include "G4ThreeVector.hh"
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 
-EGGasSD::EGGasSD(const G4String& name,
+BIGasSD::BIGasSD(const G4String& name,
                  const G4String& hitsCollectionName) 
  : G4VSensitiveDetector(name),
    fHitsCollection(NULL)
@@ -13,15 +13,15 @@ EGGasSD::EGGasSD(const G4String& name,
   collectionName.insert(hitsCollectionName);
 }
 
-EGGasSD::~EGGasSD() 
+BIGasSD::~BIGasSD() 
 {}
 
-void EGGasSD::Initialize(G4HCofThisEvent* hce)
+void BIGasSD::Initialize(G4HCofThisEvent* hce)
 {
   // Create hits collection
 
   fHitsCollection 
-    = new EGGasHitsCollection(SensitiveDetectorName, collectionName[0]); 
+    = new BIGasHitsCollection(SensitiveDetectorName, collectionName[0]); 
 
   // Add this collection in hce
 
@@ -30,7 +30,7 @@ void EGGasSD::Initialize(G4HCofThisEvent* hce)
   hce->AddHitsCollection( hcID, fHitsCollection ); 
 }
 
-G4bool EGGasSD::ProcessHits(G4Step* aStep, 
+G4bool BIGasSD::ProcessHits(G4Step* aStep, 
                             G4TouchableHistory*)
 {  
   // energy deposit
@@ -41,7 +41,7 @@ G4bool EGGasSD::ProcessHits(G4Step* aStep,
   if (edep / CLHEP::keV <= 1.e-6) return false;
   else if ((premom.cross(postmom)).mag() <= 1.e-8) return false; // parallel = not interested
 
-  EGGasHit* newHit = new EGGasHit();
+  BIGasHit* newHit = new BIGasHit();
   G4ThreeVector postloc = aStep->GetPostStepPoint()->GetPosition();
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
@@ -59,7 +59,7 @@ G4bool EGGasSD::ProcessHits(G4Step* aStep,
   return true;
 }
 
-void EGGasSD::EndOfEvent(G4HCofThisEvent*)
+void BIGasSD::EndOfEvent(G4HCofThisEvent*)
 {
   if ( verboseLevel>1 ) { 
      G4int nofHits = fHitsCollection->entries();

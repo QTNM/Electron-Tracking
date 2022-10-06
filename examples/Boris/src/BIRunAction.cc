@@ -1,4 +1,4 @@
-#include "EGRunAction.hh"
+#include "BIRunAction.hh"
 #include "g4root.hh"
 
 #include "G4Run.hh"
@@ -6,7 +6,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
-EGRunAction::EGRunAction(G4String name)
+BIRunAction::BIRunAction(G4String name)
 : G4UserRunAction()
 , fout(std::move(name))
 {
@@ -61,9 +61,9 @@ EGRunAction::EGRunAction(G4String name)
   analysisManager->FinishNtuple();
 }
 
-EGRunAction::~EGRunAction() { delete G4AnalysisManager::Instance(); }
+BIRunAction::~BIRunAction() { delete G4AnalysisManager::Instance(); }
 
-void EGRunAction::BeginOfRunAction(const G4Run* /*run*/)
+void BIRunAction::BeginOfRunAction(const G4Run* /*run*/)
 {
   // Get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -73,7 +73,7 @@ void EGRunAction::BeginOfRunAction(const G4Run* /*run*/)
   analysisManager->OpenFile(fout);
 }
 
-void EGRunAction::EndOfRunAction(const G4Run* /*run*/)
+void BIRunAction::EndOfRunAction(const G4Run* /*run*/)
 {
   // Get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();

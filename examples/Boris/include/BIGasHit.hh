@@ -1,5 +1,5 @@
-#ifndef EGGasHit_h
-#define EGGasHit_h 1
+#ifndef BIGasHit_h
+#define BIGasHit_h 1
 
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
@@ -10,16 +10,16 @@
 /// It defines data members to store the energy deposit,
 /// kinetic energy and momentum in a selected volume:
 
-class EGGasHit : public G4VHit
+class BIGasHit : public G4VHit
 {
   public:
-    EGGasHit();
-    EGGasHit(const EGGasHit&);
-    virtual ~EGGasHit();
+    BIGasHit();
+    BIGasHit(const BIGasHit&);
+    virtual ~BIGasHit();
 
     // operators
-    const EGGasHit& operator=(const EGGasHit&);
-    G4bool operator==(const EGGasHit&) const;
+    const BIGasHit& operator=(const BIGasHit&);
+    G4bool operator==(const BIGasHit&) const;
 
     inline void* operator new(size_t);
     inline void  operator delete(void*);
@@ -63,20 +63,20 @@ class EGGasHit : public G4VHit
       G4double      fPosz;
 };
 
-typedef G4THitsCollection<EGGasHit> EGGasHitsCollection;
+typedef G4THitsCollection<BIGasHit> BIGasHitsCollection;
 
-extern G4ThreadLocal G4Allocator<EGGasHit>* EGGasHitAllocator;
+extern G4ThreadLocal G4Allocator<BIGasHit>* BIGasHitAllocator;
 
-inline void* EGGasHit::operator new(size_t)
+inline void* BIGasHit::operator new(size_t)
 {
-  if(!EGGasHitAllocator)
-      EGGasHitAllocator = new G4Allocator<EGGasHit>;
-  return (void *) EGGasHitAllocator->MallocSingle();
+  if(!BIGasHitAllocator)
+      BIGasHitAllocator = new G4Allocator<BIGasHit>;
+  return (void *) BIGasHitAllocator->MallocSingle();
 }
 
-inline void EGGasHit::operator delete(void *hit)
+inline void BIGasHit::operator delete(void *hit)
 {
-  EGGasHitAllocator->FreeSingle((EGGasHit*) hit);
+  BIGasHitAllocator->FreeSingle((BIGasHit*) hit);
 }
 
 #endif
