@@ -7,7 +7,10 @@
 /run/initialize
 
 # Magnetic Field
-/field/setFieldZ 0
+/field/setFieldZ 1
+
+# Stepper choice
+/field/setStepperType 3
 
 # start
 /run/beamOn 4
