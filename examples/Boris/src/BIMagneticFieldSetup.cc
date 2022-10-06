@@ -150,8 +150,6 @@ void BIElectricFieldSetup::UpdateIntegrator()
   //  -- Careful to call this after all old objects are destroyed, and
   //      pointers nullified.
   CreateStepper();  // Note that this method deleted the existing Stepper!
-  // G4cout << "F02ElectricFieldSetup::UpdateIntegrator> "
-  //        << "New value of stepper ptr= " << fStepper << G4endl;
   assert(fStepper != nullptr);
 
   if( fStepper ) {
