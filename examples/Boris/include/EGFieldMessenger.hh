@@ -60,8 +60,8 @@ class F02FieldMessenger: public G4UImessenger
 
     G4UIdirectory*             fFieldDir;
     G4UIcmdWithAnInteger*      fStepperCmd;
-    G4UIcmdWithADoubleAndUnit* fElFieldZCmd;
-    G4UIcmdWith3VectorAndUnit* fElFieldCmd;
+    G4UIcmdWithADoubleAndUnit* fBFieldZCmd;
+    G4UIcmdWith3VectorAndUnit* fBFieldCmd;
     G4UIcmdWithADoubleAndUnit* fMinStepCmd;
     G4UIcmdWithoutParameter*   fUpdateCmd;
 };

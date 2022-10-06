@@ -47,8 +47,8 @@ F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
    fElFieldSetup(fieldSetup),
    fFieldDir(0),
    fStepperCmd(0),
-   fElFieldZCmd(0),
-   fElFieldCmd(0),
+   fBFieldZCmd(0),
+   fBFieldCmd(0),
    fMinStepCmd(0),
    fUpdateCmd(0)
 {
@@ -67,20 +67,20 @@ F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
   fUpdateCmd->SetGuidance("if you changed geometrical value(s).");
   fUpdateCmd->AvailableForStates(G4State_Idle);
 
-  fElFieldZCmd = new G4UIcmdWithADoubleAndUnit("/field/setFieldZ",this);
-  fElFieldZCmd->SetGuidance("Define uniform Electric field.");
-  fElFieldZCmd->SetGuidance("Electric field will be in Z direction.");
-  fElFieldZCmd->SetGuidance("Value of Electric field has to be given in volt/m");
-  fElFieldZCmd->SetParameterName("Ez",false,false);
-  fElFieldZCmd->SetDefaultUnit("megavolt/m");
-  fElFieldZCmd->AvailableForStates(G4State_Idle);
+  fBFieldZCmd = new G4UIcmdWithADoubleAndUnit("/field/setFieldZ",this);
+  fBFieldZCmd->SetGuidance("Define uniform magnetic field.");
+  fBFieldZCmd->SetGuidance("Magnetic field will be in Z direction.");
+  fBFieldZCmd->SetGuidance("Value of magnetic field has to be given in Tesla");
+  fBFieldZCmd->SetParameterName("Bz",false,false);
+  fBFieldZCmd->SetDefaultUnit("Tesla");
+  fBFieldZCmd->AvailableForStates(G4State_Idle);
  
-  fElFieldCmd = new G4UIcmdWith3VectorAndUnit("/field/setField",this);
-  fElFieldCmd->SetGuidance("Define uniform Electric field.");
-  fElFieldCmd->SetGuidance("Value of Electric field has to be given in volt/m");
-  fElFieldCmd->SetParameterName("Ex","Ey","Ez",false,false);
-  fElFieldCmd->SetDefaultUnit("megavolt/m");
-  fElFieldCmd->AvailableForStates(G4State_Idle);
+  fBFieldCmd = new G4UIcmdWith3VectorAndUnit("/field/setField",this);
+  fBFieldCmd->SetGuidance("Define uniform magnetic field.");
+  fBFieldCmd->SetGuidance("Value of magnetic field has to be given in Tesla");
+  fBFieldCmd->SetParameterName("Bx","By","Bz",false,false);
+  fBFieldCmd->SetDefaultUnit("Tesla");
+  fBFieldCmd->AvailableForStates(G4State_Idle);
  
   fMinStepCmd = new G4UIcmdWithADoubleAndUnit("/field/setMinStep",this);
   fMinStepCmd->SetGuidance("Define minimal step");
@@ -94,8 +94,8 @@ F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
 F02FieldMessenger::~F02FieldMessenger()
 {
   delete fStepperCmd;
-  delete fElFieldZCmd;
-  delete fElFieldCmd;
+  delete fBFieldZCmd;
+  delete fBFieldCmd;
   delete fMinStepCmd;
   delete fFieldDir;
   delete fUpdateCmd;
@@ -109,10 +109,10 @@ void F02FieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fElFieldSetup->SetStepperType(fStepperCmd->GetNewIntValue(newValue));
   if( command == fUpdateCmd )
     fElFieldSetup->UpdateIntegrator();
-  if( command == fElFieldZCmd )
-    fElFieldSetup->SetFieldZValue(fElFieldZCmd->GetNewDoubleValue(newValue));
-  if( command == fElFieldCmd )
-    fElFieldSetup->SetFieldValue(fElFieldCmd->GetNew3VectorValue(newValue));
+  if( command == fBFieldZCmd )
+    fElFieldSetup->SetFieldZValue(fBFieldZCmd->GetNewDoubleValue(newValue));
+  if( command == fBFieldCmd )
+    fElFieldSetup->SetFieldValue(fBFieldCmd->GetNew3VectorValue(newValue));
   if( command == fMinStepCmd )
     fElFieldSetup->SetMinStep(fMinStepCmd->GetNewDoubleValue(newValue));
 }
