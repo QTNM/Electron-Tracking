@@ -37,7 +37,7 @@
 
 #include "G4UImessenger.hh"
 
-class BIElectricFieldSetup;
+class BIMagneticFieldSetup;
 class G4UIdirectory;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
@@ -49,14 +49,14 @@ class G4UIcmdWithoutParameter;
 class BIFieldMessenger: public G4UImessenger
 {
   public:
-    BIFieldMessenger(BIElectricFieldSetup* );
+    BIFieldMessenger(BIMagneticFieldSetup* );
     virtual ~BIFieldMessenger();
 
     virtual void SetNewValue(G4UIcommand*, G4String);
  
   private:
 
-    BIElectricFieldSetup*      fElFieldSetup;
+    BIMagneticFieldSetup*      fElFieldSetup;
 
     G4UIdirectory*             fFieldDir;
     G4UIcmdWithAnInteger*      fStepperCmd;

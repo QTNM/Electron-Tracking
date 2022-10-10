@@ -42,7 +42,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-BIFieldMessenger::BIFieldMessenger(BIElectricFieldSetup* fieldSetup)
+BIFieldMessenger::BIFieldMessenger(BIMagneticFieldSetup* fieldSetup)
  : G4UImessenger(),
    fElFieldSetup(fieldSetup),
    fFieldDir(0),
@@ -56,7 +56,7 @@ BIFieldMessenger::BIFieldMessenger(BIElectricFieldSetup* fieldSetup)
   fFieldDir->SetGuidance("BI field tracking control.");
 
   fStepperCmd = new G4UIcmdWithAnInteger("/field/setStepperType",this);
-  fStepperCmd->SetGuidance("Select stepper type for electric field");
+  fStepperCmd->SetGuidance("Select stepper type for magnetic field");
   fStepperCmd->SetParameterName("choice",true);
   fStepperCmd->SetDefaultValue(4);
   fStepperCmd->AvailableForStates(G4State_PreInit,G4State_Idle);

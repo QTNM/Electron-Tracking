@@ -87,7 +87,7 @@ void BIDetectorConstruction::ConstructSDandField()
   // Construct the field creator - this will register the field it creates
 
   if (!fEmFieldSetup.Get()) {
-    BIElectricFieldSetup* fieldSetup = new BIElectricFieldSetup();
+    BIMagneticFieldSetup* fieldSetup = new BIMagneticFieldSetup();
     G4AutoDelete::Register(fieldSetup); //Kernel will delete the messenger
     fEmFieldSetup.Put(fieldSetup);
   }

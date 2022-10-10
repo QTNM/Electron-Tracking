@@ -58,7 +58,7 @@
 
 //  Constructors:
 
-BIElectricFieldSetup::BIElectricFieldSetup()
+BIMagneticFieldSetup::BIMagneticFieldSetup()
  : fMinStep(0.010*mm),  // minimal step of 10 microns
    fFieldManager(0),
    fChordFinder(0),
@@ -81,7 +81,7 @@ BIElectricFieldSetup::BIElectricFieldSetup()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-BIElectricFieldSetup::BIElectricFieldSetup(G4ThreeVector fieldVector)
+BIMagneticFieldSetup::BIMagneticFieldSetup(G4ThreeVector fieldVector)
   : fMinStep(0.010*mm),  // minimal step of 10 microns
     fFieldManager(0),
     fChordFinder(0),
@@ -104,9 +104,9 @@ BIElectricFieldSetup::BIElectricFieldSetup(G4ThreeVector fieldVector)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-BIElectricFieldSetup::~BIElectricFieldSetup()
+BIMagneticFieldSetup::~BIMagneticFieldSetup()
 {
-  // G4cout << " F02ElectricFieldSetup - dtor called. " << G4endl;
+  // G4cout << " F02MagneticFieldSetup - dtor called. " << G4endl;
 
   delete fFieldMessenger; fFieldMessenger= nullptr;
    // Delete the messenger first, to avoid messages to deleted classes!
@@ -119,7 +119,7 @@ BIElectricFieldSetup::~BIElectricFieldSetup()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void BIElectricFieldSetup::UpdateIntegrator()
+void BIMagneticFieldSetup::UpdateIntegrator()
 {
   // Register this field to 'global' Field Manager and
   // Create Stepper and Chord Finder with predefined type, minstep (resp.)
@@ -128,7 +128,7 @@ void BIElectricFieldSetup::UpdateIntegrator()
   //   has been chosen, or other changes have been made
   assert(fEquation!=nullptr);
 
-  G4cout<< " BIElectricFieldSetup: The minimal step is equal to "
+  G4cout<< " BIMagneticFieldSetup: The minimal step is equal to "
         << fMinStep/mm << " mm" << G4endl;
 
   if (fChordFinder) {
@@ -167,7 +167,7 @@ void BIElectricFieldSetup::UpdateIntegrator()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void BIElectricFieldSetup::CreateStepper()
+void BIMagneticFieldSetup::CreateStepper()
 {
   // Deletes the existing stepper
   //   and creates a new stepper object of the chosen stepper type
@@ -216,7 +216,7 @@ void BIElectricFieldSetup::CreateStepper()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void BIElectricFieldSetup::SetFieldZValue(G4double fieldValue)
+void BIMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
 {
   // Set the value of the Global Field to fieldValue along Z
 
@@ -227,7 +227,7 @@ void BIElectricFieldSetup::SetFieldZValue(G4double fieldValue)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void BIElectricFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
+void BIMagneticFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 {
   if (fEMfield) delete fEMfield;
 
@@ -252,7 +252,7 @@ void BIElectricFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4FieldManager*  BIElectricFieldSetup::GetGlobalFieldManager()
+G4FieldManager*  BIMagneticFieldSetup::GetGlobalFieldManager()
 {
 //  Utility method
 

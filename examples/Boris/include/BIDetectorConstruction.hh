@@ -10,7 +10,7 @@ class G4VPhysicalVolume;
 class BIGasSD;
 class BIWatchSD;
 class G4GlobalMagFieldMessenger;
-class BIElectricFieldSetup;
+class BIMagneticFieldSetup;
 
 class BIDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -31,7 +31,7 @@ private:
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
   G4Cache<BIGasSD*>                         fSD1               = nullptr;
   G4Cache<BIWatchSD*>                       fSD2               = nullptr;
-  G4Cache<BIElectricFieldSetup*>            fEmFieldSetup      = nullptr;
+  G4Cache<BIMagneticFieldSetup*>            fEmFieldSetup      = nullptr;
 };
 
 #endif

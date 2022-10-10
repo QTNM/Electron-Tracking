@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file field/field02/include/F02ElectricFieldSetup.hh
-/// \brief Definition of the F02ElectricFieldSetup class
+/// \file field/field02/include/F02MagneticFieldSetup.hh
+/// \brief Definition of the F02MagneticFieldSetup class
 //
 //
 //
@@ -32,8 +32,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef BIElectricFieldSetup_h
-#define BIElectricFieldSetup_h 1
+#ifndef BIMagneticFieldSetup_h
+#define BIMagneticFieldSetup_h 1
 
 #include "G4MagneticField.hh"
 #include "G4ThreeVector.hh"
@@ -45,20 +45,20 @@ class G4MagIntegratorStepper;
 class G4MagInt_Driver;
 class BIFieldMessenger;
 
-/// A class for control of the Electric Field of the detector.
+/// A class for control of the Magnetic Field of the detector.
 ///     The field for this case is uniform.
 ///
 /// The field for this case is uniform.
 /// It is simply a 'setup' class that creates the field and necessary
 /// other parts
 
-class BIElectricFieldSetup
+class BIMagneticFieldSetup
 {
 public:
-  BIElectricFieldSetup(G4ThreeVector);  //  The value of the field
-  BIElectricFieldSetup();               //  A zero field - true value set later
+  BIMagneticFieldSetup(G4ThreeVector);  //  The value of the field
+  BIMagneticFieldSetup();               //  A zero field - true value set later
 
-  virtual ~BIElectricFieldSetup();
+  virtual ~BIMagneticFieldSetup();
 
    // Methods to set parameters or select 
   void SetStepperType( G4int i) { fStepperType = i ; CreateStepper(); }
