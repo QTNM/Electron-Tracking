@@ -26,24 +26,29 @@
 // G4ExactHelixStepper implementation
 //
 // Author: J.Apostolakis, 28.01.2005.
-//         Implementation adapted from ExplicitEuler by W.Wander 
+//         Implementation adapted from ExplicitEuler by W.Wander
 // -------------------------------------------------------------------
 
 #include "G4PhysicalConstants.hh"
 #include "G4ThreeVector.hh"
 #include "G4LineSection.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 #include "BorisStepper.hh"
 
+const G4double BorisStepper::fUnitConstant = 0.299792458*(GeV/(tesla*m));
+
 BorisStepper::BorisStepper(G4Mag_EqRhs* EqRhs)
   : G4MagHelicalStepper(EqRhs),
-    fBfieldValue(DBL_MAX, DBL_MAX, DBL_MAX)
+    fBfieldValue(DBL_MAX, DBL_MAX, DBL_MAX),
+    fPtrMagEqOfMot(EqRhs)
 {
 }
 
 BorisStepper::~BorisStepper()
 {
-} 
+}
 
 // ---------------------------------------------------------------------------
 
@@ -53,14 +58,87 @@ BorisStepper::Stepper( const G4double yInput[],
                                     G4double hstep,
                                     G4double yOut[],
                                     G4double yErr[] )
-{  
+{
   const G4int nvar = 6;
 
   G4int i;
   G4ThreeVector Bfld_value;
 
-  MagFieldEvaluate(yInput, Bfld_value);        
-  AdvanceHelix(yInput, Bfld_value, hstep, yOut);
+  MagFieldEvaluate(yInput, Bfld_value);
+
+  // Begin AdvanceHelix Routine
+  //AdvanceHelix(yInput, Bfld_value, hstep, yOut);
+
+  const G4double approc_limit = 0.005;
+  G4ThreeVector  Bnorm, B_x_P, vperp, vpar;
+
+  G4double B_d_P;
+  G4double B_v_P;
+  G4double Theta;
+  G4double R_1;
+  G4double R_Helix;
+  G4double CosT, SinT;
+  G4ThreeVector positionMove, endTangent;
+
+  G4double Bmag = Bfld_value.mag();
+  const G4double* pIn = yInput+3;
+  G4ThreeVector initVelocity = G4ThreeVector( pIn[0], pIn[1], pIn[2]);
+  G4double      velocityVal = initVelocity.mag();
+  G4ThreeVector initTangent = (1.0/velocityVal) * initVelocity;
+
+  R_1 = GetInverseCurve(velocityVal,Bmag);
+
+  Bnorm = (1.0/Bmag)*Bfld_value;
+
+  // calculate the direction of the force
+
+  B_x_P = Bnorm.cross(initTangent);
+
+  // parallel and perp vectors
+
+  B_d_P = Bnorm.dot(initTangent); // this is the fraction of P parallel to B
+
+  vpar = B_d_P * Bnorm;       // the component parallel      to B
+  vperp= initTangent - vpar;  // the component perpendicular to B
+
+  B_v_P  = std::sqrt( 1 - B_d_P * B_d_P); // Fraction of P perp to B
+
+  // calculate  the stepping angle
+
+  Theta   = R_1 * hstep; // * B_v_P;
+  // Trigonometrix
+
+  SinT     = std::sin(Theta);
+  CosT     = std::cos(Theta);
+
+  // the actual "rotation"
+
+  G4double R = 1.0 / R_1;
+
+  positionMove  = R * ( SinT * vperp + (1-CosT) * B_x_P) + hstep * vpar;
+  endTangent    = CosT * vperp + SinT * B_x_P + vpar;
+
+  // Store the resulting position and tangent
+
+  yOut[0]   = yInput[0] + positionMove.x();
+  yOut[1]   = yInput[1] + positionMove.y();
+  yOut[2]   = yInput[2] + positionMove.z();
+  yOut[3] = velocityVal * endTangent.x();
+  yOut[4] = velocityVal * endTangent.y();
+  yOut[5] = velocityVal * endTangent.z();
+
+  // Store and/or calculate parameters for chord distance
+
+  G4double ptan=velocityVal*B_v_P;
+
+  G4double particleCharge = fPtrMagEqOfMot->FCof() / (eplus*c_light);
+  R_Helix =std::abs( ptan/(fUnitConstant  * particleCharge*Bmag));
+
+  SetAngCurve(std::abs(Theta));
+  SetCurve(std::abs(R));
+  SetRadHelix(R_Helix);
+
+  //end AdvanceHelix Routine
 
   // We are assuming a constant field: helix is exact
   //
@@ -86,14 +164,14 @@ BorisStepper::DumbStepper( const G4double yIn[],
 
   G4Exception("BorisStepper::DumbStepper",
               "GeomField0002", FatalException,
-              "Should not be called. Stepper must do all the work." ); 
-}  
+              "Should not be called. Stepper must do all the work." );
+}
 
 
 // ---------------------------------------------------------------------------
 
 G4double
-BorisStepper::DistChord() const 
+BorisStepper::DistChord() const
 {
   // Implementation : must check whether h/R >  pi  !!
   //   If( h/R <  pi)   DistChord=h/2*std::tan(Ang_curve/4)
@@ -112,16 +190,16 @@ BorisStepper::DistChord() const
   }
   else
   {
-    distChord=2.*GetRadHelix();  
+    distChord=2.*GetRadHelix();
   }
 
   return distChord;
-}   
+}
 
 // ---------------------------------------------------------------------------
 
 G4int
-BorisStepper::IntegratorOrder() const 
+BorisStepper::IntegratorOrder() const
 {
-  return 1; 
+  return 1;
 }

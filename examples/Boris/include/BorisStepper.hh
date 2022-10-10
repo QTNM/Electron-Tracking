@@ -81,7 +81,12 @@ class BorisStepper : public G4MagHelicalStepper
   private:
 
     G4ThreeVector fBfieldValue;
-      //  Initial value of field at last step
+    //  Initial value of field at last step
+
+    static const G4double fUnitConstant;
+    // As in G4Mag_EqRhs.hh/cc where it is not used.
+
+    G4Mag_EqRhs* fPtrMagEqOfMot = nullptr;
 };
 
 #endif
