@@ -4,6 +4,7 @@
 #include "G4Cache.hh"
 #include "G4GenericMessenger.hh"
 #include "G4VUserDetectorConstruction.hh"
+#include "G4UserLimits.hh"
 #include "globals.hh"
 
 class G4VPhysicalVolume;
@@ -22,6 +23,8 @@ public:
   virtual G4VPhysicalVolume* Construct();
   virtual void               ConstructSDandField();
 
+  void     SetMaxStep(G4double s);
+
 private:
   void DefineCommands();
   void DefineMaterials();
@@ -32,6 +35,8 @@ private:
   G4Cache<BIGasSD*>                         fSD1               = nullptr;
   G4Cache<BIWatchSD*>                       fSD2               = nullptr;
   G4Cache<BIMagneticFieldSetup*>            fEmFieldSetup      = nullptr;
+  G4UserLimits*                             fStepLimit         = nullptr;
+  G4double                                  maxStep;
 };
 
 #endif

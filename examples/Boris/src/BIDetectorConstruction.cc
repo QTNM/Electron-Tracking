@@ -27,6 +27,8 @@
 
 BIDetectorConstruction::BIDetectorConstruction()
 {
+  maxStep = 0.1*cm;
+
   DefineCommands();
 }
 
@@ -156,7 +158,16 @@ auto BIDetectorConstruction::SetupShort() -> G4VPhysicalVolume*
   new G4PVPlacement(nullptr, G4ThreeVector(0. * cm, 0. * cm, pipehZ + heightZ), stopLogical,
                     "Stop_phys", worldLogical, false, 0, true);
 
+  fStepLimit = new G4UserLimits(maxStep);
+  gasLogical->SetUserLimits(fStepLimit);
+
   return worldPhysical;
+}
+
+void BIDetectorConstruction::SetMaxStep(G4double s)
+{
+  maxStep = s * cm;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void BIDetectorConstruction::DefineCommands()
@@ -164,4 +175,10 @@ void BIDetectorConstruction::DefineCommands()
   // Define geometry command directory using generic messenger class
   fDetectorMessenger = new G4GenericMessenger(this, "/BI/detector/",
                                               "Commands for controlling detector setup");
+
+  // switch command
+  fDetectorMessenger->DeclareMethod("setMaxStep", &BIDetectorConstruction::SetMaxStep)
+    .SetGuidance("Set maximum step length [cm]")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
 }

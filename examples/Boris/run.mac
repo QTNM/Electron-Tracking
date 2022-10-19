@@ -3,6 +3,9 @@
 /run/verbose 0
 /tracking/verbose 0
 
+# Set max step size
+/BI/detector/setMaxStep 1
+
 # run init
 /run/initialize
 

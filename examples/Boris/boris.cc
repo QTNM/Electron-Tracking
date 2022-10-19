@@ -21,6 +21,7 @@
 #include "G4Threading.hh"
 #include "G4GenericPhysicsList.hh"
 #include "G4VModularPhysicsList.hh"
+#include "G4StepLimiterPhysics.hh"
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
@@ -84,6 +85,8 @@ int main(int argc, char** argv)
   std::vector<G4String>* myConstructors = new std::vector<G4String>;
   myConstructors->push_back("QTNMPhysicsList");
   physList = new G4GenericPhysicsList(myConstructors);
+  // Register Step limiter
+  physList->RegisterPhysics(new G4StepLimiterPhysics());
 
   // finish physics list
   runManager->SetUserInitialization(physList);
