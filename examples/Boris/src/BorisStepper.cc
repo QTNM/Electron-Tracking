@@ -63,82 +63,52 @@ BorisStepper::Stepper( const G4double yInput[],
 
   G4int i;
   G4ThreeVector Bfld_value;
-
-  MagFieldEvaluate(yInput, Bfld_value);
-
-  // Begin AdvanceHelix Routine
-  //AdvanceHelix(yInput, Bfld_value, hstep, yOut);
-
-  const G4double approc_limit = 0.005;
-  G4ThreeVector  Bnorm, B_x_P, vperp, vpar;
-
-  G4double B_d_P;
-  G4double B_v_P;
-  G4double Theta;
-  G4double R_1;
-  G4double R_Helix;
-  G4double CosT, SinT;
-  G4ThreeVector positionMove, endTangent;
-
-  G4double Bmag = Bfld_value.mag();
+  
+  G4ThreeVector x_init = G4ThreeVector( yInput[0], yInput[1], yInput[2]);
   const G4double* pIn = yInput+3;
   G4ThreeVector initVelocity = G4ThreeVector( pIn[0], pIn[1], pIn[2]);
   G4double      velocityVal = initVelocity.mag();
   G4ThreeVector initTangent = (1.0/velocityVal) * initVelocity;
 
-  R_1 = GetInverseCurve(velocityVal,Bmag);
+  G4ThreeVector x_half, Bnorm;
+  G4double R_1, Theta;
 
+  // Half time-step motion
+  x_half = x_init + initTangent * hstep * 0.5;
+
+  // Evaluate the field
+  MagFieldEvaluate(yInput, Bfld_value); // Why full input??
+  G4double Bmag = Bfld_value.mag();
+
+  // Now perform the rotation - need angle
   Bnorm = (1.0/Bmag)*Bfld_value;
+  R_1 = GetInverseCurve(velocityVal,Bmag);
+  Theta   = R_1 * hstep;
 
-  // calculate the direction of the force
+  // Rotation - re-evaluate tangent
+  G4ThreeVector t = std::tan(0.5*Theta) * Bnorm;
+  G4ThreeVector u_prime = initTangent + initTangent.cross(t);
+  G4ThreeVector endTangent = initTangent + 2.0 / (1.0 + t.dot(t)) * u_prime.cross(t);
 
-  B_x_P = Bnorm.cross(initTangent);
-
-  // parallel and perp vectors
-
-  B_d_P = Bnorm.dot(initTangent); // this is the fraction of P parallel to B
-
-  vpar = B_d_P * Bnorm;       // the component parallel      to B
-  vperp= initTangent - vpar;  // the component perpendicular to B
-
-  B_v_P  = std::sqrt( 1 - B_d_P * B_d_P); // Fraction of P perp to B
-
-  // calculate  the stepping angle
-
-  Theta   = R_1 * hstep; // * B_v_P;
-  // Trigonometrix
-
-  SinT     = std::sin(Theta);
-  CosT     = std::cos(Theta);
-
-  // the actual "rotation"
-
-  G4double R = 1.0 / R_1;
-
-  positionMove  = R * ( SinT * vperp + (1-CosT) * B_x_P) + hstep * vpar;
-  endTangent    = CosT * vperp + SinT * B_x_P + vpar;
-
-  // Store the resulting position and tangent
-
-  yOut[0]   = yInput[0] + positionMove.x();
-  yOut[1]   = yInput[1] + positionMove.y();
-  yOut[2]   = yInput[2] + positionMove.z();
+  // Half time-step motion
+  yOut[0]   = x_half[0] + endTangent.x() * hstep * 0.5;
+  yOut[1]   = x_half[1] + endTangent.y() * hstep * 0.5;
+  yOut[2]   = x_half[2] + endTangent.z() * hstep * 0.5;
   yOut[3] = velocityVal * endTangent.x();
   yOut[4] = velocityVal * endTangent.y();
   yOut[5] = velocityVal * endTangent.z();
 
-  // Store and/or calculate parameters for chord distance
+  // Store and/or calculate parameters for chord distance - Needs doing
 
-  G4double ptan=velocityVal*B_v_P;
+  // G4double ptan=velocityVal*B_v_P;
 
-  G4double particleCharge = fPtrMagEqOfMot->FCof() / (eplus*c_light);
-  R_Helix =std::abs( ptan/(fUnitConstant  * particleCharge*Bmag));
+  // G4double particleCharge = fPtrMagEqOfMot->FCof() / (eplus*c_light);
+  // R_Helix =std::abs( ptan/(fUnitConstant  * particleCharge*Bmag));
 
-  SetAngCurve(std::abs(Theta));
-  SetCurve(std::abs(R));
-  SetRadHelix(R_Helix);
+  // SetAngCurve(std::abs(Theta));
+  // SetCurve(std::abs(R));
+  // SetRadHelix(R_Helix);
 
-  //end AdvanceHelix Routine
 
   // We are assuming a constant field: helix is exact
   //
