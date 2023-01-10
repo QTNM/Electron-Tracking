@@ -70,7 +70,8 @@ BIMagneticFieldSetup::BIMagneticFieldSetup()
    fStepperType(2),    // ClassicalRK4 -- the default stepper
    fFieldMessenger(nullptr)   
 {
-  fEMfield = new G4UniformMagField(0.0, 0.0, 1.0*tesla);
+  G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * tesla );
+  fEMfield = new G4UniformMagField(fieldVector);
   fEquation = new G4Mag_UsualEqRhs(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
@@ -106,7 +107,6 @@ BIMagneticFieldSetup::BIMagneticFieldSetup(G4ThreeVector fieldVector)
 
 BIMagneticFieldSetup::~BIMagneticFieldSetup()
 {
-  // G4cout << " F02MagneticFieldSetup - dtor called. " << G4endl;
 
   delete fFieldMessenger; fFieldMessenger= nullptr;
    // Delete the messenger first, to avoid messages to deleted classes!
@@ -219,7 +219,6 @@ void BIMagneticFieldSetup::CreateStepper()
 void BIMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
 {
   // Set the value of the Global Field to fieldValue along Z
-
   G4ThreeVector fieldVector( 0.0, 0.0, fieldValue );
 
   SetFieldValue( fieldVector );
@@ -230,7 +229,6 @@ void BIMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
 void BIMagneticFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 {
   if (fEMfield) delete fEMfield;
-
   // Set the value of the Global Field value to fieldVector
 
   // Find the Field Manager for the global field
