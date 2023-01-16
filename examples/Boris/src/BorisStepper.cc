@@ -73,11 +73,12 @@ BorisStepper::Stepper( const G4double yInput[],
   G4ThreeVector x_half, Bnorm;
   G4double R_1, Theta;
 
+
   // Half time-step motion
   x_half = x_init + initTangent * hstep * 0.5;
 
   // Evaluate the field
-  MagFieldEvaluate(yInput, Bfld_value); // Why full input??
+  MagFieldEvaluate(yInput, Bfld_value);
   G4double Bmag = Bfld_value.mag();
 
   // Now perform the rotation - need angle
