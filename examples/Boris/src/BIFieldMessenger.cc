@@ -73,6 +73,7 @@ BIFieldMessenger::BIFieldMessenger(BIMagneticFieldSetup* fieldSetup)
   fBFieldZCmd->SetGuidance("Value of magnetic field has to be given in Tesla");
   fBFieldZCmd->SetParameterName("Bz",false,false);
   fBFieldZCmd->SetDefaultUnit("tesla");
+  fStepperCmd->SetDefaultValue(1.0);
   fBFieldZCmd->AvailableForStates(G4State_Idle);
  
   fBFieldCmd = new G4UIcmdWith3VectorAndUnit("/field/setField",this);
