@@ -13,7 +13,7 @@
 /field/setFieldZ 1
 
 # Stepper choice
-/field/setStepperType 3
+/field/setStepperType 4
 
 # start
 /run/beamOn 4
