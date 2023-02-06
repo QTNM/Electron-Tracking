@@ -28,6 +28,7 @@ add_executable(boris
   src/BIWatchHit.cc
   src/BIWatchSD.cc
   src/BorisStepper.cc
+  src/BorisStepperRadiation.cc
   src/QTNMPhysicsList.cc)
 target_include_directories(boris PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(boris PRIVATE ${Geant4_LIBRARIES})
