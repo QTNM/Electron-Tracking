@@ -79,7 +79,8 @@ class BorisStepper : public G4MagHelicalStepper
       // Rotates the velocity vector
     G4ThreeVector RotateVelocity( G4ThreeVector Bfld_value,
 				  G4double step,
-				  G4ThreeVector velocity);
+				  G4ThreeVector initTangent,
+				  G4double velocityVal);
     virtual G4int IntegratorOrder() const;
 
   private:
