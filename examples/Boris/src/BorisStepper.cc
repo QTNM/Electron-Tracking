@@ -70,26 +70,15 @@ BorisStepper::Stepper( const G4double yInput[],
   G4double      velocityVal = initVelocity.mag();
   G4ThreeVector initTangent = (1.0/velocityVal) * initVelocity;
 
-  G4ThreeVector x_half, Bnorm;
-  G4double R_1, Theta;
-
+  G4ThreeVector x_half;
 
   // Half time-step motion
   x_half = x_init + initTangent * hstep * 0.5;
 
-  // Evaluate the field
+  // Evaluate the field - TODO FIX ME. This should use half timestep position
   MagFieldEvaluate(yInput, Bfld_value);
-  G4double Bmag = Bfld_value.mag();
 
-  // Now perform the rotation - need angle
-  Bnorm = (1.0/Bmag)*Bfld_value;
-  R_1 = GetInverseCurve(velocityVal,Bmag);
-  Theta   = R_1 * hstep;
-
-  // Rotation - re-evaluate tangent
-  G4ThreeVector t = std::tan(0.5*Theta) * Bnorm;
-  G4ThreeVector u_prime = initTangent + initTangent.cross(t);
-  G4ThreeVector endTangent = initTangent + 2.0 / (1.0 + t.dot(t)) * u_prime.cross(t);
+  G4ThreeVector endTangent = RotateVelocity(Bfld_value, hstep, initVelocity);
 
   // Half time-step motion
   yOut[0]   = x_half[0] + endTangent.x() * hstep * 0.5;
@@ -119,6 +108,29 @@ BorisStepper::Stepper( const G4double yInput[],
   }
 
   fBfieldValue = Bfld_value;
+}
+
+G4ThreeVector
+BorisStepper::RotateVelocity( G4ThreeVector Bfld_value, G4double hstep, G4ThreeVector velocity)
+{
+  G4double      velocityVal = velocity.mag();
+  G4ThreeVector initTangent = (1.0/velocityVal) * velocity;
+  G4ThreeVector Bnorm;
+  G4double R_1, Theta;
+
+  G4double Bmag = Bfld_value.mag();
+
+  // Now perform the rotation - need angle
+  Bnorm = (1.0/Bmag)*Bfld_value;
+  R_1 = GetInverseCurve(velocityVal,Bmag);
+  Theta   = R_1 * hstep;
+
+  // Rotation - re-evaluate tangent
+  G4ThreeVector t = std::tan(0.5*Theta) * Bnorm;
+  G4ThreeVector u_prime = initTangent + initTangent.cross(t);
+  G4ThreeVector endTangent = initTangent + 2.0 / (1.0 + t.dot(t)) * u_prime.cross(t);
+
+  return endTangent;
 }
 
 // ---------------------------------------------------------------------------

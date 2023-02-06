@@ -76,6 +76,10 @@ class BorisStepper : public G4MagHelicalStepper
     G4double DistChord() const;
       // Estimate maximum distance of curved solution and chord ... 
 
+      // Rotates the velocity vector
+    G4ThreeVector RotateVelocity( G4ThreeVector Bfld_value,
+				  G4double step,
+				  G4ThreeVector velocity);
     virtual G4int IntegratorOrder() const;
 
   private:
