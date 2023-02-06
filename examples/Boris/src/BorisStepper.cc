@@ -70,20 +70,21 @@ BorisStepper::Stepper( const G4double yInput[],
   G4double      velocityVal = initVelocity.mag();
   G4ThreeVector initTangent = (1.0/velocityVal) * initVelocity;
 
-  G4ThreeVector x_half;
-
   // Half time-step motion
-  x_half = x_init + initTangent * hstep * 0.5;
+  yOut[0]   = x_init[0] + initTangent.x() * hstep * 0.5;
+  yOut[1]   = x_init[1] + initTangent.y() * hstep * 0.5;
+  yOut[2]   = x_init[2] + initTangent.z() * hstep * 0.5;
 
-  // Evaluate the field - TODO FIX ME. This should use half timestep position
-  MagFieldEvaluate(yInput, Bfld_value);
+  // Evaluate the field at half time step position
+  MagFieldEvaluate(yOut, Bfld_value);
 
   G4ThreeVector endTangent = RotateVelocity(Bfld_value, hstep, initVelocity);
 
-  // Half time-step motion
-  yOut[0]   = x_half[0] + endTangent.x() * hstep * 0.5;
-  yOut[1]   = x_half[1] + endTangent.y() * hstep * 0.5;
-  yOut[2]   = x_half[2] + endTangent.z() * hstep * 0.5;
+  // Second half time-step motion
+  yOut[0]   += endTangent.x() * hstep * 0.5;
+  yOut[1]   += endTangent.y() * hstep * 0.5;
+  yOut[2]   += endTangent.z() * hstep * 0.5;
+  // Set final velocities
   yOut[3] = velocityVal * endTangent.x();
   yOut[4] = velocityVal * endTangent.y();
   yOut[5] = velocityVal * endTangent.z();
