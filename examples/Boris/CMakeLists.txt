@@ -19,6 +19,7 @@ add_executable(boris
   src/BIDetectorConstruction.cc
   src/BIGasHit.cc
   src/BIGasSD.cc
+  src/BIEquationOfMotion.cc
   src/BIEventAction.cc
   src/BIMagneticFieldSetup.cc
   src/BIFieldMessenger.cc
