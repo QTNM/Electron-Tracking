@@ -4,6 +4,7 @@
 #include "BIGasHit.hh"
 #include "BIWatchHit.hh"
 
+#include "G4RootAnalysisManager.hh"
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 
@@ -12,6 +13,8 @@
 
 class BIEventAction : public G4UserEventAction
 {
+  using G4AnalysisManager = G4RootAnalysisManager;
+
 public:
   BIEventAction()          = default;
   virtual ~BIEventAction() = default;

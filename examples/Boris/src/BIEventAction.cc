@@ -1,5 +1,4 @@
 #include "BIEventAction.hh"
-#include "g4root.hh"
 
 #include <vector>
 

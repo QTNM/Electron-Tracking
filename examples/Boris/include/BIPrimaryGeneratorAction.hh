@@ -1,6 +1,7 @@
 #ifndef BIPrimaryGeneratorAction_h
 #define BIPrimaryGeneratorAction_h 1
 
+#include "G4RootAnalysisManager.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4GenericMessenger.hh"
 #include "Randomize.hh"
@@ -17,6 +18,8 @@ class G4Event;
 
 class BIPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
+  using G4AnalysisManager = G4RootAnalysisManager;
+
 public:
   BIPrimaryGeneratorAction();
   virtual ~BIPrimaryGeneratorAction();

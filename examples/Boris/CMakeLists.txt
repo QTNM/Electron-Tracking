@@ -10,7 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(CTest)
 
 # Dependencies
-find_package(Geant4 10.7 REQUIRED)
+find_package(Geant4 11.1 REQUIRED)
 
 # Build
 add_executable(boris

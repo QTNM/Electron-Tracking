@@ -13,7 +13,6 @@
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
 #include "G4RandomTools.hh"
-#include "g4root.hh"
 
 BIPrimaryGeneratorAction::BIPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction()
