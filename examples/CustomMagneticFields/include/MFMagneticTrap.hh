@@ -5,6 +5,13 @@
 #include "G4ThreeVector.hh"
 #include "G4MagneticField.hh"
 
+#ifdef HAVE_BOOST
+#include <boost/math/special_functions/ellint_1.hpp>
+#include <boost/math/special_functions/ellint_2.hpp>
+#else
+#define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
+#endif
+
 class MFMagneticTrap : public G4MagneticField
 {
 public:  // with description
@@ -26,5 +33,11 @@ public:  // with description
 private:
 
   G4double fFieldComponents[3] ;
+  G4double radius_;
+  G4double current_;
+  G4double b_central_;
+
+  void EvaluateCoil(const G4double yIn[7], const G4double zcoil, G4double field[3]) const;
+
 };
 #endif
