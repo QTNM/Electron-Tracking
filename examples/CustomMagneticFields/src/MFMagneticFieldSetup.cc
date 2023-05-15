@@ -45,10 +45,7 @@
 #include "G4MagIntegratorDriver.hh"
 #include "G4ChordFinder.hh"
 
-#include "G4ExplicitEuler.hh"
-#include "G4ImplicitEuler.hh"
 #include "G4ClassicalRK4.hh"
-#include "G4ExactHelixStepper.hh"
 #include "BorisStepper.hh"
 
 #include "G4PhysicalConstants.hh"
