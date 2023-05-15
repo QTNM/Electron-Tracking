@@ -23,6 +23,7 @@ add_executable(boris
   src/MFEventAction.cc
   src/MFMagneticFieldSetup.cc
   src/MFFieldMessenger.cc
+  src/MFMagneticTrap.cc
   src/MFPrimaryGeneratorAction.cc
   src/MFRunAction.cc
   src/MFWatchHit.cc

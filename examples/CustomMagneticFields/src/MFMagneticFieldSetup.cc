@@ -36,8 +36,8 @@
 
 #include "MFMagneticFieldSetup.hh"
 #include "MFFieldMessenger.hh"
+#include "MFMagneticTrap.hh"
 
-#include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 #include "G4Mag_UsualEqRhs.hh"
@@ -71,7 +71,7 @@ MFMagneticFieldSetup::MFMagneticFieldSetup()
    fFieldMessenger(nullptr)   
 {
   G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * tesla );
-  fEMfield = new G4UniformMagField(fieldVector);
+  fEMfield = new MFMagneticTrap(fieldVector);
   fEquation = new G4Mag_UsualEqRhs(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
@@ -94,7 +94,7 @@ MFMagneticFieldSetup::MFMagneticFieldSetup(G4ThreeVector fieldVector)
     fStepperType(0),    // ClassicalRK4 -- the default stepper
     fFieldMessenger(nullptr)
 {
-  fEMfield = new G4UniformMagField(fieldVector);
+  fEMfield = new MFMagneticTrap(fieldVector);
   fEquation = new G4Mag_UsualEqRhs(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
@@ -224,7 +224,7 @@ void MFMagneticFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 
   if (fieldVector != G4ThreeVector(0.,0.,0.))
   {
-    fEMfield = new G4UniformMagField(fieldVector);
+    fEMfield = new MFMagneticTrap(fieldVector);
   }
   else
   {

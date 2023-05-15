@@ -14,13 +14,13 @@
 #include "G4PVPlacement.hh"
 
 #include "G4GlobalMagFieldMessenger.hh"
-#include "G4UniformMagField.hh"
 #include "G4AutoDelete.hh"
 
 #include "G4SDManager.hh"
 #include "MFGasSD.hh"
 #include "MFWatchSD.hh"
 #include "MFMagneticFieldSetup.hh"
+#include "MFMagneticTrap.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
