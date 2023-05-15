@@ -91,7 +91,7 @@ MFMagneticFieldSetup::MFMagneticFieldSetup(G4ThreeVector fieldVector)
     fElFieldValue(),
     fStepper(0),
     fIntgrDriver(0),
-    fStepperType(2),    // ClassicalRK4 -- the default stepper
+    fStepperType(0),    // ClassicalRK4 -- the default stepper
     fFieldMessenger(nullptr)
 {
   fEMfield = new G4UniformMagField(fieldVector);
@@ -179,22 +179,10 @@ void MFMagneticFieldSetup::CreateStepper()
   switch ( fStepperType )
   {
     case 0:
-      fStepper = new G4ExplicitEuler( fEquation, nvar );
-      G4cout<<"G4ExplicitEuler is calledS"<<G4endl;
-      break;
-    case 1:
-      fStepper = new G4ImplicitEuler( fEquation, nvar );
-      G4cout<<"G4ImplicitEuler is called"<<G4endl;
-      break;
-    case 2:
       fStepper = new G4ClassicalRK4( fEquation, nvar );
       G4cout<<"G4ClassicalRK4 is called"<<G4endl;
       break;
-    case 3:
-      fStepper = new G4ExactHelixStepper( fEquation );
-      G4cout<<"G4ExactHelixStepper is called"<<G4endl;
-      break;
-    case 4:
+    case 1:
       fStepper = new BorisStepper( fEquation );
       G4cout<<"BorisStepper is called"<<G4endl;
       break;
