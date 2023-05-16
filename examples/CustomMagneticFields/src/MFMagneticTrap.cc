@@ -32,6 +32,10 @@ MFMagneticTrap::MFMagneticTrap (const MFMagneticTrap &p)
 {
   for (G4int i=0; i<3; i++)
     fFieldComponents[i] = p.fFieldComponents[i];
+
+  radius_ = p.radius_;
+  current_ = p.current_;
+  b_central_ = p.b_central_;
 }
 
 MFMagneticTrap& MFMagneticTrap::operator = (const MFMagneticTrap &p)
@@ -39,6 +43,10 @@ MFMagneticTrap& MFMagneticTrap::operator = (const MFMagneticTrap &p)
   if (&p == this) return *this;
   for (G4int i=0; i<3; i++)
     fFieldComponents[i] = p.fFieldComponents[i];
+
+  radius_ = p.radius_;
+  current_ = p.current_;
+  b_central_ = p.b_central_;
   return *this;
 }
 
