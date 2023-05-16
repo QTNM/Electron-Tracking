@@ -5,7 +5,6 @@
 #include "G4GenericMessenger.hh"
 #include "Randomize.hh"
 #include "globals.hh"
-#include "G4RootAnalysisManager.hh"
 
 class G4ParticleGun;
 class G4Event;
@@ -18,8 +17,6 @@ class G4Event;
 
 class MFPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
-  using G4AnalysisManager = G4RootAnalysisManager;
-
 public:
   MFPrimaryGeneratorAction();
   virtual ~MFPrimaryGeneratorAction();
