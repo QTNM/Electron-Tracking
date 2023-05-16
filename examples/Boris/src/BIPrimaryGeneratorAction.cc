@@ -70,22 +70,6 @@ void BIPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(ux,uy,uz)); // z-axis
 
   fParticleGun->GeneratePrimaryVertex(event);
-
-  // get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  // Initial Conditions
-  analysisManager->FillNtupleIColumn(2, 0, event->GetEventID()); // repeat all rows
-  analysisManager->FillNtupleIColumn(2, 1, 0);
-  analysisManager->FillNtupleDColumn(2, 2, 0.0);
-  analysisManager->FillNtupleDColumn(2, 3, loc.x());
-  analysisManager->FillNtupleDColumn(2, 4, loc.y());
-  analysisManager->FillNtupleDColumn(2, 5, -worldZHalfLength + 1.*cm);
-  analysisManager->FillNtupleDColumn(2, 6, fParticleGun->GetParticleMomentumDirection().x());
-  analysisManager->FillNtupleDColumn(2, 7, fParticleGun->GetParticleMomentumDirection().y());
-  analysisManager->FillNtupleDColumn(2, 8, fParticleGun->GetParticleMomentumDirection().z());
-  analysisManager->FillNtupleDColumn(2, 9, en);
-  analysisManager->AddNtupleRow(2);
 }
 
 

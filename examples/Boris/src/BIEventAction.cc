@@ -47,9 +47,28 @@ BIEventAction::GetWatchHitsCollection(G4int hcID,
   return hitsCollection;
 }
 
-void BIEventAction::BeginOfEventAction(const G4Event*
-                                         /*event*/)
-{ ; }
+void BIEventAction::BeginOfEventAction(const G4Event* event)
+{
+  G4PrimaryVertex* p = event->GetPrimaryVertex();
+  G4ThreeVector pos = p->GetPosition();
+  // Normalised Momentum direction
+  G4ThreeVector mom = p->GetPrimary()->GetMomentumDirection();
+
+  auto analysisManager = G4AnalysisManager::Instance();
+
+  // Initial Conditions
+  analysisManager->FillNtupleIColumn(2, 0, event->GetEventID());
+  analysisManager->FillNtupleIColumn(2, 1, 0);
+  analysisManager->FillNtupleDColumn(2, 2, 0.0);
+  analysisManager->FillNtupleDColumn(2, 3, pos.x());
+  analysisManager->FillNtupleDColumn(2, 4, pos.y());
+  analysisManager->FillNtupleDColumn(2, 5, pos.z());
+  analysisManager->FillNtupleDColumn(2, 6, mom.x());
+  analysisManager->FillNtupleDColumn(2, 7, mom.y());
+  analysisManager->FillNtupleDColumn(2, 8, mom.z());
+  analysisManager->FillNtupleDColumn(2, 9, p->GetPrimary()->GetKineticEnergy() / G4Analysis::GetUnitValue("keV"));
+  analysisManager->AddNtupleRow(2);
+}
 
 void BIEventAction::EndOfEventAction(const G4Event* event)
 {
