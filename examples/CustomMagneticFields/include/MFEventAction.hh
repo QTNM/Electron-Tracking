@@ -5,6 +5,8 @@
 #include "MFWatchHit.hh"
 #include "G4RootAnalysisManager.hh"
 #include "G4UserEventAction.hh"
+#include "G4FieldManager.hh"
+#include "G4TransportationManager.hh"
 #include "globals.hh"
 
 /// Event action class
@@ -34,6 +36,7 @@ private:
   G4int                 fGID    = -1;
   G4int                 fWID    = -1;
 
+  G4FieldManager*        pfieldManager; // singleton for info
 };
 
 #endif

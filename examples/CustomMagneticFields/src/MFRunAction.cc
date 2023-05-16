@@ -56,6 +56,9 @@ MFRunAction::MFRunAction(G4String name)
   analysisManager->CreateNtupleDColumn("Px");
   analysisManager->CreateNtupleDColumn("Py");
   analysisManager->CreateNtupleDColumn("Pz");
+  analysisManager->CreateNtupleDColumn("Bx");
+  analysisManager->CreateNtupleDColumn("By");
+  analysisManager->CreateNtupleDColumn("Bz");
   analysisManager->CreateNtupleDColumn("Kine");
   analysisManager->FinishNtuple();
 }

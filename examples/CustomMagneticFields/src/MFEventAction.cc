@@ -7,6 +7,8 @@
 #include "G4SDManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4ios.hh"
+#include "G4ChordFinder.hh"
+#include "G4EquationOfMotion.hh"
 #include "MFGasSD.hh"
 #include "MFWatchSD.hh"
 
@@ -56,6 +58,17 @@ void MFEventAction::BeginOfEventAction(const G4Event* event)
 
   auto analysisManager = G4AnalysisManager::Instance();
 
+  // set up information retrieval from singleton
+  pfieldManager = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+
+  // collect required values
+  G4EquationOfMotion* eqn = dynamic_cast<G4EquationOfMotion*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion());
+
+  G4double pos_[3];
+  pos_[0] = pos[0];pos_[1] = pos[1];pos_[2] = pos[2];
+  G4double B[3];
+  eqn->GetFieldValue(pos_, B);
+
   // Initial Conditions
   analysisManager->FillNtupleIColumn(2, 0, event->GetEventID());
   analysisManager->FillNtupleIColumn(2, 1, 0);
@@ -66,7 +79,10 @@ void MFEventAction::BeginOfEventAction(const G4Event* event)
   analysisManager->FillNtupleDColumn(2, 6, mom.x());
   analysisManager->FillNtupleDColumn(2, 7, mom.y());
   analysisManager->FillNtupleDColumn(2, 8, mom.z());
-  analysisManager->FillNtupleDColumn(2, 9, p->GetPrimary()->GetKineticEnergy() / G4Analysis::GetUnitValue("keV"));
+  analysisManager->FillNtupleDColumn(2, 9, B[0] / G4Analysis::GetUnitValue("tesla"));
+  analysisManager->FillNtupleDColumn(2, 10, B[1] / G4Analysis::GetUnitValue("tesla"));
+  analysisManager->FillNtupleDColumn(2, 11, B[2] / G4Analysis::GetUnitValue("tesla"));
+  analysisManager->FillNtupleDColumn(2, 12, p->GetPrimary()->GetKineticEnergy() / G4Analysis::GetUnitValue("keV"));
   analysisManager->AddNtupleRow(2);
 }
 
