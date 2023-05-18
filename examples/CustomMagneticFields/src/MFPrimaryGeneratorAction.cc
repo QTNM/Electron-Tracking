@@ -52,7 +52,7 @@ void MFPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
   // random spot location [mm]
   G4TwoVector loc = G4RandomPointInEllipse(fSpot/2.0, fSpot/2.0); // circle
-  fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()*mm, loc.y()*mm, -worldZHalfLength + 1.*cm));
+  fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()*mm, loc.y()*mm, 0.0));
 
   // Gaussian random energy [keV]
   G4double en = G4RandGauss::shoot(fMean, fStdev);
