@@ -69,6 +69,7 @@ public:
   void SetFieldValue(G4ThreeVector fieldVector);
   void SetFieldZValue(G4double      fieldValue);
   void SetTrapCurrent(G4double fTrapCurrent);
+  void SetTrapRadius(G4double fTrapRadius);
   G4ThreeVector GetConstantFieldValue();
    // Set/Get Field strength in Geant4 units
 

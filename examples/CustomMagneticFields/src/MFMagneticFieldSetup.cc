@@ -215,6 +215,12 @@ void MFMagneticFieldSetup::SetTrapCurrent(G4double fTrapCurrent)
   fEMfield->SetCurrent(fTrapCurrent);
 }
 
+void MFMagneticFieldSetup::SetTrapRadius(G4double fTrapRadius)
+{
+  // Set the value of the trap radius
+  fEMfield->SetRadius(fTrapRadius);
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void MFMagneticFieldSetup::SetFieldValue(G4ThreeVector fieldVector)

@@ -30,6 +30,8 @@ public:  // with description
 
   void SetCurrent(const G4double TrapCurrent);
 
+  void SetRadius(const G4double TrapRadius);
+
   G4ThreeVector GetConstantFieldValue() const;
 
 private:

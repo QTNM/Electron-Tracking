@@ -31,6 +31,13 @@ MFMagneticTrap::SetCurrent(const G4double TrapCurrent)
 }
 
 void
+MFMagneticTrap::SetRadius(const G4double TrapRadius)
+{
+  radius_ = TrapRadius;
+  SetCentralField();
+}
+
+void
 MFMagneticTrap::SetCentralField()
 {
   b_central_ = current_ * CLHEP::mu0 / radius_ / 2.0;

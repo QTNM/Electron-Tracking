@@ -62,6 +62,7 @@ class MFFieldMessenger: public G4UImessenger
     G4UIcmdWithAnInteger*      fStepperCmd;
     G4UIcmdWithADoubleAndUnit* fBFieldZCmd;
     G4UIcmdWithADoubleAndUnit* fTrapCurrentCmd;
+    G4UIcmdWithADoubleAndUnit* fTrapRadiusCmd;
     G4UIcmdWith3VectorAndUnit* fBFieldCmd;
     G4UIcmdWithADoubleAndUnit* fMinStepCmd;
     G4UIcmdWithoutParameter*   fUpdateCmd;

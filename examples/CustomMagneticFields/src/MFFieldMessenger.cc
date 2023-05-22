@@ -95,6 +95,13 @@ MFFieldMessenger::MFFieldMessenger(MFMagneticFieldSetup* fieldSetup)
   fTrapCurrentCmd->SetDefaultUnit("ampere");
   fTrapCurrentCmd->SetDefaultValue(1.0);
   fTrapCurrentCmd->AvailableForStates(G4State_Idle);
+
+  fTrapRadiusCmd = new G4UIcmdWithADoubleAndUnit("/field/setRadius",this);
+  fTrapRadiusCmd->SetGuidance("Define trapping radius");
+  fTrapRadiusCmd->SetParameterName("Trap Radius",false,false);
+  fTrapRadiusCmd->SetDefaultUnit("mm");
+  fTrapRadiusCmd->SetDefaultValue(100.0);
+  fTrapRadiusCmd->AvailableForStates(G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -108,6 +115,7 @@ MFFieldMessenger::~MFFieldMessenger()
   delete fFieldDir;
   delete fUpdateCmd;
   delete fTrapCurrentCmd;
+  delete fTrapRadiusCmd;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -126,6 +134,8 @@ void MFFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fElFieldSetup->SetMinStep(fMinStepCmd->GetNewDoubleValue(newValue));
   if( command == fTrapCurrentCmd )
     fElFieldSetup->SetTrapCurrent(fTrapCurrentCmd->GetNewDoubleValue(newValue));
+  if( command == fTrapRadiusCmd )
+    fElFieldSetup->SetTrapRadius(fTrapRadiusCmd->GetNewDoubleValue(newValue));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
