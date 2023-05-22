@@ -209,6 +209,12 @@ void MFMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
   SetFieldValue( fieldVector );
 }
 
+void MFMagneticFieldSetup::SetTrapCurrent(G4double fTrapCurrent)
+{
+  // Set the value of the trapping current
+  fEMfield->SetCurrent(fTrapCurrent);
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void MFMagneticFieldSetup::SetFieldValue(G4ThreeVector fieldVector)

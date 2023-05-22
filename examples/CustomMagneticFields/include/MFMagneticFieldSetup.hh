@@ -37,6 +37,7 @@
 
 #include "G4MagneticField.hh"
 #include "G4ThreeVector.hh"
+#include "MFMagneticTrap.hh"
 
 class G4FieldManager;
 class G4ChordFinder;
@@ -67,6 +68,7 @@ public:
 
   void SetFieldValue(G4ThreeVector fieldVector);
   void SetFieldZValue(G4double      fieldValue);
+  void SetTrapCurrent(G4double fTrapCurrent);
   G4ThreeVector GetConstantFieldValue();
    // Set/Get Field strength in Geant4 units
 
@@ -94,7 +96,7 @@ private:
 
   G4Mag_EqRhs*            fEquation;
 
-  G4MagneticField*        fEMfield;
+  MFMagneticTrap*         fEMfield;
  
   G4ThreeVector           fElFieldValue;
 

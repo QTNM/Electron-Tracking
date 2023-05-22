@@ -28,6 +28,8 @@ public:  // with description
 
   void SetFieldValue(const G4ThreeVector& newFieldValue);
 
+  void SetCurrent(const G4double TrapCurrent);
+
   G4ThreeVector GetConstantFieldValue() const;
 
 private:
@@ -38,6 +40,6 @@ private:
   G4double b_central_;
 
   void EvaluateCoil(const G4double yIn[7], const G4double zcoil, G4double field[3]) const;
-
+  void SetCentralField();
 };
 #endif

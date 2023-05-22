@@ -10,9 +10,9 @@ MFMagneticTrap::MFMagneticTrap(const G4ThreeVector& FieldVector )
   fFieldComponents[2] = FieldVector.z();
 
   // TODO: More constructors/get/set routines for these
-  radius_ = 10; // 10cm
-  current_ = 1; // Units?
-  b_central_ = current_ * CLHEP::mu0 / radius_ / 2.0;
+  radius_ = 100; // 10cm
+  current_ = 1 * CLHEP::ampere; // 1 Amp
+  SetCentralField();
 }
 
 void
@@ -21,6 +21,19 @@ MFMagneticTrap::SetFieldValue(const G4ThreeVector& newFieldVector )
   fFieldComponents[0] = newFieldVector.x();
   fFieldComponents[1] = newFieldVector.y();
   fFieldComponents[2] = newFieldVector.z();
+}
+
+void
+MFMagneticTrap::SetCurrent(const G4double TrapCurrent)
+{
+  current_ = TrapCurrent;
+  SetCentralField();
+}
+
+void
+MFMagneticTrap::SetCentralField()
+{
+  b_central_ = current_ * CLHEP::mu0 / radius_ / 2.0;
 }
 
 MFMagneticTrap::~MFMagneticTrap()

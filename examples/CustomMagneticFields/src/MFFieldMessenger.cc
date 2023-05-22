@@ -88,6 +88,13 @@ MFFieldMessenger::MFFieldMessenger(MFMagneticFieldSetup* fieldSetup)
   fMinStepCmd->SetParameterName("min step",false,false);
   fMinStepCmd->SetDefaultUnit("mm");
   fMinStepCmd->AvailableForStates(G4State_Idle);
+
+  fTrapCurrentCmd = new G4UIcmdWithADoubleAndUnit("/field/setCurrent",this);
+  fTrapCurrentCmd->SetGuidance("Define trapping current");
+  fTrapCurrentCmd->SetParameterName("Trap Current",false,false);
+  fTrapCurrentCmd->SetDefaultUnit("ampere");
+  fTrapCurrentCmd->SetDefaultValue(1.0);
+  fTrapCurrentCmd->AvailableForStates(G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -100,6 +107,7 @@ MFFieldMessenger::~MFFieldMessenger()
   delete fMinStepCmd;
   delete fFieldDir;
   delete fUpdateCmd;
+  delete fTrapCurrentCmd;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -116,6 +124,8 @@ void MFFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fElFieldSetup->SetFieldValue(fBFieldCmd->GetNew3VectorValue(newValue));
   if( command == fMinStepCmd )
     fElFieldSetup->SetMinStep(fMinStepCmd->GetNewDoubleValue(newValue));
+  if( command == fTrapCurrentCmd )
+    fElFieldSetup->SetTrapCurrent(fTrapCurrentCmd->GetNewDoubleValue(newValue));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
