@@ -1,5 +1,5 @@
-#ifndef EGPrimaryGeneratorAction_h
-#define EGPrimaryGeneratorAction_h 1
+#ifndef CDPrimaryGeneratorAction_h
+#define CDPrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4GenericMessenger.hh"
@@ -15,11 +15,11 @@ class G4Event;
 /// A single particle is generated.
 /// macro commands can change primary properties.
 
-class EGPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class CDPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-  EGPrimaryGeneratorAction();
-  virtual ~EGPrimaryGeneratorAction();
+  CDPrimaryGeneratorAction();
+  virtual ~CDPrimaryGeneratorAction();
 
   virtual void GeneratePrimaries(G4Event*);
 
@@ -28,11 +28,6 @@ private:
   void DefineCommands();
 
   G4ParticleGun*      fParticleGun;
-  G4GenericMessenger* fMessenger;
-
-  G4double            fMean;
-  G4double            fStdev;
-  G4double            fSpot;
 
 };
 
