@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(egun VERSION 0.1.0)
+project(cd109source VERSION 0.1.0)
 
 # Compiler/build settings
 set(CMAKE_CXX_STANDARD 17)
