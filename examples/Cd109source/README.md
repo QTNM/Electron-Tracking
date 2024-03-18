@@ -28,6 +28,6 @@ cd build; cmake ..; make
 
 and run in the build directory for instance as 
 
-./egun -m run.mac
+./cd109source -m run.mac
 
 Find out about CLI options using --help option.
