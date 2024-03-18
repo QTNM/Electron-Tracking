@@ -1,11 +1,10 @@
-#include "EGGasHit.hh"
+#include "CDGasHit.hh"
 
-G4ThreadLocal G4Allocator<EGGasHit>* EGGasHitAllocator=0;
+G4ThreadLocal G4Allocator<CDGasHit>* CDGasHitAllocator=0;
 
-EGGasHit::EGGasHit()
+CDGasHit::CDGasHit()
  : G4VHit(),
    fTrackID(0),
-   fEdep(0.),
    fKine(0.),
    fPx(0.),
    fPy(0.),
@@ -15,13 +14,12 @@ EGGasHit::EGGasHit()
    fPosz(0.)
 {}
 
-EGGasHit::~EGGasHit() {}
+CDGasHit::~CDGasHit() {}
 
-EGGasHit::EGGasHit(const EGGasHit& right)
+CDGasHit::CDGasHit(const CDGasHit& right)
   : G4VHit()
 {
   fTrackID      = right.fTrackID;
-  fEdep         = right.fEdep;
   fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;
@@ -31,10 +29,9 @@ EGGasHit::EGGasHit(const EGGasHit& right)
   fPosz         = right.fPosz;
 }
 
-const EGGasHit& EGGasHit::operator=(const EGGasHit& right)
+const CDGasHit& CDGasHit::operator=(const CDGasHit& right)
 {
   fTrackID      = right.fTrackID;
-  fEdep         = right.fEdep;
   fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;
@@ -46,14 +43,14 @@ const EGGasHit& EGGasHit::operator=(const EGGasHit& right)
   return *this;
 }
 
-G4bool EGGasHit::operator==(const EGGasHit& right) const
+G4bool CDGasHit::operator==(const CDGasHit& right) const
 {
   return ( this == &right ) ? true : false;
 }
 
-void EGGasHit::Draw()
+void CDGasHit::Draw()
 { ; }
 
-void EGGasHit::Print()
+void CDGasHit::Print()
 { ; }
 
