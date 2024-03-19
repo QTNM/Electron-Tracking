@@ -1,5 +1,5 @@
-#ifndef EGDetectorConstruction_h
-#define EGDetectorConstruction_h 1
+#ifndef CDDetectorConstruction_h
+#define CDDetectorConstruction_h 1
 
 #include "G4Cache.hh"
 #include "G4GenericMessenger.hh"
@@ -7,29 +7,29 @@
 #include "globals.hh"
 
 class G4VPhysicalVolume;
-class EGGasSD;
+class CDGasSD;
 
-class EGDetectorConstruction : public G4VUserDetectorConstruction
+class CDDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-  EGDetectorConstruction();
-  ~EGDetectorConstruction();
+  CDDetectorConstruction();
+  ~CDDetectorConstruction();
 
 public:
   virtual G4VPhysicalVolume* Construct();
   virtual void               ConstructSDandField();
 
-  void     SetDensity(G4double d);
-
 private:
   void DefineCommands();
   void DefineMaterials();
 
-  G4VPhysicalVolume* SetupShort();
-
+  G4VPhysicalVolume* SetupIsotrak();
+  G4VPhysicalVolume* SetupQSA();
+  void Switch();
+  
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
-  G4double                                  fdensity;
-  G4Cache<EGGasSD*>                         fSD                = nullptr;
+  G4bool                                    fSource;
+  G4Cache<CDGasSD*>                         fSD                = nullptr;
 };
 
 #endif

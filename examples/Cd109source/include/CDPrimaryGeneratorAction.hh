@@ -25,8 +25,6 @@ public:
 
 private:
 
-  void DefineCommands();
-
   G4ParticleGun*      fParticleGun;
 
 };

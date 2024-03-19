@@ -5,6 +5,7 @@ G4ThreadLocal G4Allocator<CDGasHit>* CDGasHitAllocator=0;
 CDGasHit::CDGasHit()
  : G4VHit(),
    fTrackID(0),
+   fPDG(0),
    fKine(0.),
    fPx(0.),
    fPy(0.),
@@ -20,6 +21,7 @@ CDGasHit::CDGasHit(const CDGasHit& right)
   : G4VHit()
 {
   fTrackID      = right.fTrackID;
+  fPDG          = right.fPDG;
   fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;
@@ -32,6 +34,7 @@ CDGasHit::CDGasHit(const CDGasHit& right)
 const CDGasHit& CDGasHit::operator=(const CDGasHit& right)
 {
   fTrackID      = right.fTrackID;
+  fPDG          = right.fPDG;
   fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;

@@ -21,10 +21,9 @@ public:
 private:
   // methods
   CDGasHitsCollection*     GetGasHitsCollection(G4int hcID,
-                                              const G4Event* event) const;
+						const G4Event* event) const;
 
   // data members
-  // hit data
   G4int                 fGID    = -1;
 
 };
