@@ -1,0 +1,16 @@
+# command set test
+# verbose
+#/run/verbose 1
+#/tracking/verbose 1
+#
+# re-construction of geometry - before run init
+#/CD/source/choice true
+#
+# list the existing physics processes
+#/process/list
+#
+# run init
+#/run/initialize
+#
+# start
+#/run/beamOn 4

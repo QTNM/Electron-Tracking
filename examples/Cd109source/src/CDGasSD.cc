@@ -41,14 +41,14 @@ G4bool CDGasSD::ProcessHits(G4Step* aStep,
   if (poststep->GetStepStatus() != fGeomBoundary) return false;
     
   // test; check correct boundary, vacuum to vacuum only at scoring surface
-  if (prestep->GetMaterial->GetName() != poststep->GetMaterial()->GetName()) return false;
+  if (prestep->GetMaterial()->GetName() != poststep->GetMaterial()->GetName()) return false;
   
   CDGasHit* newHit = new CDGasHit();
   G4ThreeVector postmom = aStep->GetPostStepPoint()->GetMomentumDirection();
   G4ThreeVector postloc = aStep->GetPostStepPoint()->GetPosition();
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
-  newHit->SetPDG(aStep->GetTrack()->GetDynamicParticle()->GetPDGcode);
+  newHit->SetPDG(aStep->GetTrack()->GetDynamicParticle()->GetPDGcode());
   newHit->SetKine(aStep->GetPostStepPoint()->GetKineticEnergy());
   newHit->SetPx(postmom.x());
   newHit->SetPy(postmom.y());

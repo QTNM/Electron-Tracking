@@ -5,6 +5,7 @@
 #include "G4Box.hh"
 #include "G4Sphere.hh"
 #include "G4Tubs.hh"
+#include "G4Orb.hh"
 #include "G4GeometryManager.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
@@ -117,7 +118,7 @@ auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
 			       ringthick, 0.0, CLHEP::twopi);
   
   //
-  // Mylar foil and source layer
+  // Acrylic/Lucite foil and source layer
   // 
   auto* foilSolid   = new G4Tubs("Foil", 0.0, foilrad, foilthick,
 				 0.0, CLHEP::twopi);
@@ -125,12 +126,12 @@ auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
 				 0.0, CLHEP::twopi);
   
   // Scorer dome, half-sphere
-  auto* scoreSolid   = new G4Sphere("Score", 0.0, scorerrad,
-				    0.0, CLHEP::twopi, 0.0, CLHEP::pi);
+  auto* scorerSolid   = new G4Sphere("Score", 0.0, scorerrad,
+				     0.0, 2*CLHEP::twopi, CLHEP::pi, CLHEP::twopi);
 
   //
   // logical volumes
-  auto* ringLogical    = new G4LogicalVolume(ringSolid, ringdMat, "Ring_log");
+  auto* ringLogical    = new G4LogicalVolume(ringSolid, ringMat, "Ring_log");
   auto* foilLogical    = new G4LogicalVolume(foilSolid, foilMat, "Foil_log");
   auto* sourceLogical  = new G4LogicalVolume(sourceSolid, sourceMat, "Source_log");
   auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
@@ -196,12 +197,12 @@ auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
 				 0.0, CLHEP::twopi);
   
   // Scorer dome, half-sphere
-  auto* scoreSolid   = new G4Sphere("Score", 0.0, scorerrad,
-				    0.0, CLHEP::twopi, 0.0, CLHEP::pi);
+  auto* scorerSolid   = new G4Sphere("Score", 0.0, scorerrad,
+				     0.0, 2*CLHEP::twopi, CLHEP::pi, CLHEP::twopi);
 
   //
   // logical volumes
-  auto* ringLogical    = new G4LogicalVolume(ringSolid, ringdMat, "Ring_log");
+  auto* ringLogical    = new G4LogicalVolume(ringSolid, ringMat, "Ring_log");
   auto* foilLogical    = new G4LogicalVolume(foilSolid, foilMat, "Foil_log");
   auto* sourceLogical  = new G4LogicalVolume(sourceSolid, sourceMat, "Source_log");
   auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
@@ -211,11 +212,11 @@ auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
                     ringLogical, "Ring_phys", worldLogical, false, 0, true);
   
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,-foilthick-sourcethick), foilLogical,
-                    "Foil_phys", worldLogical, false, 0, true); 
+                    "Foil_bottom_phys", worldLogical, false, 0, true); 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), sourceLogical, // around origin
                     "Source_phys", worldLogical, false, 0, true); 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,foilthick+sourcethick), foilLogical,
-                    "Foil_phys", worldLogical, false, 1, true); 
+                    "Foil_top_phys", worldLogical, false, 1, true); 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,2*foilthick+sourcethick), scorerLogical,
                     "Scorer_phys", worldLogical, false, 0, true); 
     
@@ -239,7 +240,7 @@ void CDDetectorConstruction::DefineCommands()
                                               "Commands for controlling source setup");
 
   // switch command
-  fDetectorMessenger->DeclareMethod("choice", &EGDetectorConstruction::Switch)
+  fDetectorMessenger->DeclareMethod("choice", &CDDetectorConstruction::Switch)
     .SetGuidance("Set source choice boolean: true=Isotrak; false=inverted.")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);

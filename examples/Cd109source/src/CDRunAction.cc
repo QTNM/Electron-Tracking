@@ -1,8 +1,8 @@
 #include "CDRunAction.hh"
-#include "g4root.hh"
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"
+#include "G4AnalysisManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
