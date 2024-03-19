@@ -40,6 +40,7 @@ class CDGasHit : public G4VHit
     void SetPosz        (G4double lz)  { fPosz = lz; };
 
     // Get methods
+    G4double GetTrackID() const     { return fTrackID; };
     G4double GetPDG()     const     { return fPDG; };
     G4double GetKine()    const     { return fKine; };
     G4double GetPx()      const     { return fPx; };

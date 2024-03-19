@@ -1,9 +1,9 @@
 #include "CDEventAction.hh"
-#include "g4root.hh"
 
 #include <vector>
 
 #include "G4Event.hh"
+#include "G4AnalysisManager.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
 #include "G4UnitsTable.hh"

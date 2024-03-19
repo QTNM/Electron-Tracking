@@ -25,7 +25,7 @@ private:
 
   G4VPhysicalVolume* SetupIsotrak();
   G4VPhysicalVolume* SetupQSA();
-  void Switch();
+  void Switch(G4bool);
   
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
   G4bool                                    fSource;

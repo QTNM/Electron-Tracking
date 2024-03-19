@@ -22,13 +22,6 @@ CDPrimaryGeneratorAction::CDPrimaryGeneratorAction()
   G4int nofParticles = 1;
   fParticleGun       = new G4ParticleGun(nofParticles);
 
-  // set Cd-109 as default ion
-  G4int Z = 48;
-  G4int A = 109;
-  G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,0.*keV);
-  fParticleGun->SetParticleDefinition(ion);
-  fParticleGun->SetParticleCharge(0.*eplus);
-  
   // default ion particle kinematics
   fParticleGun->SetParticleEnergy(0.*keV);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.)); // z-axis
@@ -48,8 +41,15 @@ void CDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   //
   // auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
 
+  // set Cd-109 as default ion
+  G4int Z = 48;
+  G4int A = 109;
+  G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,0.*keV);
+  fParticleGun->SetParticleDefinition(ion);
+  fParticleGun->SetParticleCharge(0.*eplus);
+  
   // random spot location [mm]
-  G4double fSpot = 5.0*mm // fixed spot diameter for each source
+  G4double fSpot = 5.0*mm; // fixed spot diameter for each source
   G4TwoVector loc = G4RandomPointInEllipse(fSpot/2.0, fSpot/2.0); // circle
   fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()/mm, loc.y()/mm, 0./mm)); // at z=0
 
