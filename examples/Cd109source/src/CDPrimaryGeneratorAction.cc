@@ -4,12 +4,11 @@
 // geant
 #include "G4Event.hh"
 #include "G4ThreeVector.hh"
+#include "G4TwoVector.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4IonTable.hh"
-#include "G4ParticleTable.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
-#include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
@@ -47,7 +46,7 @@ void CDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   // on DetectorConstruction class we get world volume 
   // from G4LogicalVolumeStore: assumes name is World_log!
   //
-  auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
+  // auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
 
   // random spot location [mm]
   G4double fSpot = 5.0*mm // fixed spot diameter for each source

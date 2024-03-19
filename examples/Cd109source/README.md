@@ -9,11 +9,13 @@ Set default physics list is EMStandard_opt4, high precision low-energy EM physic
 added Radioactive Decay Physics; G4ParticleGun for simple event generation, since only a Cd-109 Ion
 needs to be placed, and radioactive decay takes over.
 
-Geometry is a vacuum box containing a commercial source geometry from datasheets from Isotrak and QSA. A scoring
-surface, a half-sphere around the source emission surface, is defined as a boundary between two vacuum spaces, 
-purely for scoring of a free, emitted electron.
+Geometry is a vacuum box containing a commercial source geometry from datasheets from Isotrak
+and QSA. A scoring 
+surface, a half-sphere around the source emission surface, is defined as a boundary between two
+vacuum spaces, purely for scoring of a free, emitted electron.
 
-Scorer: scoring surface crossing - particle momentum vector and kinetic energy post-step and location. Output in ROOT file. 
+Scorer: scoring surface crossing - particle momentum vector and kinetic energy post-step and
+location. Output in ROOT file. 
 
 ## Build instruction
 
@@ -25,8 +27,7 @@ Anyone using CentOS7 can source the following environment:
 
 source /cvmfs/sft.cern.ch/lcg/views/LCG_105/x86_64-centos7-gcc12-opt/setup.sh
 
-which sets up Geant4 11.2 and GCC13(12) on a CentOS9(7) background. ROOT 6.30 will also be available. Just create a 'build' 
-directory, then 
+which sets up Geant4 11.2 and GCC13(12) on a CentOS9(7) background. ROOT 6.30 will also be available. Just create a 'build' directory, then 
 
 cd build; cmake ..; make
 

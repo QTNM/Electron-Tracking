@@ -22,6 +22,7 @@ CDRunAction::CDRunAction(G4String name)
   analysisManager->CreateNtuple("Score", "Hits");
   analysisManager->CreateNtupleIColumn("EventID");
   analysisManager->CreateNtupleIColumn("TrackID");
+  analysisManager->CreateNtupleIColumn("PDG");
   analysisManager->CreateNtupleDColumn("Kine");
   analysisManager->CreateNtupleDColumn("Px");
   analysisManager->CreateNtupleDColumn("Py");

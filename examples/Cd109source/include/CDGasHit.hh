@@ -30,6 +30,7 @@ class CDGasHit : public G4VHit
 
     // Set methods
     void SetTrackID     (G4int id)     { fTrackID = id; };
+    void SetPDG         (G4int p)      { fPDG = p; };
     void SetKine        (G4double ke)  { fKine = ke; };
     void SetPx          (G4double px)  { fPx = px; };
     void SetPy          (G4double py)  { fPy = py; };
@@ -39,7 +40,7 @@ class CDGasHit : public G4VHit
     void SetPosz        (G4double lz)  { fPosz = lz; };
 
     // Get methods
-    G4double GetTrackID() const     { return fTrackID; };
+    G4double GetPDG()     const     { return fPDG; };
     G4double GetKine()    const     { return fKine; };
     G4double GetPx()      const     { return fPx; };
     G4double GetPy()      const     { return fPy; };
@@ -51,6 +52,7 @@ class CDGasHit : public G4VHit
   private:
 
       G4int         fTrackID;
+      G4int         fPDG;
       G4double      fKine;
       G4double      fPx;
       G4double      fPy;

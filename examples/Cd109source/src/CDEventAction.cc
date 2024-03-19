@@ -51,7 +51,7 @@ void CDEventAction::EndOfEventAction(const G4Event* event)
 
   // dummy storage
   std::vector<double> tkine, px, py, pz, posx, posy, posz;
-  std::vector<int> tid;
+  std::vector<int> tid, tpdg;
 
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -65,15 +65,17 @@ void CDEventAction::EndOfEventAction(const G4Event* event)
     auto hh = (*GasHC)[i];
 
     int    id = (hh->GetTrackID());
-    double k  = (hh->GetKine())    / G4Analysis::GetUnitValue("keV");
+    int    p  = (hh->GetPDG());
+    double k  = (hh->GetKine()) / G4Analysis::GetUnitValue("keV");
     double mx = (hh->GetPx()); // normalised momentum direction vector
     double my = (hh->GetPy());
     double mz = (hh->GetPz());
-    double lx = (hh->GetPosx()); // interaction location
-    double ly = (hh->GetPosy());
-    double lz = (hh->GetPosz());
+    double lx = (hh->GetPosx()) / G4Analysis::GetUnitValue("mm");
+    double ly = (hh->GetPosy()) / G4Analysis::GetUnitValue("mm");
+    double lz = (hh->GetPosz()) / G4Analysis::GetUnitValue("mm");
 
     tid.push_back(id);
+    tpdg.push_back(p);
     tkine.push_back(k);
     px.push_back(mx);
     py.push_back(my);
@@ -89,13 +91,14 @@ void CDEventAction::EndOfEventAction(const G4Event* event)
   {
     analysisManager->FillNtupleIColumn(0, eventID); // repeat all rows
     analysisManager->FillNtupleIColumn(1, tid.at(i));
-    analysisManager->FillNtupleDColumn(2, tkine.at(i));
-    analysisManager->FillNtupleDColumn(3, px.at(i));
-    analysisManager->FillNtupleDColumn(4, py.at(i));
-    analysisManager->FillNtupleDColumn(5, pz.at(i));
-    analysisManager->FillNtupleDColumn(6, posx.at(i));
-    analysisManager->FillNtupleDColumn(7, posy.at(i));
-    analysisManager->FillNtupleDColumn(8, posz.at(i));
+    analysisManager->FillNtupleIColumn(2, tpdg.at(i));
+    analysisManager->FillNtupleDColumn(3, tkine.at(i));
+    analysisManager->FillNtupleDColumn(4, px.at(i));
+    analysisManager->FillNtupleDColumn(5, py.at(i));
+    analysisManager->FillNtupleDColumn(6, pz.at(i));
+    analysisManager->FillNtupleDColumn(7, posx.at(i));
+    analysisManager->FillNtupleDColumn(8, posy.at(i));
+    analysisManager->FillNtupleDColumn(9, posz.at(i));
     analysisManager->AddNtupleRow();
   }
 

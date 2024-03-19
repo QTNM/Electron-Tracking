@@ -48,6 +48,7 @@ G4bool CDGasSD::ProcessHits(G4Step* aStep,
   G4ThreeVector postloc = aStep->GetPostStepPoint()->GetPosition();
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
+  newHit->SetPDG(aStep->GetTrack()->GetDynamicParticle()->GetPDGcode);
   newHit->SetKine(aStep->GetPostStepPoint()->GetKineticEnergy());
   newHit->SetPx(postmom.x());
   newHit->SetPy(postmom.y());
@@ -63,7 +64,6 @@ G4bool CDGasSD::ProcessHits(G4Step* aStep,
 
 void CDGasSD::EndOfEvent(G4HCofThisEvent*)
 {
-  // to be commented - too much print no production.
   if ( verboseLevel>1 ) { 
      G4int nofHits = fHitsCollection->entries();
      G4cout << G4endl
