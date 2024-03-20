@@ -20,6 +20,7 @@
 #include "G4UImanager.hh"
 #include "G4Threading.hh"
 #include "G4GenericPhysicsList.hh"
+#include "G4HadronicParameters.hh"
 #include "G4VModularPhysicsList.hh"
 
 // us
@@ -85,7 +86,9 @@ int main(int argc, char** argv)
   myConstructors->push_back("G4EmStandardPhysics_option4");
   myConstructors->push_back("G4RadioactiveDecayPhysics");
   physList = new G4GenericPhysicsList(myConstructors);
-
+  // from user guide from version 11.2
+  G4HadronicParameters::Instance()->SetTimeThresholdForRadioactiveDecay(1.e30*CLHEP::year);
+  
   // finish physics list
   runManager->SetUserInitialization(physList);
 
