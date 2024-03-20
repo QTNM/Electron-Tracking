@@ -2,8 +2,6 @@
 
 #include "G4RunManager.hh"
 
-#include "G4Box.hh"
-#include "G4Sphere.hh"
 #include "G4Tubs.hh"
 #include "G4Orb.hh"
 #include "G4GeometryManager.hh"
@@ -91,7 +89,7 @@ auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
   // size parameter, unit [cm]
   // world
   G4double worldrad   = 50.0 * mm;    // Orb radius
-  G4double scorerrad  = 11.0 * mm;    // Dome radius
+  G4double scorerrad  = 30.0 * mm;    // Dome radius
    
   // source structure, ring holds foils with source in between
   G4double ringrad     = 12.5 * mm;    // ring diam 25 mm
@@ -110,6 +108,13 @@ auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
   auto* worldLogical  = new G4LogicalVolume(worldSolid, worldMaterial, "World_log");
   auto* worldPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), worldLogical,
                                            "World_phys", nullptr, false, 0);
+  //
+  // Scorer orb inside world
+  //
+  auto* scorerSolid = new G4Orb("Scorer", scorerrad);
+  auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
+  auto* scorerPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), scorerLogical,
+                                           "Scorer_phys", worldLogical, false, 0, true);
   
   //
   // Alu ring
@@ -125,27 +130,19 @@ auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
   auto* sourceSolid = new G4Tubs("Source", 0.0, foilrad, sourcethick,
 				 0.0, CLHEP::twopi);
   
-  // Scorer dome, half-sphere
-  auto* scorerSolid   = new G4Sphere("Score", 0.0, scorerrad,
-				     0.0, 2*CLHEP::twopi, CLHEP::pi, CLHEP::twopi);
-
   //
   // logical volumes
   auto* ringLogical    = new G4LogicalVolume(ringSolid, ringMat, "Ring_log");
   auto* foilLogical    = new G4LogicalVolume(foilSolid, foilMat, "Foil_log");
   auto* sourceLogical  = new G4LogicalVolume(sourceSolid, sourceMat, "Source_log");
-  auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
     
   // placements
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
-                    ringLogical, "Ring_phys", worldLogical, false, 0, true);
-  
+                    ringLogical, "Ring_phys", scorerLogical, false, 0, true);
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,foilthick), foilLogical,
-                    "Foil_phys", worldLogical, false, 0, true); 
+                    "Foil_phys", scorerLogical, false, 0, true); 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,-sourcethick), sourceLogical,
-                    "Source_phys", worldLogical, false, 0, true); 
-  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,2*foilthick), scorerLogical,
-                    "Scorer_phys", worldLogical, false, 0, true); 
+                    "Source_phys", scorerLogical, false, 0, true); 
     
   return worldPhysical;
 }
@@ -162,7 +159,7 @@ auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
   // size parameter, unit [cm]
   // world
   G4double worldrad   = 50.0 * mm;    // Orb radius
-  G4double scorerrad  = 11.0 * mm;    // Dome radius
+  G4double scorerrad  = 30.0 * mm;    // Dome radius
    
   // source structure, ring holds foils with source in between
   G4double ringrad     = 12.5 * mm;    // ring diam 25 mm
@@ -183,6 +180,14 @@ auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
                                            "World_phys", nullptr, false, 0);
   
   //
+  // Scorer orb inside world
+  //
+  auto* scorerSolid = new G4Orb("Scorer", scorerrad);
+  auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
+  auto* scorerPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), scorerLogical,
+                                           "Scorer_phys", worldLogical, false, 0, true);
+
+  //
   // Alu ring
   // 
   auto* ringSolid = new G4Tubs("Ring", foilrad, ringrad,
@@ -196,29 +201,22 @@ auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
   auto* sourceSolid = new G4Tubs("Source", 0.0, foilrad, sourcethick,
 				 0.0, CLHEP::twopi);
   
-  // Scorer dome, half-sphere
-  auto* scorerSolid   = new G4Sphere("Score", 0.0, scorerrad,
-				     0.0, 2*CLHEP::twopi, CLHEP::pi, CLHEP::twopi);
-
   //
   // logical volumes
   auto* ringLogical    = new G4LogicalVolume(ringSolid, ringMat, "Ring_log");
   auto* foilLogical    = new G4LogicalVolume(foilSolid, foilMat, "Foil_log");
   auto* sourceLogical  = new G4LogicalVolume(sourceSolid, sourceMat, "Source_log");
-  auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
     
   // placements
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
-                    ringLogical, "Ring_phys", worldLogical, false, 0, true);
+                    ringLogical, "Ring_phys", scorerLogical, false, 0, true);
   
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,-foilthick-sourcethick), foilLogical,
-                    "Foil_bottom_phys", worldLogical, false, 0, true); 
+                    "Foil_bot_phys", scorerLogical, false, 0, true); 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), sourceLogical, // around origin
-                    "Source_phys", worldLogical, false, 0, true); 
+                    "Source_phys", scorerLogical, false, 0, true); 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,foilthick+sourcethick), foilLogical,
-                    "Foil_top_phys", worldLogical, false, 1, true); 
-  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,2*foilthick+sourcethick), scorerLogical,
-                    "Scorer_phys", worldLogical, false, 0, true); 
+                    "Foil_top_phys", scorerLogical, false, 1, true); 
     
   return worldPhysical;
 }
