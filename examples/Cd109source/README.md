@@ -21,8 +21,9 @@ as deposited on a Nickel backing of unknown thickness. An acrylic window of 100-
 thickness covers that surface. This is therefore taken as an example of a surface source, i.e.
 the Cd-109 ions are set on the surface of the Nickel volume.
 
-A scoring surface, a half-sphere on top of the source emission surface, is defined as a 
-boundary between two vacuum spaces, purely for scoring of a free, emitted electron.
+A scoring surface, a sphere around the source, is defined as a 
+boundary between two vacuum spaces, Scorer and World, purely for scoring of a free, emitted electron.
+Condition for scoring is that a step is at a geometry boundary and between identical materials (vacuum).
 
 Scorer: scoring surface crossing - particle momentum vector and kinetic energy post-step, 
 location and PDG code. Output in ROOT file. 
