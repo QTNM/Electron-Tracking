@@ -1,0 +1,13 @@
+# command set test
+# verbose
+/run/verbose 1
+/tracking/verbose 1
+#
+# re-construction of geometry - before run init
+#/CD/source/choice false
+#
+# run init
+/run/initialize
+#
+# start
+/run/beamOn 1
