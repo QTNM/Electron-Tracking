@@ -26,7 +26,12 @@ boundary between two vacuum spaces, Scorer and World, purely for scoring of a fr
 Condition for scoring is that a step is at a geometry boundary and between identical materials (vacuum).
 
 Scorer: scoring surface crossing - particle momentum vector and kinetic energy post-step, 
-location and PDG code. Output in ROOT file. 
+location and PDG code. Output in ROOT file. A new converter script in Python converts the ROOT file 
+into a compressed CSV file which can be read back in Python using, for instance NumPy np.loadtxt()
+with the delimiter keyword ','. The header is skipped automatically as a comment. This would 
+produce a 2D NumPy array with the columns as in the converter script (or see header) and each row 
+a scored hit in the simulation. Note that due to the parallel processing, the order of entries
+is random hence the event ID numbers in the file to label each event.
 
 ## Build instruction
 
