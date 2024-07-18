@@ -1,0 +1,20 @@
+# minimal test macro
+# verbose
+/run/verbose 0
+/tracking/verbose 0
+
+# run init
+/run/initialize
+
+# example gps settings for tests
+/gps/verbose 0
+/gps/particle gamma
+/gps/ene/mono 22.0 keV
+/gps/pos/type Point
+# below origin
+/gps/pos/centre 0.0 0.0 -1.0 cm
+# shoot upwards in z
+/gps/direction 0.0 0.0 1.0
+
+# start
+/run/beamOn 1
