@@ -1,0 +1,27 @@
+#
+# Macro file for "TestEm13.cc"
+# (can be run in batch, without graphic)
+#
+/control/verbose 0
+/run/verbose 0
+#
+/testem/det/setMat Hgas
+#/testem/det/setMat G4_H
+/testem/det/setSize 100 mm
+#
+#/testem/phys/addPhysics qtnm
+/testem/phys/addPhysics singleS
+#
+/run/initialize
+#
+#/run/setCut 10 um
+/gun/particle gamma
+/gun/energy 800 eV
+/run/beamOn 1000000
+#
+/gun/particle e-
+/gun/energy 18.5 keV
+/run/beamOn 1000000
+#
+#/tracking/verbose 1
+#/run/beamOn 10
