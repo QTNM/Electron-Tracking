@@ -5,7 +5,7 @@ the TestEm13 Geant4 example in examples/extended/electromagnetic/TestEm13.
 
 ## Notes 
 
-Available physics lists are QTNMPhysicsList, EmStandardSS for a G4 single scattering example physics list and a 
+Available physics lists are QTNMPhysicsList, G4EmStandardPhysicsSS for a G4 single scattering example physics list and a 
 Standard EM list from G4.
 
 Change of physics list, some target materials and primary particle parameters is possible by macro.
