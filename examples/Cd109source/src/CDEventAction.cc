@@ -50,8 +50,8 @@ void CDEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // dummy storage
-  std::vector<double> tkine, px, py, pz, posx, posy, posz;
-  std::vector<int> tid, tpdg;
+  std::vector<G4double> tkine, px, py, pz, posx, posy, posz;
+  std::vector<G4int> tid, tpdg;
 
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -64,15 +64,15 @@ void CDEventAction::EndOfEventAction(const G4Event* event)
   {
     auto hh = (*GasHC)[i];
 
-    int    id = (hh->GetTrackID());
-    int    p  = (hh->GetPDG());
-    double k  = (hh->GetKine()) / G4Analysis::GetUnitValue("keV");
-    double mx = (hh->GetPx()); // normalised momentum direction vector
-    double my = (hh->GetPy());
-    double mz = (hh->GetPz());
-    double lx = (hh->GetPosx()) / G4Analysis::GetUnitValue("mm");
-    double ly = (hh->GetPosy()) / G4Analysis::GetUnitValue("mm");
-    double lz = (hh->GetPosz()) / G4Analysis::GetUnitValue("mm");
+    G4int    id = (hh->GetTrackID());
+    G4int    p  = (hh->GetPDG());
+    G4double k  = (hh->GetKine()) / G4Analysis::GetUnitValue("keV");
+    G4double mx = (hh->GetPx()); // normalised momentum direction vector
+    G4double my = (hh->GetPy());
+    G4double mz = (hh->GetPz());
+    G4double lx = (hh->GetPosx()) / G4Analysis::GetUnitValue("mm");
+    G4double ly = (hh->GetPosy()) / G4Analysis::GetUnitValue("mm");
+    G4double lz = (hh->GetPosz()) / G4Analysis::GetUnitValue("mm");
 
     tid.push_back(id);
     tpdg.push_back(p);
@@ -87,7 +87,7 @@ void CDEventAction::EndOfEventAction(const G4Event* event)
 
   // fill the ntuple - check column id?
   G4int eventID = event->GetEventID();
-  for (unsigned int i=0;i<tkine.size();i++)
+  for ( G4int i=0; i<tkine.size(); i++)
   {
     analysisManager->FillNtupleIColumn(0, eventID); // repeat all rows
     analysisManager->FillNtupleIColumn(1, tid.at(i));
