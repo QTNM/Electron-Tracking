@@ -43,11 +43,6 @@ CDPrimaryGeneratorAction::~CDPrimaryGeneratorAction()
 
 void CDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
-
-  // Test random number generator:
-  double myRndm = rndmNumberGenerator->flat();
-  //G4cout << "Random number:" << myRndm << G4endl;
-
   // set Cd-109 as default ion
   G4int Z = 48;
   G4int A = 109;
@@ -56,33 +51,36 @@ void CDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   fParticleGun->SetParticleCharge(0.*eplus);
 
 
- G4String detectorType = _detector->DetectorType();
+   G4String detectorType = _detector->DetectorType();
 
-    if (detectorType == "Isotrak" || detectorType == "QSA") {
-        // Pancake-shape source geometry (for Isotrak and QSA)
+   if (detectorType == "Isotrak" || detectorType == "QSA")
+     {
+       // Pancake-shape source geometry (for Isotrak and QSA)
 
-        G4double fSpot = 5.0*mm; // Fixed spot diameter for each source
+       G4double fSpot = 5.0*mm; // Fixed spot diameter for each source
 
-        // Generate a random point in a circle
-        G4TwoVector spot = G4RandomPointInEllipse(fSpot/2.0, fSpot/2.0); // circle
-        G4ThreeVector loc(spot.x(), spot.y(), 0.0); // at z = 0
+       // Generate a random point in a circle
+       G4TwoVector spot = G4RandomPointInEllipse(fSpot/2.0, fSpot/2.0); // circle
+       G4ThreeVector loc(spot.x(), spot.y(), 0.0); // at z = 0
 
-        fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()/mm, loc.y()/mm, 0)); // at z=0
-        fParticleGun->GeneratePrimaryVertex(event); // Generate primary vertex
+       fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()/mm, loc.y()/mm, 0)); // at z=0
+       fParticleGun->GeneratePrimaryVertex(event); // Generate primary vertex
+     }
+   else if (detectorType == "Pointlike" || detectorType == "Shell")
+     {
+       // Spherical-shape source geometry (for Pointlike and Shell)
 
-    } else if (detectorType == "Pointlike" || detectorType == "Shell"){
-        // Spherical-shape source geometry (for Pointlike and Shell)
+       G4double myRndm = rndmNumberGenerator->flat();
 
-        double rmax3 = std::pow(_detector->_r_max, 3);
-        double rmin3 = std::pow(_detector->_r_min, 3);
-        double m = (rmax3 - rmin3) * myRndm + rmin3;
-        double r = std::pow(m, 1.0/3.0); // Randomly generated radius
+       G4double rmax3 = std::pow(_detector->_r_max, 3);
+       G4double rmin3 = std::pow(_detector->_r_min, 3);
+       G4double m = (rmax3 - rmin3) * myRndm + rmin3;
+       G4double r = std::pow(m, 1.0/3.0); // Randomly generated radius
 
-        // Generate a random point on a sphere with radius r
-        G4ThreeVector loc = G4RandomPointOnEllipsoid(r, r, r);
+       // Generate a random point on a sphere with radius r
+       G4ThreeVector loc = G4RandomPointOnEllipsoid(r, r, r);
 
-        fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()/mm, loc.y()/mm, loc.z()/mm)); // at z=0
-        fParticleGun->GeneratePrimaryVertex(event); // Generate primary vertex
-    }
-
+       fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()/mm, loc.y()/mm, loc.z()/mm)); // at z=0
+       fParticleGun->GeneratePrimaryVertex(event); // Generate primary vertex
+     }
 }
