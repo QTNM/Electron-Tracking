@@ -5,7 +5,6 @@
 #include "G4GenericMessenger.hh"
 #include "Randomize.hh"
 #include "globals.hh"
-#include "CLHEP/Random/Random.h"
 #include "CDDetectorConstruction.hh"
 class G4ParticleGun;
 class G4Event;
@@ -27,7 +26,6 @@ public:
 private:
 
   G4ParticleGun*      fParticleGun;
-  CLHEP::HepRandom*   rndmNumberGenerator;
   G4double randomRadiusInShell();
   CDDetectorConstruction* _detector;
 };
