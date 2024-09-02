@@ -80,4 +80,3 @@ inline void CDGasHit::operator delete(void *hit)
 }
 
 #endif
-

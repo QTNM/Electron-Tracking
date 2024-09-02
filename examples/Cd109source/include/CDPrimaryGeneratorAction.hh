@@ -27,7 +27,7 @@ public:
 private:
 
   G4ParticleGun*      fParticleGun;
-  CLHEP::HepRandom*   rndmNumberGenerator; 
+  CLHEP::HepRandom*   rndmNumberGenerator;
   G4double randomRadiusInShell();
   CDDetectorConstruction* _detector;
 };

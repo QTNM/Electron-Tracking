@@ -88,7 +88,7 @@ int main(int argc, char** argv)
   physList = new G4GenericPhysicsList(myConstructors);
   // from user guide from version 11.2
   G4HadronicParameters::Instance()->SetTimeThresholdForRadioactiveDecay(1.e30*CLHEP::year);
-  
+
   // finish physics list
   runManager->SetUserInitialization(physList);
 
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
   // Batch mode only - no visualisation
   G4String command = "/control/execute ";
   UImanager->ApplyCommand(command + macroName);
-  
+
   delete runManager;
   return 0;
 }

@@ -32,7 +32,7 @@ private:
   G4VPhysicalVolume* SetupPointlike();
   G4VPhysicalVolume* SetupShell();
   void Switch(G4String);
-  
+
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
   G4String                                  fSource;
   G4Cache<CDGasSD*>                         fSD                = nullptr;

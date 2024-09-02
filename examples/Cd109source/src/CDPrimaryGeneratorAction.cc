@@ -1,6 +1,6 @@
 // us
 #include "CDPrimaryGeneratorAction.hh"
-#include "CDDetectorConstruction.hh" 
+#include "CDDetectorConstruction.hh"
 #include "CDActionInitialization.hh"
 
 //maths

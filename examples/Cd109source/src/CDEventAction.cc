@@ -11,23 +11,23 @@
 #include "CDGasSD.hh"
 
 
-CDGasHitsCollection* 
+CDGasHitsCollection*
 CDEventAction::GetGasHitsCollection(G4int hcID,
                                     const G4Event* event) const
 {
-  auto hitsCollection 
+  auto hitsCollection
     = static_cast<CDGasHitsCollection*>(
         event->GetHCofThisEvent()->GetHC(hcID));
-  
+
   if ( ! hitsCollection ) {
     G4ExceptionDescription msg;
-    msg << "Cannot access hitsCollection ID " << hcID; 
+    msg << "Cannot access hitsCollection ID " << hcID;
     G4Exception("CDEventAction::GetGasHitsCollection()",
       "MyCode0001", FatalException, msg);
-  }         
+  }
 
   return hitsCollection;
-}    
+}
 
 
 void CDEventAction::BeginOfEventAction(const G4Event*
@@ -37,7 +37,7 @@ void CDEventAction::BeginOfEventAction(const G4Event*
 void CDEventAction::EndOfEventAction(const G4Event* event)
 {
   // Get GAS hits collections IDs
-  if(fGID < 0) 
+  if(fGID < 0)
     fGID = G4SDManager::GetSDMpointer()->GetCollectionID("GasHitsCollection");
 
   // Get entries from hits collections
@@ -60,7 +60,7 @@ void CDEventAction::EndOfEventAction(const G4Event* event)
   G4int GnofHits = GasHC->entries();
 
   // Gas detector
-  for ( G4int i=0; i<GnofHits; i++ ) 
+  for ( G4int i=0; i<GnofHits; i++ )
   {
     auto hh = (*GasHC)[i];
 
