@@ -47,7 +47,7 @@ void CDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
   // Test random number generator:
   double myRndm = rndmNumberGenerator->flat();
-  //std::cout << "Random number:" << myRndm << std::endl;
+  //G4cout << "Random number:" << myRndm << G4endl;
 
   // set Cd-109 as default ion
   G4int Z = 48;

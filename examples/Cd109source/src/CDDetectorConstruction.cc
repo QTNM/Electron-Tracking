@@ -67,7 +67,7 @@ auto CDDetectorConstruction::Construct() -> G4VPhysicalVolume*
     return SetupShell();
   }
   else
-    std::cout << "Unknown source type " << fSource << ". Defaulting to Isotrak." << std::endl;
+    G4cout << "Unknown source type " << fSource << ". Defaulting to Isotrak." << G4endl;
     return SetupIsotrak();
 }
 
@@ -105,7 +105,7 @@ void CDDetectorConstruction::ConstructSDandField()
 auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
 {
 
-   std::cout << "Setting up detector SetupQSA" << std::endl;
+   G4cout << "Setting up detector SetupQSA" << G4endl;
 
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
@@ -178,7 +178,7 @@ auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
 auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
 {
 
-   std::cout << "Setting up detector SetupIsotrak" << std::endl;
+   G4cout << "Setting up detector SetupIsotrak" << G4endl;
 
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
@@ -258,7 +258,7 @@ auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
 auto CDDetectorConstruction::SetupPointlike() -> G4VPhysicalVolume*
 {
 
-  std::cout << "Setting up detector SetupPointlike" << std::endl;
+  G4cout << "Setting up detector SetupPointlike" << G4endl;
 
   //this function is used to modify a pointlike source
   // Get materials
@@ -311,8 +311,8 @@ auto CDDetectorConstruction::SetupPointlike() -> G4VPhysicalVolume*
 auto CDDetectorConstruction::SetupShell() -> G4VPhysicalVolume*
 {
 
-  std::cout << "Setting up detector SetupShell" << std::endl;
-  std::cout << "Generating random point in shell between r_min = " << _r_min << " and r_max = " << _r_max << std::endl;
+  G4cout << "Setting up detector SetupShell" << G4endl;
+  G4cout << "Generating random point in shell between r_min = " << _r_min << " and r_max = " << _r_max << G4endl;
 
   //this function is used to modify a pointlike source
   // Get materials
@@ -323,7 +323,7 @@ auto CDDetectorConstruction::SetupShell() -> G4VPhysicalVolume*
   //Scorer sphere data
   G4double scorerrad  = 30.0 * mm;    // Dome radius
   G4double worldrad   = 50.0 * mm;    // Orb radius
-  //std::cout<< worldrad << std::endl;
+  //G4cout<< worldrad << G4endl;
   // Volumes for this geometry
 
   //
