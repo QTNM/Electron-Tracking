@@ -12,6 +12,9 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4SolidStore.hh"
 #include "G4PVPlacement.hh"
+#include "G4Sphere.hh"
+#include "G4ios.hh"
+
 
 #include "G4SDManager.hh"
 #include "CDGasSD.hh"
@@ -20,7 +23,7 @@
 #include "G4SystemOfUnits.hh"
 
 CDDetectorConstruction::CDDetectorConstruction() : G4VUserDetectorConstruction()
-						 , fSource(true)
+						 , fSource("Isotrak")
 {
   DefineCommands();
   DefineMaterials();
@@ -33,6 +36,13 @@ CDDetectorConstruction::~CDDetectorConstruction()
 
 }
 
+G4String CDDetectorConstruction::DetectorType()
+{
+
+  return fSource;
+
+}
+
 auto CDDetectorConstruction::Construct() -> G4VPhysicalVolume*
 {
   // Cleanup old geometry
@@ -41,10 +51,24 @@ auto CDDetectorConstruction::Construct() -> G4VPhysicalVolume*
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
 
-  if (fSource)
+// Command for the detector selection 
+  if (fSource=="Isotrak")
     return SetupIsotrak();
-  else
+  else if (fSource=="QSA")
     return SetupQSA();
+  else if (fSource=="Pointlike"){
+    _r_min = 0.0;  // Solid sphere has a inner radius = 0
+    _r_max = 0.01*mm;  // The radius of the pointlike source
+    return SetupPointlike();
+  }
+  else if (fSource=="Shell"){
+    _r_min = 0.05*mm;  // radius of inner sphere
+    _r_max = _r_min + 0.001*mm; // outer radius of the source
+    return SetupShell();
+  }
+  else
+    std::cout << "Unknown source type " << fSource << ". Defaulting to Isotrak." << std::endl;
+    return SetupIsotrak();
 }
 
 void CDDetectorConstruction::DefineMaterials()
@@ -80,6 +104,9 @@ void CDDetectorConstruction::ConstructSDandField()
 
 auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
 {
+
+   std::cout << "Setting up detector SetupQSA" << std::endl;
+
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
   auto* foilMat       = G4Material::GetMaterial("G4_LUCITE");
@@ -150,6 +177,9 @@ auto CDDetectorConstruction::SetupQSA() -> G4VPhysicalVolume*
 
 auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
 {
+
+   std::cout << "Setting up detector SetupIsotrak" << std::endl;
+
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
   auto* foilMat       = G4Material::GetMaterial("G4_MYLAR");
@@ -222,7 +252,132 @@ auto CDDetectorConstruction::SetupIsotrak() -> G4VPhysicalVolume*
 }
 
 
-void CDDetectorConstruction::Switch(G4bool choice)
+
+
+//This would be the function for a pointlike source
+auto CDDetectorConstruction::SetupPointlike() -> G4VPhysicalVolume*
+{
+
+  std::cout << "Setting up detector SetupPointlike" << std::endl;
+
+  //this function is used to modify a pointlike source
+  // Get materials
+  auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
+  auto* sourceMat     = G4Material::GetMaterial("G4_Cd");
+    
+  // size parameter, unit [cm]
+  // world
+  G4double worldrad   = 50.0 * mm;    // Orb radius
+  G4double scorerrad  = 30.0 * mm;    // Dome radius
+   
+  
+  //
+  // World at origin
+  //
+  auto* worldSolid = new G4Orb("World", worldrad);
+  auto* worldLogical  = new G4LogicalVolume(worldSolid, worldMaterial, "World_log");
+  auto* worldPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), worldLogical,
+                                           "World_phys", nullptr, false, 0);
+  
+  //
+  // Scorer orb inside world
+  //
+  auto* scorerSolid = new G4Orb("Scorer", scorerrad);
+  auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
+  auto* scorerPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), scorerLogical,
+                                           "Scorer_phys", worldLogical, false, 0, true);
+
+  
+  //Geometry of the pointlike source
+  auto* sourceSolid = new G4Sphere("Source", 0, _r_max, 0.0, CLHEP::twopi,
+				 0.0, CLHEP::pi);  //point-like (solod sphere) source with very small radius ==  10 um
+  
+  //
+  // logical volumes
+  auto* sourceLogical  = new G4LogicalVolume(sourceSolid, sourceMat, "Source_log");
+    
+  // placements
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), sourceLogical, // around origin
+                    "Source_phys", scorerLogical, false, 0, true); 
+
+    
+  return worldPhysical;
+}
+
+
+
+
+//This would be the function for a shell source on a steel solid sphere
+auto CDDetectorConstruction::SetupShell() -> G4VPhysicalVolume*
+{
+
+  std::cout << "Setting up detector SetupShell" << std::endl;
+  std::cout << "Generating random point in shell between r_min = " << _r_min << " and r_max = " << _r_max << std::endl;
+
+  //this function is used to modify a pointlike source
+  // Get materials
+  auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
+  auto* baseMat       = G4Material::GetMaterial("G4_Al");
+  auto* sourceMat     = G4Material::GetMaterial("G4_Cd");
+
+  //Scorer sphere data
+  G4double scorerrad  = 30.0 * mm;    // Dome radius
+  G4double worldrad   = 50.0 * mm;    // Orb radius
+  //std::cout<< worldrad << std::endl;
+  // Volumes for this geometry
+  
+  //
+  // World at origin
+  //
+  auto* worldSolid = new G4Orb("World", worldrad);
+  auto* worldLogical  = new G4LogicalVolume(worldSolid, worldMaterial, "World_log");
+  auto* worldPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), worldLogical,
+                                           "World_phys", nullptr, false, 0);
+  
+  //
+  // Scorer orb inside world
+  //
+  auto* scorerSolid = new G4Orb("Scorer", scorerrad);
+  auto* scorerLogical  = new G4LogicalVolume(scorerSolid, worldMaterial, "Scorer_log");
+  auto* scorerPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), scorerLogical,
+                                           "Scorer_phys", worldLogical, false, 0, true);
+
+  //
+
+//geometry for the shell and solid sphere
+  //inner solid sphere for Alu
+  auto* baseSolid = new G4Sphere("Source", 0, _r_min, 0.0, CLHEP::twopi,
+				 0.0, CLHEP::pi); 
+ 
+
+  //outer sphere shell for cd109
+  auto* sourceSolid = new G4Sphere("Source", _r_min, _r_max, 0.0, CLHEP::twopi,
+				 0.0, CLHEP::pi);  
+
+  
+  // logical volumes
+  
+  auto* baseLogical    = new G4LogicalVolume(baseSolid, baseMat, "base_log");
+  auto* sourceLogical  = new G4LogicalVolume(sourceSolid, sourceMat, "Source_log");
+    
+  // placements
+ // new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
+                    //ringLogical, "Ring_phys", scorerLogical, false, 0, true);
+  
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0), baseLogical,
+                    "base_bot_phys", scorerLogical, false, 0, true); 
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), sourceLogical, // around origin
+                    "Source_phys", scorerLogical, false, 0, true); 
+  //new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,foilthick+sourcethick), foilLogical,
+                    //"Foil_top_phys", scorerLogical, false, 1, true); 
+    
+  return worldPhysical;
+}
+
+
+
+
+void CDDetectorConstruction::Switch(G4String choice)
 {
   fSource = choice;
 
@@ -239,7 +394,8 @@ void CDDetectorConstruction::DefineCommands()
 
   // switch command
   fDetectorMessenger->DeclareMethod("choice", &CDDetectorConstruction::Switch)
-    .SetGuidance("Set source choice boolean: true=Isotrak; false=inverted.")
+    .SetGuidance("Set source choice string: Isotrak; QSA; Pointlike; Shell.")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 }
+

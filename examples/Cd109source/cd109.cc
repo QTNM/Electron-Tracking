@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  auto* actions = new CDActionInitialization(outputFileName);
+  auto* actions = new CDActionInitialization(outputFileName, detector);
   runManager->SetUserInitialization(actions);
 
 
