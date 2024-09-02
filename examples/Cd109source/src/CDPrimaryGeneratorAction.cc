@@ -4,7 +4,6 @@
 #include "CDActionInitialization.hh"
 
 //maths
-#include <iostream>
 #include <cmath>
 
 // geant
