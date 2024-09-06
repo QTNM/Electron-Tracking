@@ -19,10 +19,10 @@ class G4HCofThisEvent;
 class CDGasSD : public G4VSensitiveDetector
 {
   public:
-    CDGasSD(const G4String& name, 
+    CDGasSD(const G4String& name,
             const G4String& hitsCollectionName);
     virtual ~CDGasSD();
-  
+
     // methods from base class
     virtual void   Initialize(G4HCofThisEvent* hitCollection);
     virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history);
@@ -33,4 +33,3 @@ class CDGasSD : public G4VSensitiveDetector
 };
 
 #endif
-

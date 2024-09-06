@@ -13,7 +13,7 @@ CDRunAction::CDRunAction(G4String name)
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetDefaultFileType("root");
-    
+
   // Create directories
   analysisManager->SetVerboseLevel(1);
   analysisManager->SetNtupleMerging(true);

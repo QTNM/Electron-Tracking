@@ -5,7 +5,7 @@
 #include "G4GenericMessenger.hh"
 #include "Randomize.hh"
 #include "globals.hh"
-
+#include "CDDetectorConstruction.hh"
 class G4ParticleGun;
 class G4Event;
 
@@ -18,7 +18,7 @@ class G4Event;
 class CDPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-  CDPrimaryGeneratorAction();
+  CDPrimaryGeneratorAction(CDDetectorConstruction* detector);
   virtual ~CDPrimaryGeneratorAction();
 
   virtual void GeneratePrimaries(G4Event*);
@@ -26,7 +26,8 @@ public:
 private:
 
   G4ParticleGun*      fParticleGun;
-
+  G4double randomRadiusInShell();
+  CDDetectorConstruction* _detector;
 };
 
 #endif

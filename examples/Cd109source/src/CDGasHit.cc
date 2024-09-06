@@ -56,4 +56,3 @@ void CDGasHit::Draw()
 
 void CDGasHit::Print()
 { ; }
-

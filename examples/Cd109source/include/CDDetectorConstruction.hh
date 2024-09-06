@@ -16,8 +16,12 @@ public:
   ~CDDetectorConstruction();
 
 public:
-  virtual G4VPhysicalVolume* Construct();
-  virtual void               ConstructSDandField();
+  virtual G4VPhysicalVolume* Construct() override;
+  virtual void               ConstructSDandField() override;
+  G4String                   DetectorType();
+
+  G4double _r_min;
+  G4double _r_max;
 
 private:
   void DefineCommands();
@@ -25,11 +29,14 @@ private:
 
   G4VPhysicalVolume* SetupIsotrak();
   G4VPhysicalVolume* SetupQSA();
-  void Switch(G4bool);
-  
+  G4VPhysicalVolume* SetupPointlike();
+  G4VPhysicalVolume* SetupShell();
+  void Switch(G4String);
+
   G4GenericMessenger*                       fDetectorMessenger = nullptr;
-  G4bool                                    fSource;
+  G4String                                  fSource;
   G4Cache<CDGasSD*>                         fSD                = nullptr;
+
 };
 
 #endif
